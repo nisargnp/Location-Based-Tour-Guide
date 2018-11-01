@@ -34,7 +34,7 @@
         android:id="@+id/comment_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ratingbar"
+        android:layout_below="@id/name_box"
         android:padding="16dp"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
@@ -45,4 +45,18 @@
         android:layout_below="@id/comment_desc"
         android:inputType="text"/>
 
+    <TextView
+        android:id="@+id/name_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingbar"
+        android:padding="16dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <EditText
+        android:id="@+id/name_box"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/name_desc"
+        android:inputType="text"/>
 </RelativeLayout>
