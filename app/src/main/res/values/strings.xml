@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Location-Based Tour Guide</string>
+    <string name="rating_string">Rating:%1.1f</string>
+    <string name="submit_string">Submit</string>
 </resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <RatingBar
+        android:id="@+id/ratingbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:numStars="5"
+        android:stepSize="0.5" />
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_box"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:text="@string/submit_string"
+        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+        android:textColor="@color/white">
+    </Button>
+
+    <TextView
+        android:id="@+id/comment_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingbar"
+        android:padding="16dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <EditText
+        android:id="@+id/comment_box"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/comment_desc"
+        android:inputType="text"/>
+
+</RelativeLayout>
