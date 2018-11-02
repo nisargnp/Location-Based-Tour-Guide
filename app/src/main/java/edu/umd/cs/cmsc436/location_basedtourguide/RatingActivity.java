@@ -18,7 +18,7 @@ public class RatingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rating);
+        setContentView(R.layout.fragment_rating);
 
         ratingText = findViewById(R.id.textView);
         rating = findViewById(R.id.ratingbar);
