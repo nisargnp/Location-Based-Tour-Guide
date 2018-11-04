@@ -4,6 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTour.AddPlaces">
+    tools:context=".AddTour.AddPlacesActivity">
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <fragment
+            android:id="@+id/list"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            class="edu.umd.cs.cmsc436.location_basedtourguide.AddTour.ListFragment"/>
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            class="edu.umd.cs.cmsc436.location_basedtourguide.AddTour.MapFragment"/>
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

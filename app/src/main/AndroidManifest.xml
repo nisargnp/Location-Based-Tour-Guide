@@ -47,14 +47,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".TourActivity">
-            <!--<intent-filter>
+        <activity android:name=".Tour.TourActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddTour.AddPlaces"></activity>
+        <activity android:name=".AddTour.AddPlacesActivity"></activity>
+        <activity android:name=".AddTour.AddTourActivity"></activity>
     </application>
 
 </manifest>

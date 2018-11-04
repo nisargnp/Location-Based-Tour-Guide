@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 public class AddTourActivity extends AppCompatActivity {
 
@@ -43,7 +44,7 @@ public class AddTourActivity extends AppCompatActivity {
         placesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddTourActivity.this, AddPlaces.class);
+                Intent intent = new Intent(AddTourActivity.this, AddPlacesActivity.class);
                 startActivity(intent);
             }
         });
@@ -73,7 +74,6 @@ public class AddTourActivity extends AppCompatActivity {
     }
 
     public void fromGalery() {
-
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, CHOOSE_PICTURE);
     }
