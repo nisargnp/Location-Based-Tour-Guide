@@ -1,5 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -79,6 +80,7 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
                 LatLng endpoint = result.get(i);
                 polylineOptions.add(endpoint);
             }
+            polylineOptions.color(Color.BLUE);
             directionsTaskParameter.getMap().addPolyline(polylineOptions);
         }
     }
@@ -122,21 +124,17 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
 
         try {
             // check status for err?
-            JSONObject responseObject = (JSONObject) new JSONTokener(
-                    data).nextValue();
+            JSONObject responseObject = (JSONObject) new JSONTokener(data).nextValue();
 
             JSONArray routes = responseObject.getJSONArray(ROUTES_TAG);
-
             if (routes.length() > 0) {
                 // if multiple routes, just use the first
                 JSONObject routeObject = routes.getJSONObject(0);
-
                 // each leg is the route from one "tour stop" to the next
                 JSONArray legs = routeObject.getJSONArray(LEGS_TAG);
 
                 for (int legs_idx = 0; legs_idx < legs.length(); legs_idx++) {
                     JSONObject legObject = legs.getJSONObject(legs_idx);
-
                     JSONArray steps = legObject.getJSONArray(STEPS_TAG);
 
                     for (int steps_idx = 0; steps_idx < steps.length(); steps_idx++) {
@@ -151,7 +149,6 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
                     }
                 }
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

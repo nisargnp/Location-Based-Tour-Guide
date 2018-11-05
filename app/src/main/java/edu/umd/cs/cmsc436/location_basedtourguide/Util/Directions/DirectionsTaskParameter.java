@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
  * https://developers.google.com/maps/documentation/directions/intro#RequestParameters
  */
 public class DirectionsTaskParameter {
-    private static final String baseURI = "https://maps.googleapis.com/maps/api/directions/json";
-    private static final String directionsKey = "***REMOVED***";
+    public static final String baseURI = "https://maps.googleapis.com/maps/api/directions/json";
+    public static final String directionsKey = "***REMOVED***";
 
     private GoogleMap map;
     /**

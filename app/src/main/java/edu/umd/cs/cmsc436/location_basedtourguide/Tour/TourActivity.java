@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,22 +59,34 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStart() {
         super.onStart();
 
+        // temporary for testing directions API
         findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Clicked Directions API test button");
 
-                // temporary testing directions API
+                if (mMap != null) {
+                    LatLng terrapinRow = new LatLng(38.980367, -76.942366);
+                    LatLng CSIC = new LatLng(38.990085, -76.936182);
 
-                LatLng terrapinRow = new LatLng(38.980367, -76.942366);
-                LatLng CSIC = new LatLng(38.990085, -76.936182);
+                    // Add markers
+                    mMap.addMarker((new MarkerOptions())
+                            .position(terrapinRow)
+                            .title("Marker at Terrapin Row")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mMap.addMarker((new MarkerOptions())
+                            .position(CSIC)
+                            .title("Marker at Computer Science Instruction Complex?")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
 
-                DirectionsAsyncTask task = new DirectionsAsyncTask();
-                DirectionsTaskParameter param = new DirectionsTaskParameter(mMap,
-                        terrapinRow,
-                        CSIC,
-                        "walking");
-                task.execute(param);
+                    // Query Directions API in background. AsyncTask will draw route lines for us.
+                    DirectionsAsyncTask task = new DirectionsAsyncTask();
+                    DirectionsTaskParameter param = new DirectionsTaskParameter(mMap,
+                            terrapinRow,
+                            CSIC,
+                            "walking");
+                    task.execute(param);
+                }
             }
         });
     }
