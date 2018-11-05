@@ -58,7 +58,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
