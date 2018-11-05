@@ -54,8 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddTour.AddPlacesActivity"></activity>
-        <activity android:name=".AddTour.AddTourActivity"></activity>
+        <activity android:name=".AddTour.AddPlacesActivity" />
+        <activity android:name=".AddTour.AddTourActivity" />
+        <activity android:name=".AddTour.AddDetailsActivity"></activity>
     </application>
 
 </manifest>
