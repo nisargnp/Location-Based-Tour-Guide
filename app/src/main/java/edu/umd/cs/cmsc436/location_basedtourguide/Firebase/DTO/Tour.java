@@ -10,6 +10,7 @@ public class Tour {
     private double lon;
     private String description;
     private String author;
+    private String pictureFile; // this is a filename @conor
     private int rating;
     private int numVotes;
     private List<String> places;
@@ -61,6 +62,14 @@ public class Tour {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getPictureFile() {
+        return pictureFile;
+    }
+
+    public void setPictureFile(String pictureFile) {
+        this.pictureFile = pictureFile;
     }
 
     public int getRating() {
