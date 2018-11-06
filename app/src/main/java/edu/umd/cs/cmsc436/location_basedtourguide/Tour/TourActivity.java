@@ -1,7 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
 import android.app.FragmentTransaction;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,31 +10,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsAsyncTask;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsTaskParameter;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = "tour-activity";
@@ -66,26 +50,36 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, "Clicked Directions API test button");
 
                 if (mMap != null) {
-                    LatLng terrapinRow = new LatLng(38.980367, -76.942366);
-                    LatLng CSIC = new LatLng(38.990085, -76.936182);
+                    List<Place> tourStops = new ArrayList<>();
 
-                    // Add markers
-                    mMap.addMarker((new MarkerOptions())
-                            .position(terrapinRow)
-                            .title("Marker at Terrapin Row")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    mMap.addMarker((new MarkerOptions())
-                            .position(CSIC)
-                            .title("Marker at Computer Science Instruction Complex?")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                    Place terrapinRow = new Place();
+                    terrapinRow.setName("Terrapin Row");
+                    terrapinRow.setLat(38.980367);
+                    terrapinRow.setLon(-76.942366);
 
-                    // Query Directions API in background. AsyncTask will draw route lines for us.
-                    DirectionsAsyncTask task = new DirectionsAsyncTask();
-                    DirectionsTaskParameter param = new DirectionsTaskParameter(mMap,
-                            terrapinRow,
-                            CSIC,
-                            "walking");
-                    task.execute(param);
+                    Place CSIC = new Place();
+                    CSIC.setName("Computer Science Inst...");
+                    CSIC.setLat(38.990085);
+                    CSIC.setLon(-76.936182);
+
+                    Place stamp = new Place();
+                    stamp.setName("Stamp Student Union");
+                    stamp.setLat(38.987881);
+                    stamp.setLon(-76.944855);
+
+                    Place eppley = new Place();
+                    eppley.setName("Eppley Recreational Center");
+                    eppley.setLat(38.993635);
+                    eppley.setLon(-76.945155);
+
+                    // order defines how route is drawn
+                    tourStops.add(terrapinRow);
+                    tourStops.add(CSIC);
+                    tourStops.add(stamp);
+                    tourStops.add(eppley);
+
+                    // TODO - replace this call with the passed in places and delete this test button
+                    DirectionsUtil.drawTourRoute(mMap, tourStops, true);
                 }
             }
         });
