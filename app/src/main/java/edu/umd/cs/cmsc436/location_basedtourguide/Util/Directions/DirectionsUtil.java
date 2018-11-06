@@ -15,6 +15,12 @@ public class DirectionsUtil {
 
     public static float PLACE_MARKER_COLOR = BitmapDescriptorFactory.HUE_AZURE;
 
+    /**
+     * Draw a Tour's (walking) route on a GoogleMap
+     * @param map - GoogleMap to draw on.
+     * @param tourStops - List of Place objects representing tour stops. MUST be in order.
+     * @param drawMarkers - Flag whether to draw markers along with the tour route.
+     */
     public static void drawTourRoute(GoogleMap map, List<Place> tourStops, boolean drawMarkers) {
         if (tourStops.size() > 1) {
             if (drawMarkers) {
@@ -25,9 +31,18 @@ public class DirectionsUtil {
             DirectionsAsyncTask task = new DirectionsAsyncTask();
             DirectionsTaskParameter param = buildDirectionParams(map, tourStops);
             task.execute(param);
+
+            // TODO - Zoom map after drawing... do in AsyncTask since we don't have access to JSON here?
         }
     }
 
+    /**
+     * Build DirectionsTaskParameter object for a DirectionsAPI query based on a passed in list of
+     * tour stops.
+     * @param map
+     * @param tourStops
+     * @return
+     */
     private static DirectionsTaskParameter buildDirectionParams(GoogleMap map, List<Place> tourStops) {
         // assumes the invariant that tourStops has at least 2 tours
         Place startLocation = tourStops.get(0);
@@ -53,8 +68,14 @@ public class DirectionsUtil {
         return param;
     }
 
+    /**
+     * Draw markers on a GoogleMap based on the locations in the given list of places
+     * @param map
+     * @param tourStops
+     */
     private static void addMarkers(GoogleMap map, List<Place> tourStops) {
         for (Place place : tourStops) {
+            // TODO - decide marker details
             map.addMarker((new MarkerOptions())
                     .position(new LatLng(place.getLat(), place.getLon()))
                     .title(place.getName())
