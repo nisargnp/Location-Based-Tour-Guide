@@ -1,20 +1,30 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.LocationItem;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +33,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -35,7 +46,10 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
+    FloatingActionButton fab;
+    Tour tour;
 
+    private ArrayList<Place> places;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int ADD_STOP_DETAILS = 5;
 
@@ -47,12 +61,27 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        fab = findViewById(R.id.fab);
+        tour = new Tour();
+        places = new ArrayList<Place>();
+        mAdapter = new PlacesAdapter(places);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-        //TODO: Create Adapter for recycler view
-        //mAdapter = new MyAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
 
+        prepareFakeData();
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tour.setLat(places.get(0).getLat());
+                tour.setLon(places.get(0).getLon());
+                //tour.setPlaces(places);
+                Intent output = new Intent().putExtra("Tour", (Parcelable) tour);
+                setResult(RESULT_OK, output);
+                finish();
+            }
+        });
 
         MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
         map.getMapAsync(this);
@@ -63,11 +92,35 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
 
         enableMyLocation(map);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
+
         map.setOnMapLongClickListener(this);
     }
 
@@ -86,14 +139,8 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapLongClick(LatLng latLng) {
         Intent intent = new Intent(AddPlacesActivity.this, AddDetailsActivity.class);
+        intent.putExtra("LatLng", latLng);
         startActivityForResult(intent, ADD_STOP_DETAILS);
-        map.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title("New Place")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
-
-
     }
 
     @Override
@@ -103,13 +150,57 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == ADD_STOP_DETAILS) {
             if (resultCode == RESULT_OK) {
+                Place place = new Place();
+                String title = data.getStringExtra("title");
+                String description = data.getStringExtra("description");
+                Double lat = data.getDoubleExtra("lat",0.0);
+                Double lon = data.getDoubleExtra("lon", 0.0);
+                String audioFile = data.getStringExtra("audioFile");
+                String videoFile = data.getStringExtra("videoFile");
+                String pictureFile = data.getStringExtra("pictureFile");
 
-                //TODO: add to the list of things!
+                place.setName(title);
+                place.setDescription(description);
+                place.setLon(lon);
+                place.setLat(lat);
 
-                Toast.makeText(getApplicationContext(),data.getStringExtra("Stop Title"), Toast.LENGTH_SHORT).show();
+                /*
+                place.setPictureFile();
+                place.setVideoFile();
+                place.setAudioFile();
+                */
+
+
+                places.add(place);
+                mAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(),place.getName(), Toast.LENGTH_SHORT).show();
+                map.addMarker(new MarkerOptions()
+                        .position(new LatLng(place.getLat(), place.getLon()))
+                        .title(place.getName())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
             }
         }
+    }
+
+    public void prepareFakeData() {
+
+        Place place1 = new Place();
+        place1.setName("Place One");
+        place1.setDescription("The First Place");
+        places.add(place1);
+
+        Place place2 = new Place();
+        place2.setName("Place Two");
+        place2.setDescription("The Second Place");
+        places.add(place2);
+
+        Place place3 = new Place();
+        place3.setName("Place Three");
+        place3.setDescription("The Third Place");
+        places.add(place3);
+
+        mAdapter.notifyDataSetChanged();
     }
 
 

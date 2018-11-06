@@ -68,7 +68,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/audio"
+                android:id="@+id/audio_button"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="84dp"
@@ -77,7 +77,7 @@
                 android:text="Audio" />
 
             <Button
-                android:id="@+id/video"
+                android:id="@+id/video_button"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="84dp"
