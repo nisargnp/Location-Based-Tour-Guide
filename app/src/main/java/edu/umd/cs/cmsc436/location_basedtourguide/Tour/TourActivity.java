@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 
@@ -37,6 +41,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.tourMapView, mMapFragment);
         fragmentTransaction.commit();
+
+        // TODO: use tour object to display correct data
+        Tour tour = (Tour) getIntent().getExtras().get(MainActivity.TOUR_TAG);
+        if (tour != null) Toast.makeText(TourActivity.this, "Tour Name: " + tour.getName(), Toast.LENGTH_LONG).show();
     }
 
     @Override
