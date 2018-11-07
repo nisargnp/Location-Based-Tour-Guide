@@ -1,6 +1,10 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.FragmentTransaction;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,14 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = "tour-activity";
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private GoogleMap mMap;
 
     @Override
@@ -43,8 +46,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentTransaction.commit();
 
         // TODO: use tour object to display correct data
-        Tour tour = (Tour) getIntent().getExtras().get(MainActivity.TOUR_TAG);
-        if (tour != null) Toast.makeText(TourActivity.this, "Tour Name: " + tour.getName(), Toast.LENGTH_LONG).show();
+//        Tour tour = (Tour) getIntent().getExtras().get(MainActivity.TOUR_TAG);
+//        if (tour != null) Toast.makeText(TourActivity.this, "Tour Name: " + tour.getName(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -58,35 +61,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, "Clicked Directions API test button");
 
                 if (mMap != null) {
-                    List<Place> tourStops = new ArrayList<>();
-
-                    Place terrapinRow = new Place();
-                    terrapinRow.setName("Terrapin Row");
-                    terrapinRow.setLat(38.980367);
-                    terrapinRow.setLon(-76.942366);
-
-                    Place CSIC = new Place();
-                    CSIC.setName("Computer Science Inst...");
-                    CSIC.setLat(38.990085);
-                    CSIC.setLon(-76.936182);
-
-                    Place stamp = new Place();
-                    stamp.setName("Stamp Student Union");
-                    stamp.setLat(38.987881);
-                    stamp.setLon(-76.944855);
-
-                    Place eppley = new Place();
-                    eppley.setName("Eppley Recreational Center");
-                    eppley.setLat(38.993635);
-                    eppley.setLon(-76.945155);
-
-                    // order defines how route is drawn
-                    tourStops.add(terrapinRow);
-                    tourStops.add(CSIC);
-                    tourStops.add(stamp);
-                    tourStops.add(eppley);
-
-                    // TODO - replace this call with the passed in places and delete this test button
+                    // TODO - get list of tour places and delete this test button
+                    List<Place> tourStops = DataProvider.getPlaces();
                     DirectionsUtil.drawTourRoute(mMap, tourStops, true);
                 }
             }
@@ -109,6 +85,22 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .draggable(true));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(collegePark));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+
+        showUserLocation();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                enableLocationLayer();
+            } else {
+                Toast.makeText(this, "This app requires access to your location data!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void setMapEventListeners() {
@@ -120,5 +112,32 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i(TAG, marker.getTitle() + "'s Info Window Clicked");
             }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void showUserLocation() {
+        if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            enableLocationLayer();
+        }
+    }
+
+    private void enableLocationLayer() {
+        if (mMap != null) {
+            try {
+                mMap.setMyLocationEnabled(true);
+            } catch (SecurityException e) {
+                // this catch is just here cause my IDE wasn't detecting the permission check
+                Log.e(TAG, e.toString());
+            }
+        }
+    }
+
+    private boolean needsRuntimePermission(String permission) {
+        // Check the SDK version and whether the permission is already granted.
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED);
     }
 }
