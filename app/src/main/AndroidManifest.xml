@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,11 +31,11 @@
             android:name=".PreviewTour.PreviewTourActivity"
             android:exported="true"
             android:label="@string/title_activity_preview_tour"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.umd.cs.cmsc436.location_basedtourguide.MainActivity" />
+                android:value="edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity" />
         </activity>
 
         <!--

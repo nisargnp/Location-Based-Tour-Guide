@@ -1,8 +1,9 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private String id;
     private String name;
