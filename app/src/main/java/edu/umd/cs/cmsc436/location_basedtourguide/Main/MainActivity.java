@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         setContentView(R.layout.activity_main);
 
         // TODO: get this from firebase eventually
+        DataProvider.generateTourImages(getApplicationContext());
         List<Tour> tours = DataProvider.getTours();
 
         TourItemFragment tourItemFragment = new TourItemFragment();
@@ -79,18 +80,15 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
     // long press -> show dialog to start tour directly
     @Override
     public void onListFragmentLongPress(Tour item) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Intent intent = new Intent(MainActivity.this, TourActivity.class);
-                        intent.putExtra(TOUR_TAG, item); // Serializable
-                        startActivity(intent);
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    Intent intent = new Intent(MainActivity.this, TourActivity.class);
+                    intent.putExtra(TOUR_TAG, item); // Serializable
+                    startActivity(intent);
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);

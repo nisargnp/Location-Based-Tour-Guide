@@ -1,5 +1,9 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Util.DataProvider;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,10 +13,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public final class DataProvider {
 
-    private DataProvider(){}
+    private DataProvider() {}
 
     private static List<Comment> comments;
     private static List<Place> places;
@@ -145,20 +151,40 @@ public final class DataProvider {
 
     }
 
+    @SuppressWarnings("unused")
     public static List<Comment> getComments() {
         return comments;
     }
 
+    @SuppressWarnings("unused")
     public static List<Place> getPlaces() {
         return places;
     }
 
+    @SuppressWarnings("unused")
     public static List<Tour> getTours() {
         return tours;
     }
 
+    @SuppressWarnings("unused")
     public static List<User> getUsers() {
         return users;
+    }
+
+    // call this if you want your tours to have images
+    @SuppressWarnings("unused")
+    public static void generateTourImages(Context context) {
+        Bitmap bitmapGrandCanyon = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.grand_canyon));
+        Bitmap bitmapNiagaraFalls = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.niagara_falls));
+        Bitmap bitmapUMD = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.umd));
+
+        String path;
+        path = Utils.putImageToInternalStorage(context, bitmapGrandCanyon, "images", "grand_canyon.jpg");
+        tours.get(0).setPictureFile(path);
+        path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
+        tours.get(1).setPictureFile(path);
+        path = Utils.putImageToInternalStorage(context, bitmapUMD, "images", "umd.jpg");
+        tours.get(2).setPictureFile(path);
     }
 
 }
