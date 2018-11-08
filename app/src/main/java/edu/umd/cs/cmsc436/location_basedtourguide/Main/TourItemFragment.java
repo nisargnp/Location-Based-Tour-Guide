@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 /**
@@ -24,12 +22,9 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
  */
 public class TourItemFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<Tour> tours;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,7 +50,6 @@ public class TourItemFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            tours = (List<Tour>) getArguments().getSerializable(MainActivity.TOUR_LIST_TAG);
         }
     }
 
@@ -73,7 +67,7 @@ public class TourItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new TourItemRecyclerViewAdapter(tours, mListener));
+            recyclerView.setAdapter(new TourItemRecyclerViewAdapter(DataStore.getInstance().getTourIDs(), mListener));
         }
         return view;
     }
@@ -97,7 +91,7 @@ public class TourItemFragment extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentPress(Tour item);
-        void onListFragmentLongPress(Tour item);
+        void onListFragmentPress(String tourID);
+        void onListFragmentLongPress(String tourID);
     }
 }

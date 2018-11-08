@@ -1,4 +1,4 @@
-package edu.umd.cs.cmsc436.location_basedtourguide.Util.DataProvider;
+package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -179,11 +179,11 @@ public final class DataProvider {
         Bitmap bitmapUMD = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.umd));
 
         String path;
-        path = Utils.putImageToInternalStorage(context, bitmapGrandCanyon, "images", "grand_canyon.jpg");
-        tours.get(0).setPictureFile(path);
-        path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
-        tours.get(1).setPictureFile(path);
         path = Utils.putImageToInternalStorage(context, bitmapUMD, "images", "umd.jpg");
+        tours.get(0).setPictureFile(path);
+        path = Utils.putImageToInternalStorage(context, bitmapGrandCanyon, "images", "grand_canyon.jpg");
+        tours.get(1).setPictureFile(path);
+        path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
         tours.get(2).setPictureFile(path);
     }
 

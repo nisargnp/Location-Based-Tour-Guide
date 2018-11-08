@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.CommentFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.dummy.DummyContent.DummyItem;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import java.util.List;
 
