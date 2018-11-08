@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "247182332925",
+    "firebase_url": "https://location-based-tour-guid-31237.firebaseio.com",
+    "project_id": "location-based-tour-guid-31237",
+    "storage_bucket": "location-based-tour-guid-31237.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247182332925:android:1f448acc57bd1a55",
+        "android_client_info": {
+          "package_name": "edu.umd.cs.cmsc436.location_basedtourguide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247182332925-mjfqomcqadm5t6u7k1prhg9i9apgcba3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umd.cs.cmsc436.location_basedtourguide",
+            "certificate_hash": "e166a375a3903c1d5e3dbc5a65f72755eb319baf"
+          }
+        },
+        {
+          "client_id": "247182332925-vcj8bosqaciot8geut8qkqdairj71qc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYnN_uggZJHndgeutoxASywPOhxhaclU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247182332925-vcj8bosqaciot8geut8qkqdairj71qc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
