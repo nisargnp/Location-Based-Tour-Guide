@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -18,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +30,22 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = "tour-activity";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
+    private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
+
+        // Location Services Client
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Add a map to the MapView
         MapFragment mMapFragment = MapFragment.newInstance();
@@ -59,12 +69,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Clicked Directions API test button");
-
-                if (mMap != null) {
-                    // TODO - get list of tour places and delete this test button
-                    List<Place> tourStops = DataProvider.getPlaces();
-                    DirectionsUtil.drawTourRoute(mMap, tourStops, true);
-                }
+                mMap.clear();
+                showTourRoute();
             }
         });
     }
@@ -92,10 +98,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode == GOOGLE_MAPS_LOCATION_REQUEST_CODE || requestCode == LOCATION_SERVICES_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                enableLocationLayer();
+                if (requestCode == LOCATION_SERVICES_REQUEST_CODE) {
+                    renderTourRoute();
+                } else {
+                    enableLocationLayer();
+                }
             } else {
                 Toast.makeText(this, "This app requires access to your location data!",
                         Toast.LENGTH_SHORT).show();
@@ -115,10 +124,20 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @TargetApi(Build.VERSION_CODES.M)
+    private void showTourRoute() {
+        if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_SERVICES_REQUEST_CODE);
+        } else {
+            renderTourRoute();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     private void showUserLocation() {
         if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
+                    GOOGLE_MAPS_LOCATION_REQUEST_CODE);
         } else {
             enableLocationLayer();
         }
@@ -128,6 +147,31 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mMap != null) {
             try {
                 mMap.setMyLocationEnabled(true);
+            } catch (SecurityException e) {
+                // this catch is just here cause my IDE wasn't detecting the permission check
+                Log.e(TAG, e.toString());
+            }
+        }
+    }
+
+    private void renderTourRoute() {
+        if (mMap != null) {
+            try {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        List<Place> tourStops = new ArrayList<>();
+                        if (location != null) {
+                            UserLocation userLocation = new UserLocation(location.getLatitude(),
+                                    location.getLongitude());
+                            tourStops.add(userLocation);
+                        }
+                        // TODO - get list of tour places and delete the test button
+                        tourStops.addAll(DataProvider.getPlaces());
+
+                        DirectionsUtil.drawTourRoute(mMap, tourStops, true);
+                    }
+                });
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
                 Log.e(TAG, e.toString());

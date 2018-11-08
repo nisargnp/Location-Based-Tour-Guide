@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 
@@ -31,14 +34,15 @@ import java.util.List;
 public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void, List<String>> {
     private String TAG = "directions-async-task";
     private DirectionsTaskParameter directionsTaskParameter;
+    private LatLngBounds routeBounds = null;
 
     protected List<String> doInBackground(DirectionsTaskParameter... params) {
         if (params.length < 1) {
-            Log.i(TAG, "Directions Async Task received no parameters!");
+            Log.w(TAG, "Directions Async Task received no parameters!");
             return null;
         }
 
-        // expect there only to be one argument, ignore all others
+        // expect only one argument, ignore all others
         directionsTaskParameter = params[0];
         String combinedURI = directionsTaskParameter.buildURI();
 
@@ -51,8 +55,7 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
             Log.i(TAG, "Directions URI: " + combinedURI);
             httpURLConnection = (HttpURLConnection) new URL(combinedURI).openConnection();
 
-            InputStream in = new BufferedInputStream(
-                    httpURLConnection.getInputStream());
+            InputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
 
             data = readStream(in);
 
@@ -76,13 +79,21 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
         // assumes coordinates are in order from start location to end location (directions api default)
         if (directionsTaskParameter != null && directionsTaskParameter.getMap() != null) {
             PolylineOptions polylineOptions = new PolylineOptions();
+            polylineOptions.color(Color.MAGENTA);
             for (int i = 0; i < result.size(); i++) {
                 String encodedPolyline = result.get(i);
                 List<LatLng> stepPoints = PolyUtil.decode(encodedPolyline);
                 polylineOptions.addAll(stepPoints);
             }
-            polylineOptions.color(Color.BLUE);
-            directionsTaskParameter.getMap().addPolyline(polylineOptions);
+
+            GoogleMap map = directionsTaskParameter.getMap();
+            // we may need to se the returned polyline to a static variable to delete a polyline
+            // on redraw. Unless we can just clear the whole map somehow
+            map.addPolyline(polylineOptions);
+            if (routeBounds != null) {
+                // TODO - adjust zoom padding?
+                map.moveCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 150));
+            }
         }
     }
 
@@ -121,10 +132,13 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
         String STEPS_TAG = "steps";
         String POLYLINE_TAG = "polyline";
         String POINTS_TAG = "points";
+        String BOUNDS_TAG = "bounds";
+        String NE_TAG = "northeast";
+        String SW_TAG = "southwest";
+        String LAT_TAG = "lat";
+        String LNG_TAG = "lng";
 
         List<String> result = new ArrayList<>();
-
-//            Log.i(TAG, "Parsing data: " + data);
 
         try {
             // check status for err?
@@ -134,6 +148,18 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
             if (routes.length() > 0) {
                 // if multiple routes, just use the first
                 JSONObject routeObject = routes.getJSONObject(0);
+
+                // get bounds for zooming
+                JSONObject bounds = routeObject.getJSONObject(BOUNDS_TAG);
+                JSONObject nwObj = bounds.getJSONObject(NE_TAG);
+                JSONObject seObj = bounds.getJSONObject(SW_TAG);
+
+                LatLng northeast = new LatLng(nwObj.getDouble(LAT_TAG),
+                        nwObj.getDouble(LNG_TAG));
+                LatLng southwest = new LatLng(seObj.getDouble(LAT_TAG),
+                        seObj.getDouble(LNG_TAG));
+                routeBounds = new LatLngBounds(southwest, northeast);
+
                 // each leg is the route from one "tour stop" to the next
                 JSONArray legs = routeObject.getJSONArray(LEGS_TAG);
 
