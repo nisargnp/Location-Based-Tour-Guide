@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.TourItemFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -17,10 +18,10 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Tour> mValues;
+    private final List<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    TourItemRecyclerViewAdapter(List<Tour> items, OnListFragmentInteractionListener listener) {
+    TourItemRecyclerViewAdapter(List<String> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,10 +36,14 @@ public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRe
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getName());
-        holder.mContentView.setText(mValues.get(position).getDescription());
-        holder.mImageView.setImageBitmap(Utils.getImageFromInternalStorage(mValues.get(position).getPictureFile()));
+
+        String tourID = mValues.get(position);
+        Tour tour = DataStore.getInstance().getTour(tourID);
+
+        holder.mItem = tourID;
+        holder.mIdView.setText(tour.getName());
+        holder.mContentView.setText(tour.getDescription());
+        holder.mImageView.setImageBitmap(Utils.getImageFromInternalStorage(tour.getPictureFile()));
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) mListener.onListFragmentPress(holder.mItem);
@@ -60,7 +65,7 @@ public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRe
         private final TextView mIdView;
         private final TextView mContentView;
         private final ImageView mImageView;
-        private Tour mItem;
+        private String mItem;
 
         private ViewHolder(View view) {
             super(view);

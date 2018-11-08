@@ -6,8 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -26,9 +26,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
@@ -56,8 +59,9 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentTransaction.commit();
 
         // TODO: use tour object to display correct data
-//        Tour tour = (Tour) getIntent().getExtras().get(MainActivity.TOUR_TAG);
-//        if (tour != null) Toast.makeText(TourActivity.this, "Tour Name: " + tour.getName(), Toast.LENGTH_LONG).show();
+        String tourID = getIntent().getExtras().getString(MainActivity.TOUR_TAG);
+        Tour tour = DataStore.getInstance().getTour(tourID);
+        if (tour != null) Log.d("TourActivity", "Tour Name: " + tour.getName());
     }
 
     @Override

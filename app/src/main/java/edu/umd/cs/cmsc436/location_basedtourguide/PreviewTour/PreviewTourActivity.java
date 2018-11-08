@@ -9,11 +9,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -54,8 +55,9 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
         tabLayout.setupWithViewPager(viewPager);
 
         // TODO: use tour object to display correct data
-        Tour tour = (Tour) getIntent().getExtras().get(MainActivity.TOUR_TAG);
-        if (tour != null) Toast.makeText(PreviewTourActivity.this, "Tour Name: " + tour.getName(), Toast.LENGTH_LONG).show();
+        String tourID = getIntent().getExtras().getString(MainActivity.TOUR_TAG);
+        Tour tour = DataStore.getInstance().getTour(tourID);
+        if (tour != null) Log.d("PreviewTourActivity", "Tour Name: " + tour.getName());
 
     }
 
