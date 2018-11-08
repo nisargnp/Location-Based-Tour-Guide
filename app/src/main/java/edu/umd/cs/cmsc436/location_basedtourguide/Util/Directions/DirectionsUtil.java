@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class DirectionsUtil {
     public static final String DEFAULT_TRANSPORTATION_MODE = "walking";
@@ -31,8 +32,6 @@ public class DirectionsUtil {
             DirectionsAsyncTask task = new DirectionsAsyncTask();
             DirectionsTaskParameter param = buildDirectionParams(map, tourStops);
             task.execute(param);
-
-            // TODO - Zoom map after drawing... do in AsyncTask since we don't have access to JSON here?
         }
     }
 
@@ -76,10 +75,13 @@ public class DirectionsUtil {
     private static void addMarkers(GoogleMap map, List<Place> tourStops) {
         for (Place place : tourStops) {
             // TODO - decide marker details
-            map.addMarker((new MarkerOptions())
-                    .position(new LatLng(place.getLat(), place.getLon()))
-                    .title(place.getName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(PLACE_MARKER_COLOR)));
+            // add a marker for all tour stops except the user's location
+            if (!(place instanceof UserLocation)) {
+                map.addMarker((new MarkerOptions())
+                        .position(new LatLng(place.getLat(), place.getLon()))
+                        .title(place.getName())
+                        .icon(BitmapDescriptorFactory.defaultMarker(PLACE_MARKER_COLOR)));
+            }
         }
     }
 }

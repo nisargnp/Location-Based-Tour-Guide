@@ -15,3 +15,7 @@ Tools > SDK Manager > SDK Tools > Check `Google Play Services` > Apply > Resync 
 - Shared Directions API key stored as a static variable in the `DirectionsTaskParameter` class.
 - `DirectionsAsyncTask` will query the Google Directions API, given a `DirectionsTaskParameter` object which will have a Map, and Lat/Lng Locations representing Tour Stops. The `DirectionsAsyncTask` will use the Directions API to map an route between all these stops, and draw the route on the given Map.
 - Unfortunetly, this API costs $$$. `$0.005` per request. We have `$100` credit right now, so max <b>20,000 requests</b>. Test this sparingly.
+
+### Location Services API
+
+- If using an AVD emulator, on emulator start up, you need to set your location Lat/Lng. From the emulator screen's side bar: `...` > `Location` > Enter your Lat/Lng.
