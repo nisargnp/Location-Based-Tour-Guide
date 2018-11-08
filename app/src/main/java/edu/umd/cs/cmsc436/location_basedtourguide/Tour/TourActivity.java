@@ -3,6 +3,7 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -39,8 +40,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String TAG = "tour-activity";
     private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
+
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private Tour mTour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +61,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentTransaction.add(R.id.tourMapView, mMapFragment);
         fragmentTransaction.commit();
 
-        // TODO: use tour object to display correct data
-        String tourID = getIntent().getExtras().getString(MainActivity.TOUR_TAG);
-        Tour tour = DataStore.getInstance().getTour(tourID);
-        if (tour != null) Log.d("TourActivity", "Tour Name: " + tour.getName());
+        Intent givenIntent = getIntent();
+        if (givenIntent != null) {
+            String tourID = givenIntent.getExtras().getString(MainActivity.TOUR_TAG);
+            mTour = DataStore.getInstance().getTour(tourID);
+            setTitle(mTour.getName());
+        }
+        if (mTour != null) Log.d("TourActivity", "Tour Name: " + mTour.getName());
     }
 
     @Override
@@ -85,16 +91,9 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setMapEventListeners();
 
-        // TODO - change this to zoom to user location (check for permissions)
-        // TODO - add markers based on passed in tour
-        LatLng collegePark = new LatLng(38.9897, -76.9378);
-        mMap.addMarker(new MarkerOptions()
-                .position(collegePark)
-                .title("Marker in College Park")
-                .snippet("Some description text")
-                .draggable(true));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(collegePark));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+        LatLng tourCoordinates = new LatLng(mTour.getLat(), mTour.getLon());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(tourCoordinates));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         showUserLocation();
     }
@@ -170,8 +169,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     location.getLongitude());
                             tourStops.add(userLocation);
                         }
-                        // TODO - get list of tour places and delete the test button
-                        tourStops.addAll(DataProvider.getPlaces());
+                        // TODO - move this logic to DataStore
+                        for (String stopId : mTour.getPlaces()) {
+                            tourStops.add(DataStore.getInstance().getPlace(stopId));
+                        }
 
                         DirectionsUtil.drawTourRoute(mMap, tourStops, true);
                     }
