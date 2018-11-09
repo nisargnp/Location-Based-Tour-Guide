@@ -1,15 +1,13 @@
 package edu.umd.cs.cmsc436.location_basedtourguide;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,15 +16,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     ImageView placeImg;
     TextView placeDesc;
+    VideoView videoView;
     GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.place_info);
+        setContentView(R.layout.activity_place_info);
 
         placeImg = findViewById(R.id.place_img);
         placeDesc = findViewById(R.id.place_desc);
+        videoView = findViewById(R.id.videoview);
 
         placeDesc.setText("This is a historic place to be remembered! It indeed is!");
 
