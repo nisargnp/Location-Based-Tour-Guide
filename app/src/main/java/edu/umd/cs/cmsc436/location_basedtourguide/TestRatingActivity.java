@@ -9,7 +9,7 @@ public class TestRatingActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_rating);
+        setContentView(R.layout.activity_test_rating);
         FragmentManager fM = getFragmentManager();
 
         RatingFragment rF = (RatingFragment) fM.findFragmentById(R.id.rating_fragment_container);

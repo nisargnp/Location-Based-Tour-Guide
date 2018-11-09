@@ -23,7 +23,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.place_info);
+        setContentView(R.layout.activity_place_info);
 
         placeImg = findViewById(R.id.place_img);
         placeDesc = findViewById(R.id.place_desc);
