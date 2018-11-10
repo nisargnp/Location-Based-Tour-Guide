@@ -41,20 +41,12 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         tmpVideoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*LayoutInflater inflater = getLayoutInflater();
-                AlertDialog.Builder builder = new AlertDialog.Builder(PlaceInfoActivity.this);
+                // Test uri of video to play
+                Bundle b = new Bundle();
+                b.putString("uri", "android.resource://"+getPackageName()+"/"+R.raw.teapot);
 
-                builder.setTitle("Title").setView(inflater.inflate(R.layout.fragment_video, null));
-                VideoView videoView = findViewById(R.id.videoview);
-                Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.teapot);
-                if (videoView != null) {
-                    videoView.setVideoURI(uri);
-                    videoView.start();
-                }
-
-                AlertDialog dialog = builder.create();
-                dialog.show();*/
                 VideoDialogFragment vidDialog = new VideoDialogFragment();
+                vidDialog.setArguments(b);
                 vidDialog.show(getFragmentManager(), "video");
             }
         });
