@@ -17,6 +17,11 @@ import android.widget.VideoView;
 /*
  * Based off of:
  * https://developer.android.com/guide/topics/ui/dialogs#java
+ *
+ * Plays a video in a DialogFragment. Pause and Play buttons implemented.
+ * Pass in the video's uri name as a string by calling setArguments(Bundle) in the Fragment's host.
+ *
+ * Clicking out of the Dialog stops the video. Rotating the screen resets the video.
  */
 public class VideoDialogFragment extends DialogFragment {
     Button pause, play;
@@ -30,8 +35,9 @@ public class VideoDialogFragment extends DialogFragment {
 
         VideoView videoView = v.findViewById(R.id.videoview);
 
-
-        Uri uri = Uri.parse("android.resource://"+getActivity().getPackageName()+"/"+R.raw.teapot);
+        Bundle b = getArguments(); // get name of uri from passed in bundle
+        String uriName = b.getString("uri");
+        Uri uri = Uri.parse(uriName);
 
         videoView.setVideoURI(uri);
         videoView.start();
