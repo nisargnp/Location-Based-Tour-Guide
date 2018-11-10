@@ -26,6 +26,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
     TextView placeDesc;
     VideoView videoView;
     Button tmpVideoButton;
+    Button tmpAudioButton;
     GoogleMap map;
 
     @Override
@@ -37,6 +38,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         placeDesc = findViewById(R.id.place_desc);
         videoView = findViewById(R.id.videoview);
         tmpVideoButton = findViewById(R.id.vid_button);
+        tmpAudioButton = findViewById(R.id.audio_button);
 
         tmpVideoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +50,17 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
                 VideoDialogFragment vidDialog = new VideoDialogFragment();
                 vidDialog.setArguments(b);
                 vidDialog.show(getFragmentManager(), "video");
+            }
+        });
+
+        tmpAudioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putString("uri", "android.resource://"+getPackageName()+"/"+R.raw.posin);
+                AudioDialogFragment audioDialog = new AudioDialogFragment();
+                audioDialog.setArguments(b);
+                audioDialog.show(getFragmentManager(), "audio");
             }
         });
         placeDesc.setText("This is a historic place to be remembered! It indeed is!");

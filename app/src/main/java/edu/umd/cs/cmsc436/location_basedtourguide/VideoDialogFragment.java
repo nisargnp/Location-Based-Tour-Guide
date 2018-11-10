@@ -5,13 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 /*
@@ -25,15 +21,16 @@ import android.widget.VideoView;
  */
 public class VideoDialogFragment extends DialogFragment {
     Button pause, play;
+    VideoView videoView;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View v = inflater.inflate(R.layout.fragment_video, null);
+        View v = inflater.inflate(R.layout.fragment_video_dialog, null);
         builder.setView(v);
 
-        VideoView videoView = v.findViewById(R.id.videoview);
+        videoView = v.findViewById(R.id.videoview);
 
         Bundle b = getArguments(); // get name of uri from passed in bundle
         String uriName = b.getString("uri");
@@ -59,5 +56,12 @@ public class VideoDialogFragment extends DialogFragment {
             }
         });
         return builder.create();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // This might not do anything, since it may already be disposed of
+        videoView.stopPlayback();
     }
 }
