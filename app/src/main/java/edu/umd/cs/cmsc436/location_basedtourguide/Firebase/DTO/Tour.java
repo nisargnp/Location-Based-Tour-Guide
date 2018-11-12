@@ -53,23 +53,23 @@ public class Tour implements Serializable {
         comments = c;
     }
 
+    public void updateTour(Tour t){
+
+        setName(t.getName());
+        setLat(t.getLat());
+        setLon(t.getLon());
+        setDescription(t.getDescription());
+        setAuthor(t.getAuthor());
+        setPictureFile(t.getPictureFile());
+        setRating(t.getRating());
+        setNumVotes(t.getNumVotes());
+        setPlaces(t.getPlaces());
+        setComments(t.getComments());
+    }
+
     public String getId() {
         return this.id;
     }
-
-    public void onDataChange(DataSnapshot snap){
-        
-    }
-
-    //this method will get all values for the tour and set them to the
-    // values so firebase is only called once
-    // this has to be called if updated information is wanted before each get call
-    public void get(){
-
-
-
-    }
-
 
     public void setId(String id) {//this shouldnt be called
         Map<String, Object> ups = new HashMap<>();
