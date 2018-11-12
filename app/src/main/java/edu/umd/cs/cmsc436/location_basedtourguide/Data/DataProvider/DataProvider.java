@@ -4,6 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +32,12 @@ public final class DataProvider {
     private static List<Place> places;
     private static List<Tour> tours;
     private static List<User> users;
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static DatabaseReference firebaseRefTours = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Tours");//is this the right ref?
+    private static DatabaseReference firebaseRefPlaces = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Places");//is this the right ref?
+    private static DatabaseReference firebaseRefComments = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Comments");//is this the right ref?
+    private static DatabaseReference firebaseRefUsers = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Users");//is this the right ref?
+
 
     static {
 
@@ -149,6 +163,83 @@ public final class DataProvider {
         tour3.setComments(new ArrayList<>());
         tours.add(tour3);
 
+
+
+        ValueEventListener TourListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Tour ChangedTour = dataSnapshot.getValue(Tour.class);
+                String i = ChangedTour.getId();
+                Tour ThisTour = null;
+                for(Tour t : tours){
+                    String id = t.getId();
+                    if(i.equals(id)){
+                        t.updateTour(ChangedTour);
+                    }
+                }
+                if(ThisTour == null){
+                    tours.add(ChangedTour);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Log.i("","Canceled Read");
+            }
+        };
+
+        ValueEventListener PlaceListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Place ChangedPlace = dataSnapshot.getValue(Place.class);
+                String i = ChangedPlace.getId();
+                Place ThisPlace = null;
+                for(Place p : places){
+                    String id = p.getId();
+                    if(i.equals(id)){
+                        p.updatePlace(ChangedPlace);
+                    }
+                }
+                if(ThisPlace == null){
+                    places.add(ChangedPlace);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Log.i("","Canceled Read");
+            }
+        };
+
+        ValueEventListener CommentListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //this should be the same for comment
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Log.i("","Canceled Read");
+            }
+        };
+
+        ValueEventListener UserListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //this should be the same for User
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Log.i("","Canceled Read");
+            }
+        };
+
+        firebaseRefTours.addValueEventListener(TourListener);
+        firebaseRefPlaces.addValueEventListener(PlaceListener);
+        firebaseRefComments.addValueEventListener(CommentListener);
+        firebaseRefUsers.addValueEventListener(UserListener);
+
     }
 
     @SuppressWarnings("unused")
@@ -185,6 +276,10 @@ public final class DataProvider {
         tours.get(1).setPictureFile(path);
         path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
         tours.get(2).setPictureFile(path);
+    }
+
+    public void onDataChanged(){
+
     }
 
 }
