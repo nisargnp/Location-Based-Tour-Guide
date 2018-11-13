@@ -3,12 +3,15 @@ package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -74,9 +77,10 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tour.setLat(places.get(0).getLat());
-                tour.setLon(places.get(0).getLon());
-                //tour.setPlaces(places);
+
+                Bundle bundle = new Bundle();
+
+
                 Intent output = new Intent().putExtra("Tour", (Parcelable) tour);
                 setResult(RESULT_OK, output);
                 finish();
@@ -151,29 +155,18 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
         if (requestCode == ADD_STOP_DETAILS) {
             if (resultCode == RESULT_OK) {
                 Place place = new Place();
-                String title = data.getStringExtra("title");
-                String description = data.getStringExtra("description");
-                Double lat = data.getDoubleExtra("lat",0.0);
-                Double lon = data.getDoubleExtra("lon", 0.0);
-                String audioFile = data.getStringExtra("audioFile");
-                String videoFile = data.getStringExtra("videoFile");
-                String pictureFile = data.getStringExtra("pictureFile");
+                Bundle bundle = data.getExtras();
+                place.setName(bundle.getString("title"));
+                place.setDescription(bundle.getString("description"));
+                place.setLon(bundle.getDouble("lon"));
+                place.setLat(bundle.getDouble("lat"));
+                place.setPictureFile(bundle.getString("imageFilePath"));
 
-                place.setName(title);
-                place.setDescription(description);
-                place.setLon(lon);
-                place.setLat(lat);
-
-                /*
-                place.setPictureFile();
-                place.setVideoFile();
-                place.setAudioFile();
-                */
 
 
                 places.add(place);
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(getApplicationContext(),place.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), place.getName() + " added to tour", Toast.LENGTH_LONG).show();
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(place.getLat(), place.getLon()))
                         .title(place.getName())
@@ -188,16 +181,27 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
         Place place1 = new Place();
         place1.setName("Place One");
         place1.setDescription("The First Place");
+        Bitmap bitmapUMD = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.umd));
+        String path = Utils.putImageToInternalStorage(getApplicationContext(), bitmapUMD, "images", "umd.jpg");
+        place1.setPictureFile(path);
+
         places.add(place1);
 
         Place place2 = new Place();
         place2.setName("Place Two");
         place2.setDescription("The Second Place");
+        Bitmap bitmapNiagaraFalls = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.niagara_falls));
+        path = Utils.putImageToInternalStorage(getApplicationContext(), bitmapNiagaraFalls, "images", "niagara_falls.jpg");
+        place2.setPictureFile(path);
+
         places.add(place2);
 
         Place place3 = new Place();
         place3.setName("Place Three");
         place3.setDescription("The Third Place");
+        Bitmap bitmapGrandCanyon = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.grand_canyon));
+        path = Utils.putImageToInternalStorage(getApplicationContext(), bitmapGrandCanyon, "images", "grand_canyon.jpg");
+        place3.setPictureFile(path);
         places.add(place3);
 
         mAdapter.notifyDataSetChanged();

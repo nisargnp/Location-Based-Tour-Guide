@@ -3,6 +3,8 @@ package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +26,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 
 public class AddTourActivity extends AppCompatActivity {
 
@@ -34,6 +40,7 @@ public class AddTourActivity extends AppCompatActivity {
     Button galleryButton;
     Button cameraButton;
     Tour tour;
+    String imageFilePath;
     private Uri selectedImage;
 
     private static final int USE_CAMERA = 0;
@@ -46,7 +53,7 @@ public class AddTourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tour);
 
-
+        tour = new Tour();
         tourImageView = findViewById(R.id.tour_image);
         titleTextView = findViewById(R.id.tour_title);
         descriptionTextView = findViewById(R.id.tour_description);
@@ -68,11 +75,11 @@ public class AddTourActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (tour == null) {
-                    Toast.makeText(getApplicationContext(), "Tour must have stops",  Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Tour must have atleast one stop",  Toast.LENGTH_SHORT).show();
                 } else {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
-                    tour.setPictureFile(getRealPathFromURI(getApplicationContext(), selectedImage));
+                    tour.setPictureFile(imageFilePath);
                 }
             }
         });
@@ -111,8 +118,10 @@ public class AddTourActivity extends AppCompatActivity {
             case 0:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        selectedImage = imageReturnedIntent.getData();
-                        tourImageView.setImageURI(selectedImage);
+                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                        tourImageView.setImageBitmap(selectedImage);
+                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+
                     }
                 }
 
@@ -120,32 +129,19 @@ public class AddTourActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        selectedImage = imageReturnedIntent.getData();
-                        tourImageView.setImageURI(selectedImage);
+                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                        tourImageView.setImageBitmap(selectedImage);
+                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+
                     }
                 }
                 break;
             case 2:
                 if(resultCode == RESULT_OK) {
-                    tour = getIntent().getExtras().getParcelable("Tour");
+                    Bundle bundle = imageReturnedIntent.getExtras();
+                    tour.setPlaces(bundle.getStringArrayList("places"));
                 }
         }
     }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
 
 }

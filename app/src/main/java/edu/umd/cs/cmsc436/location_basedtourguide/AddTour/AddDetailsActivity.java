@@ -1,10 +1,12 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Parcelable;
@@ -33,7 +35,7 @@ public class AddDetailsActivity extends AppCompatActivity {
     TextView stopDescription;
     ImageView stopImage;
     private Uri selectedImage;
-    private String filename;
+    private String imagePathFilename;
 
     private static final int USE_CAMERA = 0;
     private static final int CHOOSE_PICTURE = 1;
@@ -52,7 +54,6 @@ public class AddDetailsActivity extends AppCompatActivity {
         audioButton = findViewById(R.id.audio_button);
         videoButton = findViewById(R.id.video_button);
 
-        filename = getExternalCacheDir().getAbsolutePath();
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,16 +93,16 @@ public class AddDetailsActivity extends AppCompatActivity {
 
 
                 Intent output = new Intent();
-                output.putExtra("lat", l.latitude);
-                output.putExtra("lon", l.longitude);
-                output.putExtra("title", stopTitle.getText().toString());
-                output.putExtra("description", stopDescription.getText().toString());
 
-                /*
-                output.putExtra("audioFile", );
-                output.putExtra("videoFile", );
-                output.putExtra("pictureFile", );
-                */
+                Bundle bundle = new Bundle();
+                bundle.putDouble("lat", l.latitude);
+                bundle.putDouble("lon", l.longitude);
+                bundle.putString("title", stopTitle.getText().toString());
+                bundle.putString("description", stopDescription.getText().toString());
+                bundle.putString("imageFilePath", imagePathFilename);
+                //bundle.putString("videoFilePath", );
+                //bundle.putString("audioFilePath", );
+                output.putExtras(bundle);
 
 
                 setResult(RESULT_OK, output);
@@ -129,36 +130,25 @@ public class AddDetailsActivity extends AppCompatActivity {
             case 0:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        selectedImage = imageReturnedIntent.getData();
-                        stopImage.setImageURI(selectedImage);
+                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                        stopImage.setImageBitmap(selectedImage);
+                        imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+
                     }
                 }
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        selectedImage = imageReturnedIntent.getData();
-                        stopImage.setImageURI(selectedImage);
+                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                        stopImage.setImageBitmap(selectedImage);
+                        imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
                     }
                 }
                 break;
         }
     }
 
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
 
 
 }
