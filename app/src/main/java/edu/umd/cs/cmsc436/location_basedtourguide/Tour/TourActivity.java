@@ -43,18 +43,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String TAG = "tour-activity";
     private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
-    private static final long LOCATION_REQUEST_INTERVAL = 5000;
-    private static final long LOCATION_REQUEST_MIN_INTERVAL = 5000;
-    /**
-     * Radius of tour stops. If users enter this radius, they will be considered to be "at" a
-     * tour stop. 100 meters ~= 330 feet
-     */
-    private static final float TOUR_STOP_RADUIS_METERS = 100;
 
+    private FusedLocationProviderClient mFusedLocationClient;
     private TextView mTestText;
     private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest mLocationRequest;
     private Tour mTour;
     private int mNextStopIndex = -1;
     private List<Place> mTourPlaces;
@@ -71,12 +63,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         // TODO - remove this test view
         mTestText = findViewById(R.id.testTextView);
 
-        // Location Services Client
+        // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
-        mLocationRequest.setFastestInterval(LOCATION_REQUEST_MIN_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         // Add a map to the MapView
         MapFragment mMapFragment = MapFragment.newInstance();
@@ -197,28 +185,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             try {
                 // show user location on map
                 mMap.setMyLocationEnabled(true);
-                // start tracking user location
-                mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        if (locationResult == null) {
-                            return;
-                        }
-                        for (Location location : locationResult.getLocations()) {
-                            Log.i(TAG, location.getLatitude() + ", " + location.getLongitude());
-                            // TODO - move into a service
-                            // TODO - on arrival, notification if not active > autoplay > change preview view OR end fragment
-                            // TODO - notification bar if app not active
-                            if (mNextStopIndex >= 0) {
-                                float metersToNextStop = location.distanceTo(mTourLocations.get(mNextStopIndex));
-                                Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
-                                if (metersToNextStop < TOUR_STOP_RADUIS_METERS) {
-                                    nextTourStop();
-                                }
-                            }
-                        }
-                    };
-                }, null);
+
+                // TODO - start tracking user location service
+                // listen on message - broadcast receiver?
+                // pass service next location lat lon somehow
+                // increment index
+                //
+
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
                 Log.e(TAG, e.toString());
@@ -269,6 +242,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // increment tour stop
         mNextStopIndex += 1;
+        // TODO - actually update the place preview view when it is made
         mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
     }
 
