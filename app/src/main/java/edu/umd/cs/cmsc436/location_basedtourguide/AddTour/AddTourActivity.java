@@ -40,6 +40,7 @@ public class AddTourActivity extends AppCompatActivity {
     Button galleryButton;
     Button cameraButton;
     Tour tour;
+    String imageFilePath;
     private Uri selectedImage;
 
     private static final int USE_CAMERA = 0;
@@ -78,6 +79,7 @@ public class AddTourActivity extends AppCompatActivity {
                 } else {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
+                    tour.setPictureFile(imageFilePath);
                 }
             }
         });
@@ -118,8 +120,7 @@ public class AddTourActivity extends AppCompatActivity {
                     if (imageReturnedIntent != null) {
                         Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
                         tourImageView.setImageBitmap(selectedImage);
-                        String path = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
-                        tour.setPictureFile(path);
+                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
 
                     }
                 }
@@ -130,8 +131,8 @@ public class AddTourActivity extends AppCompatActivity {
                     if (imageReturnedIntent != null) {
                         Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
                         tourImageView.setImageBitmap(selectedImage);
-                        String path = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
-                        tour.setPictureFile(path);
+                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+
                     }
                 }
                 break;
@@ -142,21 +143,5 @@ public class AddTourActivity extends AppCompatActivity {
                 }
         }
     }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
 
 }
