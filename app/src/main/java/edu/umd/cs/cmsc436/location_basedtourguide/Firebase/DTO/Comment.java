@@ -9,6 +9,11 @@ public class Comment implements Serializable {
     private String author;
     private String text;
 
+    public void updateComment(Comment c){
+        setAuthor(c.getAuthor());
+        setText(c.getText());
+    }
+
     public String getId() {
         return id;
     }

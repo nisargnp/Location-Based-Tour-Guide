@@ -9,6 +9,11 @@ public class User implements Serializable {
     private String name;
     private List<String> tours;
 
+    public void updateUser(User u){
+        setName(u.getName());
+        setTours(u.getTours());
+    }
+
     public String getId() {
         return id;
     }
