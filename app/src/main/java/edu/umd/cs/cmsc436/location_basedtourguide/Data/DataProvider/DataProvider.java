@@ -214,7 +214,18 @@ public final class DataProvider {
         ValueEventListener CommentListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //this should be the same for comment
+                Comment ChangedComment = dataSnapshot.getValue(Comment.class);
+                String i = ChangedComment.getId();
+                Comment ThisComment = null;
+                for(Comment p : comments){
+                    String id = p.getId();
+                    if(i.equals(id)){
+                        p.updateComment(ChangedComment);
+                    }
+                }
+                if(ThisComment == null){
+                    comments.add(ChangedComment);
+                }
             }
 
             @Override
@@ -226,7 +237,18 @@ public final class DataProvider {
         ValueEventListener UserListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //this should be the same for User
+                User ChangedUser = dataSnapshot.getValue(User.class);
+                String i = ChangedUser.getId();
+                User ThisUser = null;
+                for(User p : users){
+                    String id = p.getId();
+                    if(i.equals(id)){
+                        p.updateUser(ChangedUser);
+                    }
+                }
+                if(ThisUser == null){
+                    users.add(ChangedUser);
+                }
             }
 
             @Override
