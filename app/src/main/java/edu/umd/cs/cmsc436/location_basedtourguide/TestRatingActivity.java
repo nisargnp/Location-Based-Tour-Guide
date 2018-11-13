@@ -3,7 +3,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.Fragment;
 
 public class TestRatingActivity extends Activity {
     @Override
