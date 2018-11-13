@@ -10,13 +10,13 @@
     <Button
         android:id="@+id/play_audio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="||" />
+        android:layout_height="wrap_content" />
 
     <SeekBar
         android:id="@+id/audio_seekbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/play_audio"/>
+        android:layout_toEndOf="@id/play_audio"
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

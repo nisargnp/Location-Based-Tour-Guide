@@ -70,6 +70,7 @@ public class AudioDialogFragment extends DialogFragment {
         });
 
         play = v.findViewById(R.id.play_audio);
+        play.setText("||");
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +78,7 @@ public class AudioDialogFragment extends DialogFragment {
                     // Pause audio
                     mediaPlayer.pause();
                     isPlaying = false;
-                    play.setText("Play");
+                    play.setText("\u25B6");
                 } else {
                     // Play audio
                     mediaPlayer.start();
