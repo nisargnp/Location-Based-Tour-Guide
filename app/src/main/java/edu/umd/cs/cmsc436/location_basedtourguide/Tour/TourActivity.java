@@ -37,9 +37,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public static String LATEST_LOCATION_LAT = "latest-location-lat";
+    public static String LATEST_LOCATION_LON = "latest-location-lon";
     private String TAG = "tour-activity";
     private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
@@ -48,7 +51,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView mTestText;
     private GoogleMap mMap;
     private Tour mTour;
-    private int mNextStopIndex = -1;
+    private int mNextStopIndex = 0;
     private List<Place> mTourPlaces;
     /**
      * Location objects to use Location helper functions for getting distance in meters
@@ -98,7 +101,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTourLocations.add(location);
 
                 // Initialize next tour stop
-                mNextStopIndex = 0;
                 mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
             }
         }
@@ -190,8 +192,16 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // listen on message - broadcast receiver?
                 // pass service next location lat lon somehow
                 // increment index
-                //
 
+                Log.i(TAG, "start locationIntent");
+
+                Location nextStop = mTourLocations.get(mNextStopIndex);
+                Intent locationIntent = new Intent(this, LocationTrackingService.class);
+
+                locationIntent.putExtra(LATEST_LOCATION_LAT,nextStop.getLatitude());
+                locationIntent.putExtra(LATEST_LOCATION_LON,nextStop.getLongitude());
+
+                startService(locationIntent);
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
                 Log.e(TAG, e.toString());

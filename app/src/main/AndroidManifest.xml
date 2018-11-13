@@ -87,6 +87,8 @@
         <activity android:name=".AddTour.AddTourActivity" />
         <activity android:name=".AddTour.AddDetailsActivity"></activity>
 
+        <service android:name=".Util.Location.LocationTrackingService" />
+
     </application>
 
 </manifest>
