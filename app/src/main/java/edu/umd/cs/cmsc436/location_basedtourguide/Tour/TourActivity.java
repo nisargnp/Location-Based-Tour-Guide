@@ -8,12 +8,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,13 +26,11 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
@@ -40,18 +43,40 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String TAG = "tour-activity";
     private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
+    private static final long LOCATION_REQUEST_INTERVAL = 5000;
+    private static final long LOCATION_REQUEST_MIN_INTERVAL = 5000;
+    /**
+     * Radius of tour stops. If users enter this radius, they will be considered to be "at" a
+     * tour stop. 100 meters ~= 330 feet
+     */
+    private static final float TOUR_STOP_RADUIS_METERS = 100;
 
+    private TextView mTestText;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
     private Tour mTour;
+    private int mNextStopIndex = -1;
+    private List<Place> mTourPlaces;
+    /**
+     * Location objects to use Location helper functions for getting distance in meters
+     */
+    private List<Location> mTourLocations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
+        // TODO - remove this test view
+        mTestText = findViewById(R.id.testTextView);
+
         // Location Services Client
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
+        mLocationRequest.setFastestInterval(LOCATION_REQUEST_MIN_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         // Add a map to the MapView
         MapFragment mMapFragment = MapFragment.newInstance();
@@ -67,7 +92,28 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             mTour = DataStore.getInstance().getTour(tourID);
             setTitle(mTour.getName());
         }
-        if (mTour != null) Log.d("TourActivity", "Tour Name: " + mTour.getName());
+
+        if (mTour != null) {
+            Log.d("TourActivity", "Tour Name: " + mTour.getName());
+
+            // Get list of stops for the tour
+            mTourPlaces = new ArrayList<>();
+            mTourLocations = new ArrayList<>();
+            for (String stopId : mTour.getPlaces()) {
+                Place place = DataStore.getInstance().getPlace(stopId);
+                // TODO - move this logic to DataStore
+                mTourPlaces.add(place);
+
+                Location location = new Location("temp");
+                location.setLatitude(place.getLat());
+                location.setLongitude(place.getLon());
+                mTourLocations.add(location);
+
+                // Initialize next tour stop
+                mNextStopIndex = 0;
+                mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
+            }
+        }
     }
 
     @Override
@@ -149,7 +195,30 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void enableLocationLayer() {
         if (mMap != null) {
             try {
+                // show user location on map
                 mMap.setMyLocationEnabled(true);
+                // start tracking user location
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null) {
+                            return;
+                        }
+                        for (Location location : locationResult.getLocations()) {
+                            Log.i(TAG, location.getLatitude() + ", " + location.getLongitude());
+                            // TODO - move into a service
+                            // TODO - on arrival, notification if not active > autoplay > change preview view OR end fragment
+                            // TODO - notification bar if app not active
+                            if (mNextStopIndex >= 0) {
+                                float metersToNextStop = location.distanceTo(mTourLocations.get(mNextStopIndex));
+                                Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
+                                if (metersToNextStop < TOUR_STOP_RADUIS_METERS) {
+                                    nextTourStop();
+                                }
+                            }
+                        }
+                    };
+                }, null);
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
                 Log.e(TAG, e.toString());
@@ -169,11 +238,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     location.getLongitude());
                             tourStops.add(userLocation);
                         }
-                        // TODO - move this logic to DataStore
-                        for (String stopId : mTour.getPlaces()) {
-                            tourStops.add(DataStore.getInstance().getPlace(stopId));
-                        }
-
+                        tourStops.addAll(mTourPlaces);
                         DirectionsUtil.drawTourRoute(mMap, tourStops, true);
                     }
                 });
@@ -182,6 +247,29 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG, e.toString());
             }
         }
+    }
+
+    /**
+     * Call when the user reaches the current tour stop. Will update UI and variables for the next
+     * tour stop
+     */
+    private void nextTourStop() {
+        // show notification for stop just arrived at, if not beginning of tour
+        Place arrivedPlace = mTourPlaces.get(mNextStopIndex);
+        String notificationMessage = "Arrived at " + arrivedPlace.getName();
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.snackBarView), notificationMessage, 10000);
+        snackbar.setAction("More Details", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO - actually play media
+                Log.i(TAG, "Play media for: " + arrivedPlace.getName());
+            }
+        });
+        snackbar.show();
+
+        // increment tour stop
+        mNextStopIndex += 1;
+        mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
     }
 
     private boolean needsRuntimePermission(String permission) {
