@@ -17,18 +17,11 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-        android:id="@+id/pause_vid"
-        android:layout_width="wrap_content"
+        android:id="@+id/play_pause_vid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pause"
         android:layout_below="@id/videoview"/>
 
-    <Button
-        android:id="@+id/play_vid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:layout_toEndOf="@id/pause_vid"
-        android:layout_below="@id/videoview"/>
 
 </RelativeLayout>

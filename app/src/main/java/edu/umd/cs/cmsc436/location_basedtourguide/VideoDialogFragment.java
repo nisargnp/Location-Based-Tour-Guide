@@ -20,8 +20,9 @@ import android.widget.VideoView;
  * Clicking out of the Dialog stops the video. Rotating the screen resets the video.
  */
 public class VideoDialogFragment extends DialogFragment {
-    Button pause, play;
+
     VideoView videoView;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -30,7 +31,7 @@ public class VideoDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_video_dialog, null);
         builder.setView(v);
 
-        videoView = v.findViewById(R.id.videoview);
+        VideoView videoView = v.findViewById(R.id.videoview);
 
         Bundle b = getArguments(); // get name of uri from passed in bundle
         String uriName = b.getString("uri");
@@ -39,29 +40,29 @@ public class VideoDialogFragment extends DialogFragment {
         videoView.setVideoURI(uri);
         videoView.start();
 
-        pause = v.findViewById(R.id.pause_vid);
-        pause.setOnClickListener(new View.OnClickListener() {
+        Button buttonPlayPause = v.findViewById(R.id.play_pause_vid);
+        buttonPlayPause.setText("||");
+        buttonPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (videoView.isPlaying())
+                if (videoView.isPlaying()) {
                     videoView.pause();
-            }
-        });
-        play = v.findViewById(R.id.play_vid);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!videoView.isPlaying())
+                    buttonPlayPause.setText("\u25B6");
+                } else {
                     videoView.start();
+                    buttonPlayPause.setText("||");
+                }
+
             }
         });
+
         return builder.create();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // This might not do anything, since it may already be disposed of
-        videoView.stopPlayback();
+        if (videoView != null)
+            videoView.stopPlayback();
     }
 }
