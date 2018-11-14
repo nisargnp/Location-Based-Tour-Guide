@@ -42,8 +42,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTracking
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
-    public static final String LATEST_LOCATION_LAT = "latest-location-lat";
-    public static final String LATEST_LOCATION_LON = "latest-location-lon";
+    public static final String TOUR_STOP_DATA = "tour-stop-data";
     public static final String LOCATION_DATA_ACTION =
             "edu.umd.cs.cmsc436.location_basedtourguide.Tour.LOCATION_DATA_ACTION";
     public static final int IS_ALIVE = Activity.RESULT_FIRST_USER;
@@ -56,9 +55,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView mTestText;
     private GoogleMap mMap;
     private Tour mTour;
-    private int mNextStopIndex = 0;
     private List<Place> mTourPlaces;
     private BroadcastReceiver mLocationDataReceiver;
+    private int localNextStopIndex = 0;
+
     /**
      * Location objects to use Location helper functions for getting distance in meters
      */
@@ -84,16 +84,15 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentTransaction.add(R.id.tourMapView, mMapFragment);
         fragmentTransaction.commit();
 
+        // kill location tracking service if one exists
+        stopService(new Intent(this, LocationTrackingService.class));
+
         Intent givenIntent = getIntent();
         if (givenIntent != null) {
             String tourID = givenIntent.getExtras().getString(MainActivity.TOUR_TAG);
             mTour = DataStore.getInstance().getTour(tourID);
             setTitle(mTour.getName());
         }
-
-        // TODO - handle if stopID is passed in intent
-        // this is if user closed app and came back via notification
-        // actually what if they just open it again... do we need a static variable on location tracking?
 
         if (mTour != null) {
             Log.d("TourActivity", "Tour Name: " + mTour.getName());
@@ -112,7 +111,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTourLocations.add(location);
 
                 // Initialize next tour stop
-                mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
+                // TODO - initialize setup for tour stop preview view
+                mTestText.setText(mTourPlaces.get(LocationTrackingService.getNextStopIndex()).getName());
             }
         }
 
@@ -122,8 +122,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onReceive(Context context, Intent intent) {
                 Log.i(TAG, "INTENT RECEIVED");
                 if (isOrderedBroadcast()) {
-                    // TODO - handle a message from tracking service
-                    // this is if user arrives while app is open
+                    refreshNextStop();
                     setResultCode(IS_ALIVE);
                 } else {
                     Log.e(TAG, "NOT ORDERED BROADCAST, ABORTING!");
@@ -131,7 +130,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         };
-
     }
 
     @Override
@@ -158,6 +156,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mLocationDataReceiver != null) {
             Log.i(TAG, "REGISTERING RECEIVER");
             registerReceiver(mLocationDataReceiver, intentFilter);
+        }
+
+        if (localNextStopIndex != LocationTrackingService.getNextStopIndex()) {
+            refreshNextStop();
         }
     }
 
@@ -239,12 +241,14 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Log.i(TAG, "start locationIntent");
 
-                Location nextStop = mTourLocations.get(mNextStopIndex);
                 Intent locationIntent = new Intent(this, LocationTrackingService.class);
+                String tourStopData[] = new String[mTourLocations.size()];
 
-                locationIntent.putExtra(LATEST_LOCATION_LAT,nextStop.getLatitude());
-                locationIntent.putExtra(LATEST_LOCATION_LON,nextStop.getLongitude());
-                locationIntent.putExtra(MainActivity.TOUR_TAG, mTour.getId());
+                for (int i = 0; i < mTourLocations.size(); i++) {
+                    Location location = mTourLocations.get(i);
+                    tourStopData[i] = location.getLatitude() + "," + location.getLongitude();
+                }
+                locationIntent.putExtra(TourActivity.TOUR_STOP_DATA, tourStopData);
 
                 startService(locationIntent);
             } catch (SecurityException e) {
@@ -278,27 +282,36 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Call when the user reaches the current tour stop. Will update UI and variables for the next
-     * tour stop
+     * Check the LocationTrackingService to get the next tour stop the user should be going to, and
+     * update the UI accordingly.
      */
-    private void nextTourStop() {
-        // show notification for stop just arrived at, if not beginning of tour
-        Place arrivedPlace = mTourPlaces.get(mNextStopIndex);
-        String notificationMessage = "Arrived at " + arrivedPlace.getName();
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.snackBarView), notificationMessage, 10000);
-        snackbar.setAction("More Details", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO - actually play media
-                Log.i(TAG, "Play media for: " + arrivedPlace.getName());
-            }
-        });
-        snackbar.show();
+    private void refreshNextStop() {
+        int nextStopIdx = LocationTrackingService.getNextStopIndex();
+        localNextStopIndex = nextStopIdx;
 
-        // increment tour stop
-        mNextStopIndex += 1;
-        // TODO - actually update the place preview view when it is made
-        mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
+        if (nextStopIdx > 0) {
+            Place arrivedPlace = mTourPlaces.get(nextStopIdx - 1);
+            String notificationMessage = "Arrived at " + arrivedPlace.getName();
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.snackBarView), notificationMessage, 10000);
+            snackbar.setAction("More Details", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO - actually play media
+                    Log.i(TAG, "Play media for: " + arrivedPlace.getName());
+                }
+            });
+            snackbar.show();
+
+            if (nextStopIdx < mTourPlaces.size()) {
+                // TODO - actually update the place preview view when it is made
+                Place nextPlace = mTourPlaces.get(nextStopIdx);
+                mTestText.setText(nextPlace.getName());
+            } else {
+                // TODO - handle end of tour
+                Log.i(TAG, "END OF TOUR!");
+                mTestText.setText("END");
+            }
+        }
     }
 
     private boolean needsRuntimePermission(String permission) {

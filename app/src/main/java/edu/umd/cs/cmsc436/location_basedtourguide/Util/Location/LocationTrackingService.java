@@ -18,7 +18,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.lang.reflect.MalformedParametersException;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -35,12 +38,15 @@ public class LocationTrackingService extends Service {
      * tour stop. 100 meters ~= 330 feet
      */
     private static final float TOUR_STOP_RADIUS_METERS = 100;
+    /**
+     * Source of truth for which tour stop the user needs to go to next. Stored as 0 based index
+     */
+    private static int nextStopIndex = 0;
 
     private LocationManager mLocationManager;
-    private Location nextTourStop;
+    private List<Location> listTourStops;
     private Context mContext;
     private NotificationManager mNotificationManager;
-    private String tourId;
 
     public LocationTrackingService() {
         super();
@@ -55,18 +61,30 @@ public class LocationTrackingService extends Service {
             throw new InvalidParameterException("Need extras for LocationTrackingService start");
         }
 
-        tourId = extras.getString(MainActivity.TOUR_TAG);
+        listTourStops = new ArrayList<>();
+        nextStopIndex = 0;
 
-        Double nextStopLat = extras.getDouble(TourActivity.LATEST_LOCATION_LAT);
-        Double nextStopLon = extras.getDouble(TourActivity.LATEST_LOCATION_LON);
-        nextTourStop = new Location("next-location");
-        updateNextStop(nextStopLat, nextStopLon);
+        String tourStops[] = extras.getStringArray(TourActivity.TOUR_STOP_DATA);
+        for (int i = 0; i < tourStops.length; i++) {
+            String latLon[] = tourStops[i].split(",");
+
+            if (latLon.length != 2) {
+                throw new MalformedParametersException("Bad location coordinates for tracking service");
+            }
+
+            Location newTourStop = new Location("Tour Stop #" + i);
+            newTourStop.setLatitude(Double.parseDouble(latLon[0]));
+            newTourStop.setLongitude(Double.parseDouble(latLon[1]));
+            listTourStops.add(newTourStop);
+        }
 
         /*
         Foreground service to allow location updates when applications is backgrounded.
         NOTE: You will receive location updates less frequently when application is backgrounded.
         one update per ~30 seconds
          */
+        // TODO - fix issue with stacking multiple arrived notifications takes you back to
+        // main activity. But still if you click the UMD tour, it is still going
         Notification notification = new Notification.Builder(mContext, channelId).build();
         startForeground(notificationId++, notification);
 
@@ -75,6 +93,8 @@ public class LocationTrackingService extends Service {
 
     @Override
     public void onCreate() {
+        // TODO - less log statements
+        // TODO - test multiple stops being reached
         Log.i(TAG, "in on create");
 
         mContext = getApplicationContext();
@@ -91,16 +111,19 @@ public class LocationTrackingService extends Service {
                     LOCATION_REQUEST_INTERVAL,
                     MIN_DISTANCE_DELTA,
                     new LocationListener() {
+                        // TODO - inner class
                         @Override
                         public void onLocationChanged(Location location) {
                             Log.i(TAG, "New Location: " + location.getLatitude() + ", " + location.getLongitude());
-                            if (nextTourStop != null) {
-                                float metersToNextStop = location.distanceTo(nextTourStop);
+                            if (nextStopIndex < listTourStops.size()) {
+                                float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
                                 Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
                                 if (metersToNextStop < TOUR_STOP_RADIUS_METERS) {
                                     Log.i(TAG, "In range of next tour stop");
                                     arriveAtStop();
                                 }
+                            } else {
+                                Log.w(TAG, "this is a debug statement if a location changes and we are past end tour");
                             }
                         }
 
@@ -136,21 +159,18 @@ public class LocationTrackingService extends Service {
         return null;
     }
 
-    private void updateNextStop(Double lat, Double lon) {
-        if (nextTourStop != null && lat != null || lon != null) {
-            nextTourStop.setLatitude(lat);
-            nextTourStop.setLongitude(lon);
-        } else {
-            throw new InvalidParameterException("Bad next tour stop location update");
-        }
-    }
-
+    /**
+     * Send a message to the tour component indicating that the user arrived at a stop. If tour
+     * component is not in the foreground, create a notification to inform the user. Tour component
+     * will get the latest nextTourStopIndex variable on resume to update.
+     */
     private void arriveAtStop() {
-        final Intent restartMainActivityIntent = new Intent(mContext,
-                TourActivity.class);
+        nextStopIndex += 1;
+
+        final Intent restartMainActivityIntent = new Intent(mContext, TourActivity.class);
         restartMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // don't think we need this if we set the Tour Activity to "singleInstance"
-//        restartMainActivityIntent.putExtra(MainActivity.TOUR_TAG, tourId);
+        // restartMainActivityIntent.putExtra(MainActivity.TOUR_TAG, tourId);
 
         mContext.sendOrderedBroadcast(new Intent(TourActivity.LOCATION_DATA_ACTION), null,
                 new BroadcastReceiver() {
@@ -199,5 +219,9 @@ public class LocationTrackingService extends Service {
 
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    public static int getNextStopIndex() {
+        return nextStopIndex;
     }
 }
