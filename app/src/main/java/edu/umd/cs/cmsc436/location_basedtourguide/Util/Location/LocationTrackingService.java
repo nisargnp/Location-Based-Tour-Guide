@@ -47,6 +47,7 @@ public class LocationTrackingService extends Service {
     private List<Location> listTourStops;
     private Context mContext;
     private NotificationManager mNotificationManager;
+    private LocationListener mCustomLocationListener;
 
     public LocationTrackingService() {
         super();
@@ -88,7 +89,7 @@ public class LocationTrackingService extends Service {
         Notification notification = new Notification.Builder(mContext, channelId).build();
         startForeground(notificationId++, notification);
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -106,42 +107,12 @@ public class LocationTrackingService extends Service {
         }
 
         try {
+            mCustomLocationListener = new CustomLocationListener();
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     LOCATION_REQUEST_INTERVAL,
                     MIN_DISTANCE_DELTA,
-                    new LocationListener() {
-                        // TODO - inner class
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            Log.i(TAG, "New Location: " + location.getLatitude() + ", " + location.getLongitude());
-                            if (nextStopIndex < listTourStops.size()) {
-                                float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
-                                Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
-                                if (metersToNextStop < TOUR_STOP_RADIUS_METERS) {
-                                    Log.i(TAG, "In range of next tour stop");
-                                    arriveAtStop();
-                                }
-                            } else {
-                                Log.w(TAG, "this is a debug statement if a location changes and we are past end tour");
-                            }
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                            Log.e(TAG, "onStatusChanged: " + provider);
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-                            Log.e(TAG, "onProviderEnabled: " + provider);
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-                            Log.e(TAG, "onProviderDisabled: " + provider);
-                        }
-                    });
+                    mCustomLocationListener);
         } catch (SecurityException e) {
             // Service assumes you have already received necessary permissions
             Log.e(TAG, e.toString());
@@ -150,7 +121,13 @@ public class LocationTrackingService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "service ending...");
+        Log.e(TAG, "service ending...");
+        super.onDestroy();
+        nextStopIndex = 0;
+
+        if (mLocationManager != null && mCustomLocationListener != null) {
+            mLocationManager.removeUpdates(mCustomLocationListener);
+        }
     }
 
     @Override
@@ -223,5 +200,37 @@ public class LocationTrackingService extends Service {
 
     public static int getNextStopIndex() {
         return nextStopIndex;
+    }
+
+    private class CustomLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.i(TAG, "New Location: " + location.getLatitude() + ", " + location.getLongitude());
+            if (nextStopIndex < listTourStops.size()) {
+                float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
+                Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
+                if (metersToNextStop < TOUR_STOP_RADIUS_METERS) {
+                    Log.i(TAG, "In range of next tour stop");
+                    arriveAtStop();
+                }
+            } else {
+                Log.w(TAG, "this is a debug statement if a location changes and we are past end tour");
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(TAG, "onProviderDisabled: " + provider);
+        }
     }
 }
