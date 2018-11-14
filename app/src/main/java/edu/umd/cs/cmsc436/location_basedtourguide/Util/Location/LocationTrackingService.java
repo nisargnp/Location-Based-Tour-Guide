@@ -23,16 +23,13 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 
 public class LocationTrackingService extends Service {
     private static final String TAG = "location-service";
-    private static int notificationId = 11151990;
-    private static String channelId = "my_channel_01";
     private static final long LOCATION_REQUEST_INTERVAL = 5000;
-    private static final float MIN_DISTANCE_DELTA = 10f;
+    private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - raise value? => less power
     /**
      * Radius of tour stops. If users enter this radius, they will be considered to be "at" a
      * tour stop. 100 meters ~= 330 feet
@@ -42,6 +39,8 @@ public class LocationTrackingService extends Service {
      * Source of truth for which tour stop the user needs to go to next. Stored as 0 based index
      */
     private static int nextStopIndex = 0;
+    private static int notificationId = 11151990;
+    private static String channelId = "my_channel_01";
 
     private LocationManager mLocationManager;
     private List<Location> listTourStops;
@@ -56,7 +55,6 @@ public class LocationTrackingService extends Service {
     @TargetApi(Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "in start command");
         Bundle extras = intent.getExtras();
         if (extras == null) {
             throw new InvalidParameterException("Need extras for LocationTrackingService start");
@@ -64,7 +62,7 @@ public class LocationTrackingService extends Service {
 
         listTourStops = new ArrayList<>();
         nextStopIndex = 0;
-
+        // setup tour stops to track relative location to
         String tourStops[] = extras.getStringArray(TourActivity.TOUR_STOP_DATA);
         for (int i = 0; i < tourStops.length; i++) {
             String latLon[] = tourStops[i].split(",");
@@ -86,6 +84,7 @@ public class LocationTrackingService extends Service {
          */
         // TODO - fix issue with stacking multiple arrived notifications takes you back to
         // main activity. But still if you click the UMD tour, it is still going
+        // is this still an issue?
         Notification notification = new Notification.Builder(mContext, channelId).build();
         startForeground(notificationId++, notification);
 
@@ -94,10 +93,7 @@ public class LocationTrackingService extends Service {
 
     @Override
     public void onCreate() {
-        // TODO - less log statements
-        // TODO - test multiple stops being reached
-        Log.i(TAG, "in on create");
-
+        Log.i(TAG, "Creating new LocationTrackingService");
         mContext = getApplicationContext();
 
         createNotificationChannel();
@@ -121,7 +117,7 @@ public class LocationTrackingService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "service ending...");
+        Log.e(TAG, "LocationTrackingService ending...");
         super.onDestroy();
         nextStopIndex = 0;
 
@@ -136,18 +132,20 @@ public class LocationTrackingService extends Service {
         return null;
     }
 
+    public static int getNextStopIndex() {
+        return nextStopIndex;
+    }
+
     /**
      * Send a message to the tour component indicating that the user arrived at a stop. If tour
      * component is not in the foreground, create a notification to inform the user. Tour component
-     * will get the latest nextTourStopIndex variable on resume to update.
+     * will automatically get the latest nextTourStopIndex variable on resume to update.
      */
     private void arriveAtStop() {
         nextStopIndex += 1;
 
         final Intent restartMainActivityIntent = new Intent(mContext, TourActivity.class);
         restartMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // don't think we need this if we set the Tour Activity to "singleInstance"
-        // restartMainActivityIntent.putExtra(MainActivity.TOUR_TAG, tourId);
 
         mContext.sendOrderedBroadcast(new Intent(TourActivity.LOCATION_DATA_ACTION), null,
                 new BroadcastReceiver() {
@@ -175,10 +173,6 @@ public class LocationTrackingService extends Service {
                             Toast.makeText(mContext,
                                     "you have arrived at a stop!!!",
                                     Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(mContext,
-                                    "you have arrived at a stop...",
-                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 }, null, 0, null, null);
@@ -198,39 +192,31 @@ public class LocationTrackingService extends Service {
         }
     }
 
-    public static int getNextStopIndex() {
-        return nextStopIndex;
-    }
-
     private class CustomLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            Log.i(TAG, "New Location: " + location.getLatitude() + ", " + location.getLongitude());
             if (nextStopIndex < listTourStops.size()) {
                 float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
                 Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
                 if (metersToNextStop < TOUR_STOP_RADIUS_METERS) {
-                    Log.i(TAG, "In range of next tour stop");
                     arriveAtStop();
                 }
-            } else {
-                Log.w(TAG, "this is a debug statement if a location changes and we are past end tour");
             }
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
+            Log.w(TAG, "onStatusChanged: " + provider);
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
+            Log.w(TAG, "onProviderEnabled: " + provider);
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
+            Log.w(TAG, "onProviderDisabled: " + provider);
         }
     }
 }
