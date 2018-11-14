@@ -58,7 +58,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Place> mTourPlaces;
     private BroadcastReceiver mLocationDataReceiver;
     private int localNextStopIndex = 0;
-
     /**
      * Location objects to use Location helper functions for getting distance in meters
      */
@@ -69,7 +68,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
-        Log.i(TAG, mTour != null ? mTour.toString() : "null");
         // TODO - remove this test view
         mTestText = findViewById(R.id.testTextView);
 
@@ -79,7 +77,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Add a map to the MapView
         MapFragment mMapFragment = MapFragment.newInstance();
         mMapFragment.getMapAsync(this);
-
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.tourMapView, mMapFragment);
         fragmentTransaction.commit();
@@ -88,12 +85,12 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (givenIntent != null) {
             String tourID = givenIntent.getExtras().getString(MainActivity.TOUR_TAG);
             mTour = DataStore.getInstance().getTour(tourID);
-            setTitle(mTour.getName());
         }
 
         if (mTour != null) {
-            Log.d("TourActivity", "Tour Name: " + mTour.getName());
+            Log.d(TAG, "Tour Name: " + mTour.getName());
 
+            setTitle(mTour.getName());
             // Get list of stops for the tour
             mTourPlaces = new ArrayList<>();
             mTourLocations = new ArrayList<>();
@@ -102,6 +99,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // TODO - move this logic to DataStore
                 mTourPlaces.add(place);
 
+                // Working with location objects are easier for LocationAPI
                 Location location = new Location("temp");
                 location.setLatitude(place.getLat());
                 location.setLongitude(place.getLon());
@@ -113,11 +111,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
 
-        Log.i(TAG, "CREATING RECEIVER");
         mLocationDataReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.i(TAG, "INTENT RECEIVED");
+                Log.i(TAG, "New LocationData intent received");
                 if (isOrderedBroadcast()) {
                     refreshNextStop();
                     setResultCode(IS_ALIVE);
@@ -133,11 +130,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStart() {
         super.onStart();
 
-        // temporary for testing directions API
-        findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.refreshButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Clicked Directions API test button");
+                Log.i(TAG, "Refreshing Tour Route Drawing");
                 mMap.clear();
                 showTourRoute();
             }
@@ -146,15 +142,15 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onResume() {
+        Log.i(TAG, "Resuming Tour UI");
         super.onResume();
 
         IntentFilter intentFilter = new IntentFilter(LOCATION_DATA_ACTION);
-        Log.i(TAG, "resuming");
         if (mLocationDataReceiver != null) {
             Log.i(TAG, "REGISTERING RECEIVER");
             registerReceiver(mLocationDataReceiver, intentFilter);
         }
-
+        // Refresh next tour stop if reached tour stop while backgrounded
         if (localNextStopIndex != LocationTrackingService.getNextStopIndex()) {
             refreshNextStop();
         }
@@ -243,8 +239,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // show user location on map
                 mMap.setMyLocationEnabled(true);
 
-                Log.i(TAG, "start locationIntent");
-
+                // Start location tracking service
                 Intent locationIntent = new Intent(this, LocationTrackingService.class);
                 String tourStopData[] = new String[mTourLocations.size()];
 
@@ -274,7 +269,9 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     location.getLongitude());
                             tourStops.add(userLocation);
                         }
-                        tourStops.addAll(mTourPlaces);
+                        // Draw all tour stops not visited yet
+                        // TODO - I think we still need to draw markers for visited tours
+                        tourStops.addAll(mTourPlaces.subList(localNextStopIndex, mTourPlaces.size()));
                         DirectionsUtil.drawTourRoute(mMap, tourStops, true);
                     }
                 });
