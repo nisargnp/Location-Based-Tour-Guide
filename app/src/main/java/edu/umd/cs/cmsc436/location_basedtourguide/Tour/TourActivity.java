@@ -84,9 +84,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         fragmentTransaction.add(R.id.tourMapView, mMapFragment);
         fragmentTransaction.commit();
 
-        // kill location tracking service if one exists
-        stopService(new Intent(this, LocationTrackingService.class));
-
         Intent givenIntent = getIntent();
         if (givenIntent != null) {
             String tourID = givenIntent.getExtras().getString(MainActivity.TOUR_TAG);
@@ -170,6 +167,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             unregisterReceiver(mLocationDataReceiver);
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.w(TAG, "Destroy...");
+        stopService(new Intent(this, LocationTrackingService.class));
     }
 
     @Override
