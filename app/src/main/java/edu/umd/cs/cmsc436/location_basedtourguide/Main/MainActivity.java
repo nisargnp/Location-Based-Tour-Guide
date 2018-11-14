@@ -12,6 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import edu.umd.cs.cmsc436.location_basedtourguide.AddTour.AddTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
@@ -28,6 +31,11 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // TODO: remove this eventually
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference("testing");
+        dbRef.setValue("testValue");
 
         // TODO: get this from firebase eventually
         DataProvider.generateTourImages(getApplicationContext());
