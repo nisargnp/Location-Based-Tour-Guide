@@ -2,8 +2,12 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -16,9 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,8 +42,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTracking
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
-    public static String LATEST_LOCATION_LAT = "latest-location-lat";
-    public static String LATEST_LOCATION_LON = "latest-location-lon";
+    public static final String LATEST_LOCATION_LAT = "latest-location-lat";
+    public static final String LATEST_LOCATION_LON = "latest-location-lon";
+    public static final String LOCATION_DATA_ACTION =
+            "edu.umd.cs.cmsc436.location_basedtourguide.Tour.LOCATION_DATA_ACTION";
+    public static final int IS_ALIVE = Activity.RESULT_FIRST_USER;
+
     private String TAG = "tour-activity";
     private static final int LOCATION_SERVICES_REQUEST_CODE = 1;
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
@@ -53,6 +58,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Tour mTour;
     private int mNextStopIndex = 0;
     private List<Place> mTourPlaces;
+    private BroadcastReceiver mLocationDataReceiver;
     /**
      * Location objects to use Location helper functions for getting distance in meters
      */
@@ -63,6 +69,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
+        Log.i(TAG, mTour != null ? mTour.toString() : "null");
         // TODO - remove this test view
         mTestText = findViewById(R.id.testTextView);
 
@@ -84,6 +91,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             setTitle(mTour.getName());
         }
 
+        // TODO - handle if stopID is passed in intent
+        // this is if user closed app and came back via notification
+        // actually what if they just open it again... do we need a static variable on location tracking?
+
         if (mTour != null) {
             Log.d("TourActivity", "Tour Name: " + mTour.getName());
 
@@ -104,6 +115,23 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTestText.setText(mTourPlaces.get(mNextStopIndex).getName());
             }
         }
+
+        Log.i(TAG, "CREATING RECEIVER");
+        mLocationDataReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "INTENT RECEIVED");
+                if (isOrderedBroadcast()) {
+                    // TODO - handle a message from tracking service
+                    // this is if user arrives while app is open
+                    setResultCode(IS_ALIVE);
+                } else {
+                    Log.e(TAG, "NOT ORDERED BROADCAST, ABORTING!");
+                    abortBroadcast();
+                }
+            }
+        };
+
     }
 
     @Override
@@ -119,6 +147,27 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showTourRoute();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(LOCATION_DATA_ACTION);
+        Log.i(TAG, "resuming");
+        if (mLocationDataReceiver != null) {
+            Log.i(TAG, "REGISTERING RECEIVER");
+            registerReceiver(mLocationDataReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (mLocationDataReceiver != null) {
+            Log.i(TAG, "UNREGISTERING RECEIVER");
+            unregisterReceiver(mLocationDataReceiver);
+        }
+        super.onPause();
     }
 
     @Override
@@ -188,11 +237,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // show user location on map
                 mMap.setMyLocationEnabled(true);
 
-                // TODO - start tracking user location service
-                // listen on message - broadcast receiver?
-                // pass service next location lat lon somehow
-                // increment index
-
                 Log.i(TAG, "start locationIntent");
 
                 Location nextStop = mTourLocations.get(mNextStopIndex);
@@ -200,6 +244,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 locationIntent.putExtra(LATEST_LOCATION_LAT,nextStop.getLatitude());
                 locationIntent.putExtra(LATEST_LOCATION_LON,nextStop.getLongitude());
+                locationIntent.putExtra(MainActivity.TOUR_TAG, mTour.getId());
 
                 startService(locationIntent);
             } catch (SecurityException e) {
