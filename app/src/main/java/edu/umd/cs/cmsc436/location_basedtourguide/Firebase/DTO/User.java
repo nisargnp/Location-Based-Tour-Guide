@@ -4,7 +4,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User implements Serializable {
 
@@ -17,6 +19,7 @@ public class User implements Serializable {
     private DatabaseReference thisUser;
 
     public void updateUser(User u){
+        setId(u.getId());
         setName(u.getName());
         setTours(u.getTours());
     }
@@ -24,8 +27,8 @@ public class User implements Serializable {
     public User(){
 
     }
-    public User(int n){
-        this(null,null,null);
+    public User(String name){
+        this(null,name,null);
         id = firebaseUsers.push().getKey();
         thisUser = firebaseUsers.child(id);
         setId(id);
@@ -42,6 +45,9 @@ public class User implements Serializable {
     }
 
     public void setId(String id) {
+        Map<String, Object> ups = new HashMap<>();
+        ups.put(this.id,id);
+        firebaseUsers.updateChildren(ups);
         this.id = id;
     }
 
@@ -50,6 +56,9 @@ public class User implements Serializable {
     }
 
     public void setName(String name) {
+        Map<String, Object> ups = new HashMap<>();
+        ups.put("name",name);
+        firebaseUsers.updateChildren(ups);
         this.name = name;
     }
 
@@ -58,6 +67,9 @@ public class User implements Serializable {
     }
 
     public void setTours(List<String> tours) {
+        Map<String, Object> ups = new HashMap<>();
+        ups.put("tours",tours);
+        firebaseUsers.updateChildren(ups);
         this.tours = tours;
     }
 

@@ -23,6 +23,7 @@ public class Place implements Serializable {
 
 
     public void updatePlace(Place p){
+        setId(p.getId());
         setName(p.getName());
         setLat(p.getLat());
         setLon(p.getLon());
@@ -37,8 +38,8 @@ public class Place implements Serializable {
 
     }
 
-    public Place(int n){
-        this(null,null,null,0,0,null,null,null);
+    public Place(String name){
+        this(null,name,null,0,0,null,null,null);
         id = firebasePlaces.push().getKey();
         thisPlace = firebasePlaces.child(id);
         setId(id);

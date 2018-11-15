@@ -1,5 +1,7 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.view.Change;
 
 
 public class DataStore {
@@ -35,11 +38,12 @@ public class DataStore {
     private  List<Tour> tours;
     private  List<User> users;
 
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static DatabaseReference firebaseRefTours = database.getReference("Tours");
-    private static DatabaseReference firebaseRefPlaces = database.getReference("Places");
-    private static DatabaseReference firebaseRefComments = database.getReference("Comments");
-    private static DatabaseReference firebaseRefUsers = database.getReference("Users");
+    private static FirebaseDatabase database;
+
+    private static DatabaseReference firebaseRefTours;
+    private static DatabaseReference firebaseRefPlaces;
+    private static DatabaseReference firebaseRefComments;
+    private static DatabaseReference firebaseRefUsers;
 
 
     private DataStore() {
@@ -47,6 +51,75 @@ public class DataStore {
         placeMap = new LinkedHashMap<>();
         tourMap = new LinkedHashMap<>();
         userMap = new LinkedHashMap<>();
+
+        database = FirebaseDatabase.getInstance();
+
+        firebaseRefTours = database.getReference("Tours");
+        firebaseRefPlaces = database.getReference("Places");
+        firebaseRefComments = database.getReference("Comments");
+        firebaseRefUsers = database.getReference("Users");
+
+
+        firebaseRefTours.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    Tour t = child.getValue(Tour.class);
+                    tourMap.put(t.getId(),t);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        firebaseRefPlaces.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    Place p = child.getValue(Place.class);
+                    placeMap.put(p.getId(),p);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        firebaseRefComments.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    Comment c = child.getValue(Comment.class);
+                    commentMap.put(c.getId(),c);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        firebaseRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    User u = child.getValue(User.class);
+                    userMap.put(u.getId(),u);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        update();
+
 
         ValueEventListener TourListener = new ValueEventListener() {
             @Override
@@ -62,7 +135,8 @@ public class DataStore {
                     }
                 }
                 if(ThisTour == null){
-                    tours.add(ChangedTour);
+                    tourMap.put(i,ThisTour);
+                    update();
                 }
             }
 
@@ -86,7 +160,8 @@ public class DataStore {
                     }
                 }
                 if(ThisPlace == null){
-                    places.add(ChangedPlace);
+                    placeMap.put(i,ThisPlace);
+                    update();
                 }
             }
 
@@ -110,7 +185,8 @@ public class DataStore {
                     }
                 }
                 if(ThisComment == null){
-                    comments.add(ChangedComment);
+                   commentMap.put(i,ThisComment);
+                   update();
                 }
             }
 
@@ -134,7 +210,8 @@ public class DataStore {
                     }
                 }
                 if(ThisUser == null){
-                    users.add(ChangedUser);
+                    userMap.put(i,ThisUser);
+                    update();
                 }
             }
 
@@ -164,6 +241,18 @@ public class DataStore {
         places = new ArrayList<Place>(placeMap.values());
         comments = new ArrayList<Comment>(commentMap.values());
         users = new ArrayList<User>(userMap.values());
+    }
+
+    public void clearAll(){
+        comments.clear();
+        places.clear();
+        tours.clear();
+        users.clear();
+
+        commentMap.clear();
+        placeMap.clear();
+        tourMap.clear();
+        userMap.clear();
     }
 
     public static DataStore getInstance() {
