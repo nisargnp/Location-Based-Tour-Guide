@@ -2,7 +2,6 @@ package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     ImageView placeImg;
@@ -38,28 +38,26 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         tmpVideoButton = findViewById(R.id.vid_button);
         tmpAudioButton = findViewById(R.id.audio_button);
 
-        tmpVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Test uri of video to play
-                Bundle b = new Bundle();
-                b.putString("uri", "android.resource://"+getPackageName()+"/"+R.raw.teapot);
+        // TODO: these paths will come from the Tour object
+        String audioPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.posin, "test", "posin");
+        String videoPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.teapot, "test", "teapot");
 
-                VideoDialogFragment vidDialog = new VideoDialogFragment();
-                vidDialog.setArguments(b);
-                vidDialog.show(getFragmentManager(), "video");
-            }
+        tmpVideoButton.setOnClickListener(v -> {
+            // Test uri of video to play
+            Bundle b = new Bundle();
+            b.putString("uri", videoPath);
+
+            VideoDialogFragment vidDialog = new VideoDialogFragment();
+            vidDialog.setArguments(b);
+            vidDialog.show(getFragmentManager(), "video");
         });
 
-        tmpAudioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle b = new Bundle();
-                b.putString("uri", "android.resource://"+getPackageName()+"/"+R.raw.posin);
-                AudioDialogFragment audioDialog = new AudioDialogFragment();
-                audioDialog.setArguments(b);
-                audioDialog.show(getFragmentManager(), "audio");
-            }
+        tmpAudioButton.setOnClickListener(v -> {
+            Bundle b = new Bundle();
+            b.putString("uri", audioPath);
+            AudioDialogFragment audioDialog = new AudioDialogFragment();
+            audioDialog.setArguments(b);
+            audioDialog.show(getFragmentManager(), "audio");
         });
         placeDesc.setText("This is a historic place to be remembered! It indeed is!");
 
