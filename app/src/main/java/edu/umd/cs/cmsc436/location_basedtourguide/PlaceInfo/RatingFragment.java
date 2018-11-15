@@ -1,4 +1,4 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.app.Activity;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+
 public class RatingFragment extends Fragment {
     TextView ratingText;
     TextView commentDesc;
