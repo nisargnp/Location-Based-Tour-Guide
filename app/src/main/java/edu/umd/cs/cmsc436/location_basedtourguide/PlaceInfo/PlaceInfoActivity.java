@@ -1,11 +1,7 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +15,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     ImageView placeImg;

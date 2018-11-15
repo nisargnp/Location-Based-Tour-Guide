@@ -29,7 +29,7 @@
         </activity>
 
 
-        <activity android:name=".TestRatingActivity">
+        <activity android:name=".PlaceInfo.TestRatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PlaceInfoActivity">
+        <activity android:name=".PlaceInfo.PlaceInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
