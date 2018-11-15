@@ -1,4 +1,4 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,17 +13,18 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.VideoView;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+
 /*
 This tutorial helped in implementing the seekbar
 https://www.youtube.com/watch?v=7Z3fAAZezZk
  */
 public class AudioDialogFragment extends DialogFragment {
-    Button play;
-    MediaPlayer mediaPlayer;
-    Runnable runnable;
-    Handler handler;
-    SeekBar seekBar;
-    boolean isPlaying = true;
+
+    private MediaPlayer mediaPlayer;
+    private Handler handler;
+    private SeekBar seekBar;
+    private boolean isPlaying = true;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,20 +35,16 @@ public class AudioDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_audio_dialog, null);
         builder.setView(v);
 
-
         Bundle b = getArguments(); // get name of uri from passed in bundle
         String uriName = b.getString("uri");
         Uri uri = Uri.parse(uriName);
 
         seekBar = v.findViewById(R.id.audio_seekbar);
         mediaPlayer = MediaPlayer.create(getActivity(),uri);
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                seekBar.setMax(mediaPlayer.getDuration());
-                mediaPlayer.start();
-                changeSeekBar();
-            }
+        mediaPlayer.setOnPreparedListener(mp -> {
+            seekBar.setMax(mediaPlayer.getDuration());
+            mediaPlayer.start();
+            changeSeekBar();
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -69,23 +66,20 @@ public class AudioDialogFragment extends DialogFragment {
             }
         });
 
-        play = v.findViewById(R.id.play_audio);
+        Button play = v.findViewById(R.id.play_audio);
         play.setText("||");
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying) {
-                    // Pause audio
-                    mediaPlayer.pause();
-                    isPlaying = false;
-                    play.setText("\u25B6");
-                } else {
-                    // Play audio
-                    mediaPlayer.start();
-                    changeSeekBar();
-                    isPlaying = true;
-                    play.setText("||");
-                }
+        play.setOnClickListener(v1 -> {
+            if (isPlaying) {
+                // Pause audio
+                mediaPlayer.pause();
+                isPlaying = false;
+                play.setText("\u25B6");
+            } else {
+                // Play audio
+                mediaPlayer.start();
+                changeSeekBar();
+                isPlaying = true;
+                play.setText("||");
             }
         });
 
@@ -102,14 +96,7 @@ public class AudioDialogFragment extends DialogFragment {
         try {
             seekBar.setProgress(mediaPlayer.getCurrentPosition());
             if (mediaPlayer.isPlaying()) {
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        changeSeekBar();
-                    }
-                };
-
-                handler.postDelayed(runnable, 1000);
+                handler.postDelayed(this::changeSeekBar, 1000);
             }
         } catch (IllegalStateException e) {
             seekBar.setProgress(0);

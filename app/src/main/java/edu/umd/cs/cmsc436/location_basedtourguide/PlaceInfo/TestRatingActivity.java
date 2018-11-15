@@ -1,8 +1,10 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 public class TestRatingActivity extends Activity {
     @Override

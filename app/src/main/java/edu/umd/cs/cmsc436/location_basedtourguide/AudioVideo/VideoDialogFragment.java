@@ -1,4 +1,4 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 /*
  * Based off of:
@@ -21,7 +23,7 @@ import android.widget.VideoView;
  */
 public class VideoDialogFragment extends DialogFragment {
 
-    VideoView videoView;
+    private VideoView videoView;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class VideoDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_video_dialog, null);
         builder.setView(v);
 
-        VideoView videoView = v.findViewById(R.id.videoview);
+        videoView = v.findViewById(R.id.videoview);
 
         Bundle b = getArguments(); // get name of uri from passed in bundle
         String uriName = b.getString("uri");
@@ -42,18 +44,15 @@ public class VideoDialogFragment extends DialogFragment {
 
         Button buttonPlayPause = v.findViewById(R.id.play_pause_vid);
         buttonPlayPause.setText("||");
-        buttonPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (videoView.isPlaying()) {
-                    videoView.pause();
-                    buttonPlayPause.setText("\u25B6");
-                } else {
-                    videoView.start();
-                    buttonPlayPause.setText("||");
-                }
-
+        buttonPlayPause.setOnClickListener(v1 -> {
+            if (videoView.isPlaying()) {
+                videoView.pause();
+                buttonPlayPause.setText("\u25B6");
+            } else {
+                videoView.start();
+                buttonPlayPause.setText("||");
             }
+
         });
 
         return builder.create();
