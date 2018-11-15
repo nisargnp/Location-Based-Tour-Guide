@@ -6,29 +6,29 @@
     android:padding="8dp"
     android:id="@+id/video_fragment_layout">
 
+    <TextView
+        android:id="@+id/play_pause_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textColor="#5d5d5d"
+        android:textSize="20dp"
+        android:text="You just discovered a place!"/>
+
     <VideoView
         android:id="@+id/videoview"
         android:layout_width="400dp"
         android:layout_height="600dp"
         android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_below="@id/play_pause_text"/>
 
     <Button
-        android:id="@+id/pause_vid"
-        android:layout_width="wrap_content"
+        android:id="@+id/play_pause_vid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pause"
         android:layout_below="@id/videoview"/>
 
-    <Button
-        android:id="@+id/play_vid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:layout_toEndOf="@id/pause_vid"
-        android:layout_below="@id/videoview"/>
 
 </RelativeLayout>

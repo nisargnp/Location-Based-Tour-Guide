@@ -6,17 +6,28 @@
     android:padding="8dp"
     android:id="@+id/video_fragment_layout">
 
+    <TextView
+        android:id="@+id/play_pause_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textColor="#5d5d5d"
+        android:textSize="20dp"
+        android:text="You just discovered a place!"/>
 
     <Button
         android:id="@+id/play_audio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="||" />
+        android:layout_below="@id/play_pause_text"/>
 
     <SeekBar
         android:id="@+id/audio_seekbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/play_audio"/>
+        android:layout_toEndOf="@id/play_audio"
+        android:paddingTop="15dp"
+        android:layout_below="@id/play_pause_text"/>
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHolder>
 {
@@ -52,6 +53,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHold
         Place place = places.get(i);
         viewHolder.mContentView.setText(place.getDescription());
         viewHolder.mIdView.setText(place.getName());
+        viewHolder.image.setImageBitmap(Utils.getImageFromInternalStorage(place.getPictureFile()));
 
     }
 
