@@ -12,9 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import edu.umd.cs.cmsc436.location_basedtourguide.AddTour.AddTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;

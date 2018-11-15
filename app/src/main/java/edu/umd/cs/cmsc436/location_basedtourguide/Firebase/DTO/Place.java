@@ -18,7 +18,7 @@ public class Place implements Serializable {
     private String videoFile;
     private String audioFile;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebasePlaces = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Places");//is this the right ref?
+    private DatabaseReference firebasePlaces = database.getReference("Places");//is this the right ref?
     private DatabaseReference thisPlace;
 
 
@@ -34,10 +34,15 @@ public class Place implements Serializable {
     }
 
     public Place(){
+
+    }
+
+    public Place(int n){
+        this(null,null,null,0,0,null,null,null);
         id = firebasePlaces.push().getKey();
-        Place p = new Place(id,null,null,0,0,null,null,null);
-        firebasePlaces.setValue(p);
         thisPlace = firebasePlaces.child(id);
+        setId(id);
+        thisPlace.setValue(this);
     }
 
     public Place(String i, String n,String d,double la,double lo,String pic,String vid,String aud){

@@ -32,11 +32,6 @@ public final class DataProvider {
     private static List<Place> places;
     private static List<Tour> tours;
     private static List<User> users;
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static DatabaseReference firebaseRefTours = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Tours");//is this the right ref?
-    private static DatabaseReference firebaseRefPlaces = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Places");//is this the right ref?
-    private static DatabaseReference firebaseRefComments = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Comments");//is this the right ref?
-    private static DatabaseReference firebaseRefUsers = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Users");//is this the right ref?
 
 
     static {
@@ -47,7 +42,7 @@ public final class DataProvider {
         users = new ArrayList<>();
 
         // tour 1
-        Tour tour1 = new Tour();
+        Tour tour1 = new Tour(1);
         tour1.setId("-rmtSKxBkNkkeWXOdkgGr");
         tour1.setName("UMD");
         tour1.setLat(38.9869);
@@ -61,7 +56,7 @@ public final class DataProvider {
         tour1.setComments(Arrays.asList("-UzlvCqPYYlHDNVdCtGAw", "-cARNyPaVoMDmlwEtCsxW", "-MuAOmNFRTOPrTirfFiXV"));
         tours.add(tour1);
 
-        Place terrapinRow = new Place();
+        Place terrapinRow = new Place(1);
         terrapinRow.setId("-vQLJaqfPfLJgObaJpUst");
         terrapinRow.setName("Terrapin Row");
         terrapinRow.setDescription("Students live here.");
@@ -69,7 +64,7 @@ public final class DataProvider {
         terrapinRow.setLon(-76.942366);
         places.add(terrapinRow);
 
-        Place CSIC = new Place();
+        Place CSIC = new Place(1);
         CSIC.setId("-XCjumRBOpQaIAISygJMp");
         CSIC.setName("Computer Science Instructional Center");
         CSIC.setDescription("Students study here.");
@@ -77,7 +72,7 @@ public final class DataProvider {
         CSIC.setLon(-76.936182);
         places.add(CSIC);
 
-        Place stamp = new Place();
+        Place stamp = new Place(1);
         stamp.setId("-YSbepfiuBlDRajJUwYpB");
         stamp.setName("Stamp Student Union");
         stamp.setDescription("Students eat here.");
@@ -85,7 +80,7 @@ public final class DataProvider {
         stamp.setLon(-76.944855);
         places.add(stamp);
 
-        Place eppley = new Place();
+        Place eppley = new Place(1);
         eppley.setId("-mWYsAGcLRjeJBCzlDdxd");
         eppley.setName("Eppley Recreational Center");
         eppley.setDescription("Students exercise here.");
@@ -93,48 +88,48 @@ public final class DataProvider {
         eppley.setLon(-76.945155);
         places.add(eppley);
 
-        Comment comment1 = new Comment();
+        Comment comment1 = new Comment(1);
         comment1.setAuthor("-oTPklbIgOHaroQvAsOJT");
         comment1.setId("-UzlvCqPYYlHDNVdCtGAw");
         comment1.setText("This is an amazing university!");
         comments.add(comment1);
 
-        Comment comment2 = new Comment();
+        Comment comment2 = new Comment(1);
         comment2.setAuthor("-oMHqmNoDIECTxzCiSVsO");
         comment2.setId("-cARNyPaVoMDmlwEtCsxW");
         comment2.setText("This is an good university!");
         comments.add(comment2);
 
-        Comment comment3 = new Comment();
+        Comment comment3 = new Comment(1);
         comment3.setAuthor("-QXUjhMkcfvlXWSctzZSd");
         comment3.setId("-MuAOmNFRTOPrTirfFiXV");
         comment3.setText("This is an okay university!");
         comments.add(comment3);
 
-        User bob = new User();
+        User bob = new User(1);
         bob.setId("-mXyLdjKWUNEMNslvUPWu");
         bob.setName("Bob");
         bob.setTours(Collections.singletonList("-rmtSKxBkNkkeWXOdkgGr"));
         users.add(bob);
 
-        User sam = new User();
+        User sam = new User(1);
         sam.setId("-oTPklbIgOHaroQvAsOJT");
         sam.setName("Sam");
         users.add(sam);
         bob.setTours(Arrays.asList("-jrFHNufNMxrgaSKydVQW", "-TZLeLsitKXOGjhFpPuVz"));
 
-        User alex = new User();
+        User alex = new User(1);
         alex.setId("-oMHqmNoDIECTxzCiSVsO");
         alex.setName("Alex");
         users.add(alex);
 
-        User joe = new User();
+        User joe = new User(1);
         joe.setId("-QXUjhMkcfvlXWSctzZSd");
         joe.setName("Joe");
         users.add(joe);
 
         // tour 2
-        Tour tour2 = new Tour();
+        Tour tour2 = new Tour(1);
         tour2.setId("-jrFHNufNMxrgaSKydVQW");
         tour2.setName("Grand Canyon");
         tour2.setLat(36.0544);
@@ -149,7 +144,7 @@ public final class DataProvider {
         tours.add(tour2);
 
         // tour 3
-        Tour tour3 = new Tour();
+        Tour tour3 = new Tour(1);
         tour3.setId("-TZLeLsitKXOGjhFpPuVz");
         tour3.setName("Niagara Falls");
         tour3.setLat(43.0962);
@@ -162,105 +157,6 @@ public final class DataProvider {
         tour3.setPlaces(new ArrayList<>());
         tour3.setComments(new ArrayList<>());
         tours.add(tour3);
-
-
-
-        ValueEventListener TourListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Tour ChangedTour = dataSnapshot.getValue(Tour.class);
-                String i = ChangedTour.getId();
-                Tour ThisTour = null;
-                for(Tour t : tours){
-                    String id = t.getId();
-                    if(i.equals(id)){
-                        t.updateTour(ChangedTour);
-                    }
-                }
-                if(ThisTour == null){
-                    tours.add(ChangedTour);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener PlaceListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Place ChangedPlace = dataSnapshot.getValue(Place.class);
-                String i = ChangedPlace.getId();
-                Place ThisPlace = null;
-                for(Place p : places){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updatePlace(ChangedPlace);
-                    }
-                }
-                if(ThisPlace == null){
-                    places.add(ChangedPlace);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener CommentListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Comment ChangedComment = dataSnapshot.getValue(Comment.class);
-                String i = ChangedComment.getId();
-                Comment ThisComment = null;
-                for(Comment p : comments){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updateComment(ChangedComment);
-                    }
-                }
-                if(ThisComment == null){
-                    comments.add(ChangedComment);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener UserListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User ChangedUser = dataSnapshot.getValue(User.class);
-                String i = ChangedUser.getId();
-                User ThisUser = null;
-                for(User p : users){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updateUser(ChangedUser);
-                    }
-                }
-                if(ThisUser == null){
-                    users.add(ChangedUser);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        firebaseRefTours.addValueEventListener(TourListener);
-        firebaseRefPlaces.addValueEventListener(PlaceListener);
-        firebaseRefComments.addValueEventListener(CommentListener);
-        firebaseRefUsers.addValueEventListener(UserListener);
 
     }
 
@@ -298,10 +194,6 @@ public final class DataProvider {
         tours.get(1).setPictureFile(path);
         path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
         tours.get(2).setPictureFile(path);
-    }
-
-    public void onDataChanged(){
-
     }
 
 }
