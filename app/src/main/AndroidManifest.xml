@@ -29,7 +29,7 @@
         </activity>
 
 
-        <activity android:name=".TestRatingActivity">
+        <activity android:name=".PlaceInfo.TestRatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PlaceInfoActivity">
+        <activity android:name=".PlaceInfo.PlaceInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,7 +76,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Tour.TourActivity">
+        <activity android:name=".Tour.TourActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -86,6 +87,8 @@
         <activity android:name=".AddTour.AddPlacesActivity" />
         <activity android:name=".AddTour.AddTourActivity" />
         <activity android:name=".AddTour.AddDetailsActivity"></activity>
+
+        <service android:name=".Util.Location.LocationTrackingService" />
 
     </application>
 

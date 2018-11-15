@@ -4,6 +4,10 @@ a.k.a. Tourodactyl (pTOURodactyl?)
 
 ## Development Notes
 
+### Firebase account
+- Username: cmsc436test@gmail.com
+- Password: tourodactyl
+
 ### Google Maps API
 
 - Shared Maps API key stored in `app/src/debug/res/values/google_maps_api.xml` and `app/src/release/res/values/google_maps_api.xml`

@@ -1,20 +1,32 @@
 {
   "project_info": {
+<<<<<<< HEAD
     "project_number": "247182332925",
     "firebase_url": "https://location-based-tour-guid-31237.firebaseio.com",
     "project_id": "location-based-tour-guid-31237",
     "storage_bucket": "location-based-tour-guid-31237.appspot.com"
+=======
+    "project_number": "665009384495",
+    "firebase_url": "https://location-based-tour-guid-7c2b9.firebaseio.com",
+    "project_id": "location-based-tour-guid-7c2b9",
+    "storage_bucket": "location-based-tour-guid-7c2b9.appspot.com"
+>>>>>>> e0c99ea9ae086d8ae992b8c1c39cb3b550f9c6fd
   },
   "client": [
     {
       "client_info": {
+<<<<<<< HEAD
         "mobilesdk_app_id": "1:247182332925:android:1f448acc57bd1a55",
+=======
+        "mobilesdk_app_id": "1:665009384495:android:1f448acc57bd1a55",
+>>>>>>> e0c99ea9ae086d8ae992b8c1c39cb3b550f9c6fd
         "android_client_info": {
           "package_name": "edu.umd.cs.cmsc436.location_basedtourguide"
         }
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
           "client_id": "247182332925-mjfqomcqadm5t6u7k1prhg9i9apgcba3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -24,12 +36,19 @@
         },
         {
           "client_id": "247182332925-vcj8bosqaciot8geut8qkqdairj71qc9.apps.googleusercontent.com",
+=======
+          "client_id": "665009384495-uu9pnqhg3de7nc4honkck2uh3tpd9rf9.apps.googleusercontent.com",
+>>>>>>> e0c99ea9ae086d8ae992b8c1c39cb3b550f9c6fd
           "client_type": 3
         }
       ],
       "api_key": [
         {
+<<<<<<< HEAD
           "current_key": "AIzaSyDsYnN_uggZJHndgeutoxASywPOhxhaclU"
+=======
+          "current_key": "AIzaSyCovhI7rYGkUBGx52fk3aefXJfpKt7lT4Q"
+>>>>>>> e0c99ea9ae086d8ae992b8c1c39cb3b550f9c6fd
         }
       ],
       "services": {
@@ -37,6 +56,7 @@
           "status": 1
         },
         "appinvite_service": {
+<<<<<<< HEAD
           "status": 2,
           "other_platform_oauth_client": [
             {
@@ -44,6 +64,10 @@
               "client_type": 3
             }
           ]
+=======
+          "status": 1,
+          "other_platform_oauth_client": []
+>>>>>>> e0c99ea9ae086d8ae992b8c1c39cb3b550f9c6fd
         },
         "ads_service": {
           "status": 2

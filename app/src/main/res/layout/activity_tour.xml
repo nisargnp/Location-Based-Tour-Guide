@@ -24,13 +24,13 @@
         android:text="The Place Info Thing Goes Here" />
 
     <Button
-        android:id="@+id/testButton"
+        android:id="@+id/refreshButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp"
-        android:text="Draw Tour (Manually do it for Now)" />
+        android:text="Refresh Tour Route" />
 
     <View
         android:id="@+id/snackBarView"

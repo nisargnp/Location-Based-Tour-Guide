@@ -1,4 +1,4 @@
-package edu.umd.cs.cmsc436.location_basedtourguide;
+package edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+
 /*
  * Based off of:
  * https://developer.android.com/guide/topics/ui/dialogs#java
@@ -20,8 +22,9 @@ import android.widget.VideoView;
  * Clicking out of the Dialog stops the video. Rotating the screen resets the video.
  */
 public class VideoDialogFragment extends DialogFragment {
-    Button pause, play;
-    VideoView videoView;
+
+    private VideoView videoView;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -39,29 +42,26 @@ public class VideoDialogFragment extends DialogFragment {
         videoView.setVideoURI(uri);
         videoView.start();
 
-        pause = v.findViewById(R.id.pause_vid);
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (videoView.isPlaying())
-                    videoView.pause();
+        Button buttonPlayPause = v.findViewById(R.id.play_pause_vid);
+        buttonPlayPause.setText("||");
+        buttonPlayPause.setOnClickListener(v1 -> {
+            if (videoView.isPlaying()) {
+                videoView.pause();
+                buttonPlayPause.setText("\u25B6");
+            } else {
+                videoView.start();
+                buttonPlayPause.setText("||");
             }
+
         });
-        play = v.findViewById(R.id.play_vid);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!videoView.isPlaying())
-                    videoView.start();
-            }
-        });
+
         return builder.create();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // This might not do anything, since it may already be disposed of
-        videoView.stopPlayback();
+        if (videoView != null)
+            videoView.stopPlayback();
     }
 }
