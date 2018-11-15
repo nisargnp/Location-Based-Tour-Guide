@@ -33,15 +33,13 @@ public class Tour implements Serializable {
     private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
     private DatabaseReference thisTour;
 
-    //call this when you want a new tour built
+    //dont call this ever pls
     public Tour() {
-
-
 
     }
 
-    public Tour(int n){//use this constructor
-        this(null,null,0,0,null,null,null,0,0,null,null);
+    public Tour(String name){//use this constructor
+        this(null,name,0,0,null,null,null,0,0,null,null);
         id = firebaseTours.push().getKey();
         //firebaseTours.chidlsetValue(t);
         thisTour = firebaseTours.child(id);
@@ -65,6 +63,7 @@ public class Tour implements Serializable {
 
     public void updateTour(Tour t){
 
+        setId(t.getId());
         setName(t.getName());
         setLat(t.getLat());
         setLon(t.getLon());
