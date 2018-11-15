@@ -1,7 +1,9 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,8 +18,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
+import edu.umd.cs.cmsc436.location_basedtourguide.Interface.UriResultListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
+
+import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadFileToFirebase;
 
 public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     ImageView placeImg;
@@ -42,22 +47,41 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         String audioPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.posin, "test", "posin");
         String videoPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.teapot, "test", "teapot");
 
-        tmpVideoButton.setOnClickListener(v -> {
-            // Test uri of video to play
-            Bundle b = new Bundle();
-            b.putString("uri", videoPath);
-
-            VideoDialogFragment vidDialog = new VideoDialogFragment();
-            vidDialog.setArguments(b);
-            vidDialog.show(getFragmentManager(), "video");
+        //TODO: for testing, remove later
+        uploadFileToFirebase(PlaceInfoActivity.this, audioPath, "video", "posin", true, uri -> {
+            Log.d("PlaceInfoActivity", "video uri: " + uri);
+            tmpAudioButton.setOnClickListener(v -> {
+                Bundle b = new Bundle();
+                b.putString("uri", uri.toString());
+                AudioDialogFragment audioDialog = new AudioDialogFragment();
+                audioDialog.setArguments(b);
+                audioDialog.show(getFragmentManager(), "audio");
+            });
+        });
+        uploadFileToFirebase(PlaceInfoActivity.this, videoPath, "audio", "teapot", true, uri -> {
+            Log.d("PlaceInfoActivity", "audio uri: " + uri);
+            tmpVideoButton.setOnClickListener(v -> {
+                Bundle b = new Bundle();
+                b.putString("uri", uri.toString());
+                VideoDialogFragment vidDialog = new VideoDialogFragment();
+                vidDialog.setArguments(b);
+                vidDialog.show(getFragmentManager(), "video");
+            });
         });
 
         tmpAudioButton.setOnClickListener(v -> {
             Bundle b = new Bundle();
-            b.putString("uri", audioPath);
+            b.putString("uri", null);
             AudioDialogFragment audioDialog = new AudioDialogFragment();
             audioDialog.setArguments(b);
             audioDialog.show(getFragmentManager(), "audio");
+        });
+        tmpVideoButton.setOnClickListener(v -> {
+            Bundle b = new Bundle();
+            b.putString("uri", null);
+            VideoDialogFragment vidDialog = new VideoDialogFragment();
+            vidDialog.setArguments(b);
+            vidDialog.show(getFragmentManager(), "video");
         });
         placeDesc.setText("This is a historic place to be remembered! It indeed is!");
 
