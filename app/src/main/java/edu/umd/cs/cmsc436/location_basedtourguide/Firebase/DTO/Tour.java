@@ -1,5 +1,7 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -28,15 +30,23 @@ public class Tour implements Serializable {
     private List<String> places;
     private List<String> comments;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseTours = database.getReference("project/location-based-tour-guid-31237/database/firestore/data~2F").child("Tours");//is this the right ref?
+    private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
     private DatabaseReference thisTour;
 
     //call this when you want a new tour built
     public Tour() {
+
+
+
+    }
+
+    public Tour(int n){//use this constructor
+        this(null,null,0,0,null,null,null,0,0,null,null);
         id = firebaseTours.push().getKey();
-        Tour t = new Tour(id,null,0,0,null,null,null,0,0,null,null);
-        firebaseTours.setValue(t);
+        //firebaseTours.chidlsetValue(t);
         thisTour = firebaseTours.child(id);
+        setId(id);
+        thisTour.setValue(this);
     }
     //shouldnt call this one?
     public Tour(String i, String n, double la, double lo, String des, String au,String pic,int rat, int nu, List<String> pl, List<String> c){
