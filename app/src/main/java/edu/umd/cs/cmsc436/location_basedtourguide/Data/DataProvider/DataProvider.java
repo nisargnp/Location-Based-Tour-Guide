@@ -4,14 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +25,6 @@ public final class DataProvider {
     private static List<Tour> tours;
     private static List<User> users;
 
-
     static {
 
         comments = new ArrayList<>();
@@ -49,7 +40,7 @@ public final class DataProvider {
         tour1.setLon(-76.9426);
         tour1.setDescription("This is University of Maryland, College Park. It is the largest school in Maryland.");
         tour1.setAuthor("-mXyLdjKWUNEMNslvUPWu");
-        tour1.setPictureFile("");
+        tour1.setPictureFile("https://www.provost.umd.edu/images/umdimg10.jpg");
         tour1.setRating(77);
         tour1.setNumVotes(20);
         tour1.setPlaces(Arrays.asList("-vQLJaqfPfLJgObaJpUst", "-XCjumRBOpQaIAISygJMp", "-YSbepfiuBlDRajJUwYpB", "-mWYsAGcLRjeJBCzlDdxd"));
@@ -62,6 +53,9 @@ public final class DataProvider {
         terrapinRow.setDescription("Students live here.");
         terrapinRow.setLat(38.980367);
         terrapinRow.setLon(-76.942366);
+        terrapinRow.setPictureFile("https://img.offcampusimages.com/ksG-bVfAntpM3Y-0eCrDneMZGFw=/960x665/left/top/smart/images/ocgpt7bqm09amm4tieanigg8gw9rsk1nwh0tzenqzdm.jpeg");
+        terrapinRow.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav");
+        terrapinRow.setVideoFile("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4");
         places.add(terrapinRow);
 
         Place CSIC = new Place("Computer Science Instructional Center");
@@ -70,6 +64,9 @@ public final class DataProvider {
         CSIC.setDescription("Students study here.");
         CSIC.setLat(38.990085);
         CSIC.setLon(-76.936182);
+        CSIC.setPictureFile("http://www.cs.umd.edu/sites/default/files/csic.jpg");
+        CSIC.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/i_ran_so_far_away-flock_of_seagulls.wav");
+        CSIC.setVideoFile("http://techslides.com/demos/sample-videos/small.mp4");
         places.add(CSIC);
 
         Place stamp = new Place("Stamp Student Union");
@@ -78,6 +75,9 @@ public final class DataProvider {
         stamp.setDescription("Students eat here.");
         stamp.setLat(38.987881);
         stamp.setLon(-76.944855);
+        stamp.setPictureFile("http://4.bp.blogspot.com/-qR-DNRpZhT0/VD6V8aae_rI/AAAAAAAAAVw/Cvm7VGLhCAk/s1600/DSC_0544.jpg");
+        stamp.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/africa-toto.wav");
+        stamp.setVideoFile("");
         places.add(stamp);
 
         Place eppley = new Place("Eppley Recreational Center");
@@ -87,6 +87,8 @@ public final class DataProvider {
         eppley.setLat(38.993635);
         eppley.setLon(-76.945155);
         eppley.setPictureFile("http://1.bp.blogspot.com/-m6RNHUfcogg/UI1KzblHw1I/AAAAAAAAEDU/CMGB5h6hNLs/s1600/DSC00746.JPG");
+        eppley.setAudioFile("");
+        eppley.setVideoFile("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
         places.add(eppley);
 
         Comment comment1 = new Comment("-oTPklbIgOHaroQvAsOJT");
@@ -116,17 +118,19 @@ public final class DataProvider {
         User sam = new User("Sam");
         sam.setId("-oTPklbIgOHaroQvAsOJT");
         sam.setName("Sam");
+        sam.setTours(Arrays.asList("-jrFHNufNMxrgaSKydVQW", "-TZLeLsitKXOGjhFpPuVz"));
         users.add(sam);
-        bob.setTours(Arrays.asList("-jrFHNufNMxrgaSKydVQW", "-TZLeLsitKXOGjhFpPuVz"));
 
         User alex = new User("Alex");
         alex.setId("-oMHqmNoDIECTxzCiSVsO");
         alex.setName("Alex");
+        alex.setTours(new ArrayList<>());
         users.add(alex);
 
         User joe = new User("Joe");
         joe.setId("-QXUjhMkcfvlXWSctzZSd");
         joe.setName("Joe");
+        joe.setTours(new ArrayList<>());
         users.add(joe);
 
         // tour 2
@@ -137,7 +141,7 @@ public final class DataProvider {
         tour2.setLon(-112.1401);
         tour2.setDescription("This is the Grand Canyon.");
         tour2.setAuthor("-oTPklbIgOHaroQvAsOJT");
-        tour2.setPictureFile("");
+        tour2.setPictureFile("https://www.canyontours.com/wp-content/uploads/2015/01/grand-canyon-south-rim-tour-bright-angel-point.jpg");
         tour2.setRating(87);
         tour2.setNumVotes(20);
         tour2.setPlaces(new ArrayList<>());
@@ -152,7 +156,7 @@ public final class DataProvider {
         tour3.setLon(-79.0377);
         tour3.setDescription("This is Niagara Falls.");
         tour3.setAuthor("-oTPklbIgOHaroQvAsOJT");
-        tour3.setPictureFile("");
+        tour3.setPictureFile("http://www.niagarafallslive.com/wp-content/uploads/2013/08/american-fall-night-1.jpg");
         tour3.setRating(97);
         tour3.setNumVotes(20);
         tour3.setPlaces(new ArrayList<>());
