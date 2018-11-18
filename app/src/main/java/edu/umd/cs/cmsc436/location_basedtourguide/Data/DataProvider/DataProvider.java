@@ -186,19 +186,19 @@ public final class DataProvider {
     }
 
     // call this if you want your tours to have images
-    @SuppressWarnings("unused")
-    public static void generateTourImages(Context context) {
-        Bitmap bitmapGrandCanyon = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.grand_canyon));
-        Bitmap bitmapNiagaraFalls = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.niagara_falls));
-        Bitmap bitmapUMD = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.umd));
-
-        String path;
-        path = Utils.putImageToInternalStorage(context, bitmapUMD, "images", "umd.jpg");
-        tours.get(0).setPictureFile(path);
-        path = Utils.putImageToInternalStorage(context, bitmapGrandCanyon, "images", "grand_canyon.jpg");
-        tours.get(1).setPictureFile(path);
-        path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
-        tours.get(2).setPictureFile(path);
-    }
+//    @SuppressWarnings("unused")
+//    public static void generateTourImages(Context context) {
+//        Bitmap bitmapGrandCanyon = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.grand_canyon));
+//        Bitmap bitmapNiagaraFalls = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.niagara_falls));
+//        Bitmap bitmapUMD = BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.umd));
+//
+//        String path;
+//        path = Utils.putImageToInternalStorage(context, bitmapUMD, "images", "umd.jpg");
+//        tours.get(0).setPictureFile(path);
+//        path = Utils.putImageToInternalStorage(context, bitmapGrandCanyon, "images", "grand_canyon.jpg");
+//        tours.get(1).setPictureFile(path);
+//        path = Utils.putImageToInternalStorage(context, bitmapNiagaraFalls, "images", "niagara_falls.jpg");
+//        tours.get(2).setPictureFile(path);
+//    }
 
 }
