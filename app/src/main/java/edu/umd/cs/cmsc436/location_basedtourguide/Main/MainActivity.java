@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         dbRef.setValue("testValue");
 
         // TODO: get this from firebase eventually
-        DataProvider.generateTourImages(getApplicationContext());
         DataStore.getInstance().addTours(DataProvider.getTours());
         DataStore.getInstance().addPlaces(DataProvider.getPlaces());
         DataStore.getInstance().addComments(DataProvider.getComments());
