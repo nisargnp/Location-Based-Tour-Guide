@@ -4,6 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +33,7 @@ public final class DataProvider {
     private static List<Tour> tours;
     private static List<User> users;
 
+
     static {
 
         comments = new ArrayList<>();
@@ -33,7 +42,7 @@ public final class DataProvider {
         users = new ArrayList<>();
 
         // tour 1
-        Tour tour1 = new Tour();
+        Tour tour1 = new Tour("UMD");
         tour1.setId("-rmtSKxBkNkkeWXOdkgGr");
         tour1.setName("UMD");
         tour1.setLat(38.9869);
@@ -47,7 +56,7 @@ public final class DataProvider {
         tour1.setComments(Arrays.asList("-UzlvCqPYYlHDNVdCtGAw", "-cARNyPaVoMDmlwEtCsxW", "-MuAOmNFRTOPrTirfFiXV"));
         tours.add(tour1);
 
-        Place terrapinRow = new Place();
+        Place terrapinRow = new Place("Terrapin Row");
         terrapinRow.setId("-vQLJaqfPfLJgObaJpUst");
         terrapinRow.setName("Terrapin Row");
         terrapinRow.setDescription("Students live here.");
@@ -55,7 +64,7 @@ public final class DataProvider {
         terrapinRow.setLon(-76.942366);
         places.add(terrapinRow);
 
-        Place CSIC = new Place();
+        Place CSIC = new Place("Computer Science Instructional Center");
         CSIC.setId("-XCjumRBOpQaIAISygJMp");
         CSIC.setName("Computer Science Instructional Center");
         CSIC.setDescription("Students study here.");
@@ -63,7 +72,7 @@ public final class DataProvider {
         CSIC.setLon(-76.936182);
         places.add(CSIC);
 
-        Place stamp = new Place();
+        Place stamp = new Place("Stamp Student Union");
         stamp.setId("-YSbepfiuBlDRajJUwYpB");
         stamp.setName("Stamp Student Union");
         stamp.setDescription("Students eat here.");
@@ -71,7 +80,7 @@ public final class DataProvider {
         stamp.setLon(-76.944855);
         places.add(stamp);
 
-        Place eppley = new Place();
+        Place eppley = new Place("Eppley Recreational Center");
         eppley.setId("-mWYsAGcLRjeJBCzlDdxd");
         eppley.setName("Eppley Recreational Center");
         eppley.setDescription("Students exercise here.");
@@ -79,48 +88,48 @@ public final class DataProvider {
         eppley.setLon(-76.945155);
         places.add(eppley);
 
-        Comment comment1 = new Comment();
+        Comment comment1 = new Comment("-oTPklbIgOHaroQvAsOJT");
         comment1.setAuthor("-oTPklbIgOHaroQvAsOJT");
         comment1.setId("-UzlvCqPYYlHDNVdCtGAw");
         comment1.setText("This is an amazing university!");
         comments.add(comment1);
 
-        Comment comment2 = new Comment();
+        Comment comment2 = new Comment("-oMHqmNoDIECTxzCiSVsO");
         comment2.setAuthor("-oMHqmNoDIECTxzCiSVsO");
         comment2.setId("-cARNyPaVoMDmlwEtCsxW");
         comment2.setText("This is an good university!");
         comments.add(comment2);
 
-        Comment comment3 = new Comment();
+        Comment comment3 = new Comment("-QXUjhMkcfvlXWSctzZSd");
         comment3.setAuthor("-QXUjhMkcfvlXWSctzZSd");
         comment3.setId("-MuAOmNFRTOPrTirfFiXV");
         comment3.setText("This is an okay university!");
         comments.add(comment3);
 
-        User bob = new User();
+        User bob = new User("Bob");
         bob.setId("-mXyLdjKWUNEMNslvUPWu");
         bob.setName("Bob");
         bob.setTours(Collections.singletonList("-rmtSKxBkNkkeWXOdkgGr"));
         users.add(bob);
 
-        User sam = new User();
+        User sam = new User("Sam");
         sam.setId("-oTPklbIgOHaroQvAsOJT");
         sam.setName("Sam");
         users.add(sam);
         bob.setTours(Arrays.asList("-jrFHNufNMxrgaSKydVQW", "-TZLeLsitKXOGjhFpPuVz"));
 
-        User alex = new User();
+        User alex = new User("Alex");
         alex.setId("-oMHqmNoDIECTxzCiSVsO");
         alex.setName("Alex");
         users.add(alex);
 
-        User joe = new User();
+        User joe = new User("Joe");
         joe.setId("-QXUjhMkcfvlXWSctzZSd");
         joe.setName("Joe");
         users.add(joe);
 
         // tour 2
-        Tour tour2 = new Tour();
+        Tour tour2 = new Tour("Grand Canyon");
         tour2.setId("-jrFHNufNMxrgaSKydVQW");
         tour2.setName("Grand Canyon");
         tour2.setLat(36.0544);
@@ -135,7 +144,7 @@ public final class DataProvider {
         tours.add(tour2);
 
         // tour 3
-        Tour tour3 = new Tour();
+        Tour tour3 = new Tour("Niagara Falls");
         tour3.setId("-TZLeLsitKXOGjhFpPuVz");
         tour3.setName("Niagara Falls");
         tour3.setLat(43.0962);
