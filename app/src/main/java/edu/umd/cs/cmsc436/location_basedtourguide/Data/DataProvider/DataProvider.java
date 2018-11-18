@@ -77,6 +77,7 @@ public final class DataProvider {
         eppley.setDescription("Students exercise here.");
         eppley.setLat(38.993635);
         eppley.setLon(-76.945155);
+        eppley.setPictureFile("http://1.bp.blogspot.com/-m6RNHUfcogg/UI1KzblHw1I/AAAAAAAAEDU/CMGB5h6hNLs/s1600/DSC00746.JPG");
         places.add(eppley);
 
         Comment comment1 = new Comment();
