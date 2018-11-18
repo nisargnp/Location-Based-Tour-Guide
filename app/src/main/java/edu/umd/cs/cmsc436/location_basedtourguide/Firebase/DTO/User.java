@@ -15,18 +15,14 @@ public class User implements Serializable {
     private List<String> tours;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseUsers = database.getReference("Users");//.child("Tours");//is this the right ref?
+    private DatabaseReference firebaseUsers = database.getReference("Users");
     private DatabaseReference thisUser;
 
-    public void updateUser(User u){
-        setId(u.getId());
-        setName(u.getName());
-        setTours(u.getTours());
-    }
+    /**
+     * Don't use this constructor, this is for Firebase only.
+     */
+    public User(){}
 
-    public User(){
-
-    }
     public User(String name){
         this(null,name,null);
         id = firebaseUsers.push().getKey();
@@ -34,10 +30,17 @@ public class User implements Serializable {
         setId(id);
         thisUser.setValue(this);
     }
+
     public User(String id, String Name, List<String> Tours){
         this.id = id;
         this.name= Name;
         this.tours = Tours;
+    }
+
+    public void updateUser(User u){
+        setId(u.getId());
+        setName(u.getName());
+        setTours(u.getTours());
     }
 
     public String getId() {
