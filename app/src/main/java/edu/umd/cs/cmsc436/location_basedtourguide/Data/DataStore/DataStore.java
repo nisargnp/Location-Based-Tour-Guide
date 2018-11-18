@@ -1,6 +1,7 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -127,17 +128,20 @@ public class DataStore {
                 update();
                 Tour ChangedTour = dataSnapshot.getValue(Tour.class);
                 String i = ChangedTour.getId();
-                Tour ThisTour = null;
-                for(Tour t : tours){
-                    String id = t.getId();
-                    if(i.equals(id)){
-                        t.updateTour(ChangedTour);
-                    }
+                if(i != null) {
+                        Tour ThisTour = null;
+                        for (Tour t : tours) {
+                            String id = t.getId();
+                            if (i.equals(id)) {
+                                t.updateTour(ChangedTour);
+                            }
+                        }
+                        if (ThisTour == null) {
+                            tourMap.put(i, ThisTour);
+                            update();
+                        }
                 }
-                if(ThisTour == null){
-                    tourMap.put(i,ThisTour);
-                    update();
-                }
+
             }
 
             @Override
@@ -152,16 +156,18 @@ public class DataStore {
                 update();
                 Place ChangedPlace = dataSnapshot.getValue(Place.class);
                 String i = ChangedPlace.getId();
-                Place ThisPlace = null;
-                for(Place p : places){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updatePlace(ChangedPlace);
+                if(i != null) {
+                    Place ThisPlace = null;
+                    for (Place p : places) {
+                        String id = p.getId();
+                        if (i.equals(id)) {
+                            p.updatePlace(ChangedPlace);
+                        }
                     }
-                }
-                if(ThisPlace == null){
-                    placeMap.put(i,ThisPlace);
-                    update();
+                    if (ThisPlace == null) {
+                        placeMap.put(i, ThisPlace);
+                        update();
+                    }
                 }
             }
 
@@ -177,16 +183,18 @@ public class DataStore {
                 update();
                 Comment ChangedComment = dataSnapshot.getValue(Comment.class);
                 String i = ChangedComment.getId();
-                Comment ThisComment = null;
-                for(Comment p : comments){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updateComment(ChangedComment);
+                if(i != null) {
+                    Comment ThisComment = null;
+                    for (Comment p : comments) {
+                        String id = p.getId();
+                        if (i.equals(id)) {
+                            p.updateComment(ChangedComment);
+                        }
                     }
-                }
-                if(ThisComment == null){
-                   commentMap.put(i,ThisComment);
-                   update();
+                    if (ThisComment == null) {
+                        commentMap.put(i, ThisComment);
+                        update();
+                    }
                 }
             }
 
@@ -202,16 +210,18 @@ public class DataStore {
                 update();
                 User ChangedUser = dataSnapshot.getValue(User.class);
                 String i = ChangedUser.getId();
-                User ThisUser = null;
-                for(User p : users){
-                    String id = p.getId();
-                    if(i.equals(id)){
-                        p.updateUser(ChangedUser);
+                if (i != null) {
+                    User ThisUser = null;
+                    for (User p : users) {
+                        String id = p.getId();
+                        if (i.equals(id)) {
+                            p.updateUser(ChangedUser);
+                        }
                     }
-                }
-                if(ThisUser == null){
-                    userMap.put(i,ThisUser);
-                    update();
+                    if (ThisUser == null) {
+                        userMap.put(i, ThisUser);
+                        update();
+                    }
                 }
             }
 
