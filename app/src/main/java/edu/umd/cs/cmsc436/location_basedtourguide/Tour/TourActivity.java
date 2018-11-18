@@ -209,6 +209,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Log.i(TAG, marker.getTitle() + "'s Info Window Clicked");
+
             }
         });
     }
