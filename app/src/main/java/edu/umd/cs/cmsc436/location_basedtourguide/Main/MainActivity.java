@@ -33,12 +33,7 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: remove this eventually
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference("testing");
-        dbRef.setValue("testValue");
-
-        // TODO: get this from firebase eventually
+        // TODO: remove hardcode
         DataStore.getInstance().addTours(DataProvider.getTours());
         DataStore.getInstance().addPlaces(DataProvider.getPlaces());
         DataStore.getInstance().addComments(DataProvider.getComments());
