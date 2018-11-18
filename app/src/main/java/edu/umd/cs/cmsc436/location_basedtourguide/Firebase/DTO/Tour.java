@@ -1,7 +1,20 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class Tour implements Serializable {
 
@@ -16,12 +29,61 @@ public class Tour implements Serializable {
     private int numVotes;
     private List<String> places;
     private List<String> comments;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
+    private DatabaseReference thisTour;
 
-    public String getId() {
-        return id;
+    //dont call this ever pls
+    public Tour() {
+
     }
 
-    public void setId(String id) {
+    public Tour(String name){//use this constructor
+        this(null,name,0,0,null,null,null,0,0,null,null);
+        id = firebaseTours.push().getKey();
+        //firebaseTours.chidlsetValue(t);
+        thisTour = firebaseTours.child(id);
+        setId(id);
+        thisTour.setValue(this);
+    }
+    //shouldnt call this one?
+    public Tour(String i, String n, double la, double lo, String des, String au,String pic,int rat, int nu, List<String> pl, List<String> c){
+        id = i;
+        name = n;
+        lat = la;
+        lon = lo;
+        description = des;
+        author = au;
+        pictureFile = pic;
+        rating = rat;
+        numVotes = nu;
+        places = pl;
+        comments = c;
+    }
+
+    public void updateTour(Tour t){
+
+        setId(t.getId());
+        setName(t.getName());
+        setLat(t.getLat());
+        setLon(t.getLon());
+        setDescription(t.getDescription());
+        setAuthor(t.getAuthor());
+        setPictureFile(t.getPictureFile());
+        setRating(t.getRating());
+        setNumVotes(t.getNumVotes());
+        setPlaces(t.getPlaces());
+        setComments(t.getComments());
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {//this shouldnt be called
+        Map<String, Object> ups = new HashMap<>();
+        ups.put(this.id,id);
+        firebaseTours.updateChildren(ups);
         this.id = id;
     }
 
@@ -30,6 +92,9 @@ public class Tour implements Serializable {
     }
 
     public void setName(String name) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("name",name);
+        thisTour.updateChildren(ups);
         this.name = name;
     }
 
@@ -38,6 +103,9 @@ public class Tour implements Serializable {
     }
 
     public void setLat(double lat) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("lat",lat);
+        thisTour.updateChildren(ups);
         this.lat = lat;
     }
 
@@ -46,6 +114,9 @@ public class Tour implements Serializable {
     }
 
     public void setLon(double lon) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("lon",lon);
+        thisTour.updateChildren(ups);
         this.lon = lon;
     }
 
@@ -54,6 +125,9 @@ public class Tour implements Serializable {
     }
 
     public void setDescription(String description) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("description",description);
+        thisTour.updateChildren(ups);
         this.description = description;
     }
 
@@ -62,6 +136,9 @@ public class Tour implements Serializable {
     }
 
     public void setAuthor(String author) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("author",author);
+        thisTour.updateChildren(ups);
         this.author = author;
     }
 
@@ -70,6 +147,9 @@ public class Tour implements Serializable {
     }
 
     public void setPictureFile(String pictureFile) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("pictureFile",pictureFile);
+        thisTour.updateChildren(ups);
         this.pictureFile = pictureFile;
     }
 
@@ -78,6 +158,9 @@ public class Tour implements Serializable {
     }
 
     public void setRating(int rating) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("rating",rating);
+        thisTour.updateChildren(ups);
         this.rating = rating;
     }
 
@@ -86,6 +169,9 @@ public class Tour implements Serializable {
     }
 
     public void setNumVotes(int numVotes) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("numVotes",numVotes);
+        thisTour.updateChildren(ups);
         this.numVotes = numVotes;
     }
 
@@ -94,6 +180,9 @@ public class Tour implements Serializable {
     }
 
     public void setPlaces(List<String> places) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("places",places);
+        thisTour.updateChildren(ups);
         this.places = places;
     }
 
@@ -102,6 +191,9 @@ public class Tour implements Serializable {
     }
 
     public void setComments(List<String> comments) {
+        Map<String,Object> ups = new HashMap<>();
+        ups.put("comments",comments);
+        thisTour.updateChildren(ups);
         this.comments = comments;
     }
 
