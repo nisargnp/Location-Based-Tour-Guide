@@ -33,20 +33,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TOUR_STOP_DATA = "tour-stop-data";
+    public static final String PLACE_ID = "place-id";
     public static final String LOCATION_DATA_ACTION =
             "edu.umd.cs.cmsc436.location_basedtourguide.Tour.LOCATION_DATA_ACTION";
     public static final int IS_ALIVE = Activity.RESULT_FIRST_USER;
@@ -73,16 +75,15 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
+        // Next stop preview setup
+        // TODO - do we need a title indicating that this preview is for the next stop?
         mPreviewImageView = findViewById(R.id.previewImage);
         mPreviewTitleView = findViewById(R.id.previewTitle);
         mPreviewDescriptionView = findViewById(R.id.previewDescription);
-        // TODO - do we need a title indicating that this prevew is for the next stop?
-
         findViewById(R.id.previewView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO - actually redirect
-                Log.i(TAG, "redirect to tour info for tour index: " + LocationTrackingService.getNextStopIndex());
+                openPlaceInfo(LocationTrackingService.getNextStopIndex());
             }
         });
 
@@ -220,13 +221,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setMapEventListeners() {
-        // TODO - on info window click, send to appropriate place detail activity
-        // TODO - update markers with place description
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Log.i(TAG, marker.getTitle() + "'s Info Window Clicked");
-
+                openPlaceInfo((Integer) marker.getTag());
             }
         });
     }
@@ -287,10 +285,11 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     location.getLongitude());
                             tourStops.add(userLocation);
                         }
-                        // Draw all tour stops not visited yet
-                        // TODO - I think we still need to draw markers for visited tours
+                        // Draw path to tour stops not visited yet
                         tourStops.addAll(mTourPlaces.subList(localNextStopIndex, mTourPlaces.size()));
-                        DirectionsUtil.drawTourRoute(mMap, tourStops, true);
+                        DirectionsUtil.drawTourRoute(mMap, tourStops);
+                        // Draw a marker for all tour stops even if visted
+                        DirectionsUtil.drawTourMarkers(mMap, mTourPlaces);
                     }
                 });
             } catch (SecurityException e) {
@@ -309,21 +308,32 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         localNextStopIndex = nextStopIdx;
 
         if (nextStopIdx > 0) {
-            Place arrivedPlace = mTourPlaces.get(nextStopIdx - 1);
+            int arrivedPlaceId = nextStopIdx - 1;
+            Place arrivedPlace = mTourPlaces.get(arrivedPlaceId);
             String notificationMessage = "Arrived at " + arrivedPlace.getName();
+
             Snackbar snackbar = Snackbar.make(findViewById(R.id.snackBarView), notificationMessage, 10000);
             snackbar.setAction("More Details", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "Playing media for: " + arrivedPlace.getName());
-                    // TODO - these paths will come from the Place object
-//                    String videoPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.teapot, "test", "teapot");
-//                    // TODO - logic for video vs audio vs just go to info
-//                    Bundle b = new Bundle();
-//                    b.putString("uri", uri.toString());
-//                    VideoDialogFragment vidDialog = new VideoDialogFragment();
-//                    vidDialog.setArguments(b);
-//                    vidDialog.show(getFragmentManager(), "video");
+
+                    // TODO - how do i set a title for vid/aud frag?
+                    if (arrivedPlace.getVideoFile().length() > 0) {
+                        Bundle b = new Bundle();
+                        b.putString("uri", arrivedPlace.getVideoFile());
+                        VideoDialogFragment vidDialog = new VideoDialogFragment();
+                        vidDialog.setArguments(b);
+                        vidDialog.show(getFragmentManager(), "video");
+                    } else if (arrivedPlace.getAudioFile().length() > 0) {
+                        Bundle b = new Bundle();
+                        b.putString("uri", arrivedPlace.getAudioFile());
+                        AudioDialogFragment audioDialog = new AudioDialogFragment();
+                        audioDialog.setArguments(b);
+                        audioDialog.show(getFragmentManager(), "audio");
+                    } else {
+                        openPlaceInfo(arrivedPlaceId);
+                    }
                 }
             });
             snackbar.show();
@@ -344,6 +354,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
         mPreviewTitleView.setText(tourStop.getName());
         mPreviewDescriptionView.setText(tourStop.getDescription());
+    }
+
+    private void openPlaceInfo(int placeIndex) {
+        String placeId = mTourPlaces.get(placeIndex).getId();
+        Intent intent = new Intent(TourActivity.this, PlaceInfoActivity.class);
+        intent.putExtra(PLACE_ID, placeId);
+        startActivity(intent);
     }
 
     private boolean needsRuntimePermission(String permission) {

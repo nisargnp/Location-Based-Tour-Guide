@@ -3,6 +3,7 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -20,18 +21,36 @@ public class DirectionsUtil {
      * Draw a Tour's (walking) route on a GoogleMap
      * @param map - GoogleMap to draw on.
      * @param tourStops - List of Place objects representing tour stops. MUST be in order.
-     * @param drawMarkers - Flag whether to draw markers along with the tour route.
      */
-    public static void drawTourRoute(GoogleMap map, List<Place> tourStops, boolean drawMarkers) {
+    public static void drawTourRoute(GoogleMap map, List<Place> tourStops) {
         if (tourStops.size() > 1) {
-            if (drawMarkers) {
-                addMarkers(map, tourStops);
-            }
-
             // Query Directions API in background. The AsyncTask will draw route lines for us.
             DirectionsAsyncTask task = new DirectionsAsyncTask();
             DirectionsTaskParameter param = buildDirectionParams(map, tourStops);
             task.execute(param);
+        }
+    }
+
+    /**
+     * Draw markers on a GoogleMap based on the locations in the given list of places
+     * @param map
+     * @param tourStops
+     */
+    public static void drawTourMarkers(GoogleMap map, List<Place> tourStops) {
+        if (tourStops.size() > 1) {
+            // TODO - change color of next stop marker?
+            // TODO - different color for visited stops?
+            for (int i = 0; i < tourStops.size(); i++) {
+                Place place = tourStops.get(i);
+                if (!(place instanceof UserLocation)) {
+                    Marker marker = map.addMarker((new MarkerOptions())
+                            .position(new LatLng(place.getLat(), place.getLon()))
+                            .title(place.getName())
+                            .snippet(place.getDescription())
+                            .icon(BitmapDescriptorFactory.defaultMarker(PLACE_MARKER_COLOR)));
+                    marker.setTag(i);
+                }
+            }
         }
     }
 
@@ -65,23 +84,5 @@ public class DirectionsUtil {
         }
 
         return param;
-    }
-
-    /**
-     * Draw markers on a GoogleMap based on the locations in the given list of places
-     * @param map
-     * @param tourStops
-     */
-    private static void addMarkers(GoogleMap map, List<Place> tourStops) {
-        for (Place place : tourStops) {
-            // TODO - decide marker details
-            // add a marker for all tour stops except the user's location
-            if (!(place instanceof UserLocation)) {
-                map.addMarker((new MarkerOptions())
-                        .position(new LatLng(place.getLat(), place.getLon()))
-                        .title(place.getName())
-                        .icon(BitmapDescriptorFactory.defaultMarker(PLACE_MARKER_COLOR)));
-            }
-        }
     }
 }

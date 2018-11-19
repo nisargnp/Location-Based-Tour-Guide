@@ -31,43 +31,71 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="460dp" />
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/previewView"
         android:layout_width="334dp"
-        android:layout_height="79dp"
+        android:layout_height="96dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="21dp">
 
-        <ImageView
-            android:id="@+id/previewImage"
-            android:layout_width="90dp"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            app:srcCompat="@color/colorPrimary" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:shrinkColumns="*"
+            android:stretchColumns="*">
 
-        <TextView
-            android:id="@+id/previewTitle"
-            android:layout_width="232dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="Preview Title"
-            android:textStyle="bold" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/previewDescription"
-            android:layout_width="232dp"
-            android:layout_height="57dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:text="TextView" />
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/previewImage"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/clouds" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="12"
+                    android:orientation="vertical"
+                    android:paddingStart="15dp">
+
+                    <TextView
+                        android:id="@+id/previewTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:text="Place"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/previewDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:scrollHorizontally="true"
+                        android:text="This is the description of a place " />
+                </LinearLayout>
+
+            </TableRow>
+        </TableLayout>
+
+    </android.support.v7.widget.CardView>
 
 </android.widget.RelativeLayout>
