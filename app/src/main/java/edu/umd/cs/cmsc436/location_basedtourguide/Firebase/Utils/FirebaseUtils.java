@@ -41,15 +41,10 @@ public class FirebaseUtils {
      * @param context contexxt
      * @param tour tour
      */
-    public static void uploadToFirebase(Context context, Tour tour) {
-        if (tour.getPictureFile().length() != 0) {
-            uploadFileToFirebase(context, tour.getPictureFile(), "image", tour.getPictureFile(), uri -> {
-                tour.setPictureFile(uri.toString());
-                uploadToFirebaseRaw(tour);
-            });
-        } else {
-            uploadToFirebaseRaw(tour);
-        }
+    public static String uploadToFirebase(Context context, Tour tour) {
+        String id = dbTours.push().getKey();
+        tryUploadTourImage(context, id, tour);
+        return id;
     }
 
     /**
@@ -58,9 +53,12 @@ public class FirebaseUtils {
      *
      * @param context context
      * @param place tour
+     * @return id
      */
-    public static void uploadToFirebase(Context context, Place place) {
-        tryUploadPlaceImage(context, place);
+    public static String uploadToFirebase(Context context, Place place) {
+        String id = dbPlaces.push().getKey();
+        tryUploadPlaceImage(context, id, place);
+        return id;
     }
 
     /**
@@ -68,9 +66,12 @@ public class FirebaseUtils {
      *
      * @param context context
      * @param comment comment
+     * @return id
      */
-    public static void uploadToFirebase(Context context, Comment comment) {
-        uploadToFirebaseRaw(comment);
+    public static String uploadToFirebase(Context context, Comment comment) {
+        String id = dbComments.push().getKey();
+        uploadToFirebaseRaw(id, comment);
+        return id;
     }
 
     /**
@@ -78,84 +79,107 @@ public class FirebaseUtils {
      *
      * @param context context
      * @param user user
+     * @return id
      */
-    public static void uploadToFirebase(Context context, User user) {
-        uploadToFirebaseRaw(user);
+    public static String uploadToFirebase(Context context, User user) {
+        String id = dbUsers.push().getKey();
+        uploadToFirebaseRaw(id, user);
+        return id;
     }
 
     /**
      * For testing only, don't use.
      * @param tour tour
+     * @return id
      */
-    public static void uploadToFirebaseRaw(Tour tour) {
-        String id = dbTours.push().getKey();
+    public static String uploadToFirebaseRaw(String id, Tour tour) {
+        if (id == null) id = dbTours.push().getKey();
         tour.setId(id);
         if (id != null) dbTours.child(id).setValue(tour);
+        return id;
     }
 
     /**
      * For testing only, don't use.
      * @param place place
+     * @return id
      */
-    public static void uploadToFirebaseRaw(Place place) {
-        String id = dbPlaces.push().getKey();
+    public static String uploadToFirebaseRaw(String id, Place place) {
+        if (id == null) id = dbPlaces.push().getKey();
         place.setId(id);
         if (id != null)dbPlaces.child(id).setValue(place);
+        return id;
     }
 
     /**
      * For testing only, don't use.
      * @param comment comment
+     * @return id
      */
-    public static void uploadToFirebaseRaw(Comment comment) {
-        String id = dbComments.push().getKey();
+    public static String uploadToFirebaseRaw(String id, Comment comment) {
+        if (id == null) id = dbComments.push().getKey();
         comment.setId(id);
         if (id != null)dbComments.child(id).setValue(comment);
+        return id;
     }
 
     /**
      * For testing only, don't use.
      * @param user user
+     * @return id
      */
-    public static void uploadToFirebaseRaw(User user) {
-        String id = dbUsers.push().getKey();
+    public static String uploadToFirebaseRaw(String id, User user) {
+        if (id == null) id = dbUsers.push().getKey();
         user.setId(id);
         if (id != null)dbUsers.child(id).setValue(user);
+        return id;
     }
 
     // private helper
-    private static void tryUploadPlaceImage(Context context, Place place) {
+    private static void tryUploadTourImage(Context context, String id, Tour tour) {
+        if (tour.getPictureFile().length() != 0) {
+            uploadFileToFirebase(context, tour.getPictureFile(), "image", tour.getPictureFile(), uri -> {
+                tour.setPictureFile(uri.toString());
+                uploadToFirebaseRaw(id, tour);
+            });
+        } else {
+            uploadToFirebaseRaw(id, tour);
+        }
+    }
+
+    // private helper
+    private static void tryUploadPlaceImage(Context context, String id, Place place) {
         if (place.getPictureFile().length() != 0) {
             uploadFileToFirebase(context, place.getPictureFile(), "image", place.getPictureFile(), uri -> {
                 place.setPictureFile(uri.toString());
-                tryUploadPlaceAudio(context, place);
+                tryUploadPlaceAudio(context, id, place);
             });
         } else {
-            tryUploadPlaceAudio(context, place);
+            tryUploadPlaceAudio(context, id, place);
         }
     }
 
     // private helper
-    private static void tryUploadPlaceAudio(Context context, Place place) {
+    private static void tryUploadPlaceAudio(Context context, String id, Place place) {
         if (place.getAudioFile().length() != 0) {
             uploadFileToFirebase(context, place.getAudioFile(), "audio", place.getAudioFile(), uri -> {
                 place.setPictureFile(uri.toString());
-                tryUploadPlaceVideo(context, place);
+                tryUploadPlaceVideo(context, id, place);
             });
         } else {
-            tryUploadPlaceVideo(context, place);
+            tryUploadPlaceVideo(context, id, place);
         }
     }
 
     // private helper
-    private static void tryUploadPlaceVideo(Context context, Place place) {
+    private static void tryUploadPlaceVideo(Context context, String id, Place place) {
         if (place.getVideoFile().length() != 0) {
             uploadFileToFirebase(context, place.getVideoFile(), "video", place.getVideoFile(), uri -> {
                 place.setPictureFile(uri.toString());
-                uploadToFirebaseRaw(place);
+                uploadToFirebaseRaw(id, place);
             });
         } else {
-            uploadToFirebaseRaw(place);
+            uploadToFirebaseRaw(id, place);
         }
     }
 
