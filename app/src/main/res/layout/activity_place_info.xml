@@ -42,6 +42,7 @@
                 android:padding="16dp"
                 android:scrollHorizontally="false"
                 android:layout_toEndOf="@id/place_img"
+                android:scrollbars = "vertical"
                 app:layout_constraintBottom_toTopOf="@+id/place_img"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
