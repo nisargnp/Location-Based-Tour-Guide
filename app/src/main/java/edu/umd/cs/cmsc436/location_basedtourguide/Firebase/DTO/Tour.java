@@ -1,19 +1,12 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
-import android.util.Log;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class Tour implements Serializable {
@@ -29,14 +22,15 @@ public class Tour implements Serializable {
     private int numVotes;
     private List<String> places;
     private List<String> comments;
+
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
     private DatabaseReference thisTour;
 
-    //dont call this ever pls
-    public Tour() {
-
-    }
+    /**
+     * Don't use this constructor, this is for Firebase only.
+     */
+    public Tour(){}
 
     public Tour(String name){//use this constructor
         this(null,name,0,0,null,null,null,0,0,null,null);
@@ -46,7 +40,7 @@ public class Tour implements Serializable {
         setId(id);
         thisTour.setValue(this);
     }
-    //shouldnt call this one?
+
     public Tour(String i, String n, double la, double lo, String des, String au,String pic,int rat, int nu, List<String> pl, List<String> c){
         id = i;
         name = n;
@@ -62,7 +56,6 @@ public class Tour implements Serializable {
     }
 
     public void updateTour(Tour t){
-
         setId(t.getId());
         setName(t.getName());
         setLat(t.getLat());

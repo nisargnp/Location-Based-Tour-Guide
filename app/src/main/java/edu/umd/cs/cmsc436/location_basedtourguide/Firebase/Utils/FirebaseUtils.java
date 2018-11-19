@@ -9,7 +9,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.Interface.UriResultListener;
+import edu.umd.cs.cmsc436.location_basedtourguide.Interface.OnUriResultListener;
 
 public class FirebaseUtils {
 
@@ -20,9 +20,9 @@ public class FirebaseUtils {
      * @param filePath path of file to upload from internal storage
      * @param uploadDir name of storage directory on Firebase
      * @param uploadName name of uploaded file on Firebase
-     * @param uriResultListener optional function to invoke when download URI becomes available
+     * @param onUriResultListener optional function to invoke when download URI becomes available
      */
-    public static void uploadFileToFirebase(String filePath, String uploadDir, String uploadName, UriResultListener uriResultListener) {
+    public static void uploadFileToFirebase(String filePath, String uploadDir, String uploadName, OnUriResultListener onUriResultListener) {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageRef =  firebaseStorage.getReference(uploadDir + "/" + uploadName);
         File file = new File(filePath);
@@ -31,7 +31,7 @@ public class FirebaseUtils {
             storageRef.putFile(Uri.fromFile(file))
                     .addOnSuccessListener(taskSnapshot -> {
                         storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            if (uriResultListener != null) uriResultListener.onUriResult(uri);
+                            if (onUriResultListener != null) onUriResultListener.onUriResult(uri);
                         });
                     }).addOnFailureListener(Throwable::printStackTrace);
         }
@@ -44,14 +44,14 @@ public class FirebaseUtils {
      * @param uploadDir name of storage directory on Firebase
      * @param uploadName name of uploaded file on Firebase
      * @param showProgressDialog whether to show progress dialog popup
-     * @param uriResultListener optional function to invoke when download URI becomes available
+     * @param onUriResultListener optional function to invoke when download URI becomes available
      */
-    public static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, boolean showProgressDialog, UriResultListener uriResultListener) {
+    public static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, boolean showProgressDialog, OnUriResultListener onUriResultListener) {
         if (showProgressDialog) {
             ProgressDialog progressDialog = ProgressDialog.show(context, "Uploading", "Please wait...");
             uploadFileToFirebase(filePath, uploadDir, uploadName, uri -> {
                 progressDialog.dismiss();
-                if (uriResultListener != null) uriResultListener.onUriResult(uri);
+                if (onUriResultListener != null) onUriResultListener.onUriResult(uri);
             });
         } else {
             uploadFileToFirebase(filePath, uploadDir, uploadName, null);

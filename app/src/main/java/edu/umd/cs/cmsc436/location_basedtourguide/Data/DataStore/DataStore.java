@@ -55,194 +55,194 @@ public class DataStore {
 
         database = FirebaseDatabase.getInstance();
 
-        firebaseRefTours = database.getReference("Tours");
-        firebaseRefPlaces = database.getReference("Places");
-        firebaseRefComments = database.getReference("Comments");
-        firebaseRefUsers = database.getReference("Users");
-
-
-        firebaseRefTours.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    Tour t = child.getValue(Tour.class);
-                    tourMap.put(t.getId(),t);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        firebaseRefPlaces.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    Place p = child.getValue(Place.class);
-                    placeMap.put(p.getId(),p);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        firebaseRefComments.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    Comment c = child.getValue(Comment.class);
-                    commentMap.put(c.getId(),c);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        firebaseRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    User u = child.getValue(User.class);
-                    userMap.put(u.getId(),u);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        update();
-
-
-        ValueEventListener TourListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                update();
-                Tour ChangedTour = dataSnapshot.getValue(Tour.class);
-                String i = ChangedTour.getId();
-                if(i != null) {
-                        Tour ThisTour = null;
-                        for (Tour t : tours) {
-                            String id = t.getId();
-                            if (i.equals(id)) {
-                                t.updateTour(ChangedTour);
-                            }
-                        }
-                        if (ThisTour == null) {
-                            tourMap.put(i, ThisTour);
-                            update();
-                        }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener PlaceListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                update();
-                Place ChangedPlace = dataSnapshot.getValue(Place.class);
-                String i = ChangedPlace.getId();
-                if(i != null) {
-                    Place ThisPlace = null;
-                    for (Place p : places) {
-                        String id = p.getId();
-                        if (i.equals(id)) {
-                            p.updatePlace(ChangedPlace);
-                        }
-                    }
-                    if (ThisPlace == null) {
-                        placeMap.put(i, ThisPlace);
-                        update();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener CommentListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                update();
-                Comment ChangedComment = dataSnapshot.getValue(Comment.class);
-                String i = ChangedComment.getId();
-                if(i != null) {
-                    Comment ThisComment = null;
-                    for (Comment p : comments) {
-                        String id = p.getId();
-                        if (i.equals(id)) {
-                            p.updateComment(ChangedComment);
-                        }
-                    }
-                    if (ThisComment == null) {
-                        commentMap.put(i, ThisComment);
-                        update();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        ValueEventListener UserListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                update();
-                User ChangedUser = dataSnapshot.getValue(User.class);
-                String i = ChangedUser.getId();
-                if (i != null) {
-                    User ThisUser = null;
-                    for (User p : users) {
-                        String id = p.getId();
-                        if (i.equals(id)) {
-                            p.updateUser(ChangedUser);
-                        }
-                    }
-                    if (ThisUser == null) {
-                        userMap.put(i, ThisUser);
-                        update();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.i("","Canceled Read");
-            }
-        };
-
-        if(firebaseRefTours != null) {
-            firebaseRefTours.addValueEventListener(TourListener);
-        }
-        if(firebaseRefPlaces != null) {
-            firebaseRefPlaces.addValueEventListener(PlaceListener);
-        }
-        if(firebaseRefComments != null) {
-            firebaseRefComments.addValueEventListener(CommentListener);
-        }
-        if(firebaseRefUsers != null) {
-            firebaseRefUsers.addValueEventListener(UserListener);
-        }
+//        firebaseRefTours = database.getReference("Tours");
+//        firebaseRefPlaces = database.getReference("Places");
+//        firebaseRefComments = database.getReference("Comments");
+//        firebaseRefUsers = database.getReference("Users");
+//
+//
+//        firebaseRefTours.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+//                    Tour t = child.getValue(Tour.class);
+//                    tourMap.put(t.getId(),t);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//        firebaseRefPlaces.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+//                    Place p = child.getValue(Place.class);
+//                    placeMap.put(p.getId(),p);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        firebaseRefComments.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+//                    Comment c = child.getValue(Comment.class);
+//                    commentMap.put(c.getId(),c);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        firebaseRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+//                    User u = child.getValue(User.class);
+//                    userMap.put(u.getId(),u);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//        update();
+//
+//
+//        ValueEventListener TourListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                update();
+//                Tour ChangedTour = dataSnapshot.getValue(Tour.class);
+//                String i = ChangedTour.getId();
+//                if(i != null) {
+//                        Tour ThisTour = null;
+//                        for (Tour t : tours) {
+//                            String id = t.getId();
+//                            if (i.equals(id)) {
+//                                t.updateTour(ChangedTour);
+//                            }
+//                        }
+//                        if (ThisTour == null) {
+//                            tourMap.put(i, ThisTour);
+//                            update();
+//                        }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //Log.i("","Canceled Read");
+//            }
+//        };
+//
+//        ValueEventListener PlaceListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                update();
+//                Place ChangedPlace = dataSnapshot.getValue(Place.class);
+//                String i = ChangedPlace.getId();
+//                if(i != null) {
+//                    Place ThisPlace = null;
+//                    for (Place p : places) {
+//                        String id = p.getId();
+//                        if (i.equals(id)) {
+//                            p.updatePlace(ChangedPlace);
+//                        }
+//                    }
+//                    if (ThisPlace == null) {
+//                        placeMap.put(i, ThisPlace);
+//                        update();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //Log.i("","Canceled Read");
+//            }
+//        };
+//
+//        ValueEventListener CommentListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                update();
+//                Comment ChangedComment = dataSnapshot.getValue(Comment.class);
+//                String i = ChangedComment.getId();
+//                if(i != null) {
+//                    Comment ThisComment = null;
+//                    for (Comment p : comments) {
+//                        String id = p.getId();
+//                        if (i.equals(id)) {
+//                            p.updateComment(ChangedComment);
+//                        }
+//                    }
+//                    if (ThisComment == null) {
+//                        commentMap.put(i, ThisComment);
+//                        update();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //Log.i("","Canceled Read");
+//            }
+//        };
+//
+//        ValueEventListener UserListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                update();
+//                User ChangedUser = dataSnapshot.getValue(User.class);
+//                String i = ChangedUser.getId();
+//                if (i != null) {
+//                    User ThisUser = null;
+//                    for (User p : users) {
+//                        String id = p.getId();
+//                        if (i.equals(id)) {
+//                            p.updateUser(ChangedUser);
+//                        }
+//                    }
+//                    if (ThisUser == null) {
+//                        userMap.put(i, ThisUser);
+//                        update();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //Log.i("","Canceled Read");
+//            }
+//        };
+//
+//        if(firebaseRefTours != null) {
+//            firebaseRefTours.addValueEventListener(TourListener);
+//        }
+//        if(firebaseRefPlaces != null) {
+//            firebaseRefPlaces.addValueEventListener(PlaceListener);
+//        }
+//        if(firebaseRefComments != null) {
+//            firebaseRefComments.addValueEventListener(CommentListener);
+//        }
+//        if(firebaseRefUsers != null) {
+//            firebaseRefUsers.addValueEventListener(UserListener);
+//        }
 
     }
 

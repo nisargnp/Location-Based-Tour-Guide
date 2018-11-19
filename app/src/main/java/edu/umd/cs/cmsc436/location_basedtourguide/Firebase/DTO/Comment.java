@@ -5,7 +5,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Comment implements Serializable {
@@ -18,9 +17,11 @@ public class Comment implements Serializable {
     private DatabaseReference firebaseComments = database.getReference("Comments");//.child("Tours");//is this the right ref?
     private DatabaseReference thisComment;
 
-    public Comment(){
+    /**
+     * Don't use this constructor, this is for Firebase only.
+     */
+    public Comment(){}
 
-    }
     public Comment(String author){
         this(null,author,null);
         id = firebaseComments.push().getKey();
@@ -28,12 +29,12 @@ public class Comment implements Serializable {
         setId(id);
         thisComment.setValue(this);
     }
+
     public Comment(String id, String Author, String Text){
         this.id = id;
         this.author = Author;
         this.text = Text;
     }
-
 
     public void updateComment(Comment c){
         setId(c.getId());
