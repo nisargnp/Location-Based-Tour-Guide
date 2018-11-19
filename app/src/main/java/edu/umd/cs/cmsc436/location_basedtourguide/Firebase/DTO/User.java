@@ -4,9 +4,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class User implements Serializable {
 
@@ -14,8 +17,6 @@ public class User implements Serializable {
     private String name;
     private List<String> tours;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseUsers = database.getReference("Users");
     private DatabaseReference thisUser;
 
     /**
@@ -23,18 +24,22 @@ public class User implements Serializable {
      */
     public User(){}
 
-    public User(String name){
-        this(null,name,null);
-        id = firebaseUsers.push().getKey();
-        thisUser = firebaseUsers.child(id);
-        setId(id);
-        thisUser.setValue(this);
+    public static User createUser() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference firebaseUsers = database.getReference("Users");
+
+        User user = new User("","",new ArrayList<>());
+        user.id = firebaseUsers.push().getKey();
+        user.thisUser = firebaseUsers.child(user.id);
+        user.setId(user.id);
+        user.thisUser.setValue(user);
+        return user;
     }
 
-    public User(String id, String Name, List<String> Tours){
+    private User(String id, String name, List<String> tours) {
         this.id = id;
-        this.name= Name;
-        this.tours = Tours;
+        this.name = name;
+        this.tours = tours;
     }
 
     public void updateUser(User u){
@@ -48,10 +53,8 @@ public class User implements Serializable {
     }
 
     public void setId(String id) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put(this.id,id);
-        firebaseUsers.updateChildren(ups);
         this.id = id;
+        thisUser.updateChildren(Utils.generatePair("id", id));
     }
 
     public String getName() {
@@ -59,10 +62,8 @@ public class User implements Serializable {
     }
 
     public void setName(String name) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put("name",name);
-        firebaseUsers.updateChildren(ups);
         this.name = name;
+        thisUser.updateChildren(Utils.generatePair("name", name));
     }
 
     public List<String> getTours() {
@@ -70,10 +71,8 @@ public class User implements Serializable {
     }
 
     public void setTours(List<String> tours) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put("tours",tours);
-        firebaseUsers.updateChildren(ups);
         this.tours = tours;
+        thisUser.updateChildren(Utils.generatePair("tours", tours));
     }
 
 }

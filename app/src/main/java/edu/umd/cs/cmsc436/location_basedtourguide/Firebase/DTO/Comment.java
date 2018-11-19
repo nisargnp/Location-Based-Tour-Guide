@@ -7,14 +7,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
+
 public class Comment implements Serializable {
 
     private String id;
     private String author;
     private String text;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseComments = database.getReference("Comments");//.child("Tours");//is this the right ref?
     private DatabaseReference thisComment;
 
     /**
@@ -22,18 +22,22 @@ public class Comment implements Serializable {
      */
     public Comment(){}
 
-    public Comment(String author){
-        this(null,author,null);
-        id = firebaseComments.push().getKey();
-        thisComment = firebaseComments.child(id);
-        setId(id);
-        thisComment.setValue(this);
+    public static Comment createComment() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference firebaseComments = database.getReference("Comments");
+
+        Comment comment = new Comment("","","");
+        comment.id = firebaseComments.push().getKey();
+        comment.thisComment = firebaseComments.child(comment.id);
+        comment.setId(comment.id);
+        comment.thisComment.setValue(comment);
+        return comment;
     }
 
-    public Comment(String id, String Author, String Text){
+    private Comment(String id, String author, String text) {
         this.id = id;
-        this.author = Author;
-        this.text = Text;
+        this.author = author;
+        this.text = text;
     }
 
     public void updateComment(Comment c){
@@ -47,10 +51,8 @@ public class Comment implements Serializable {
     }
 
     public void setId(String id) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put(this.id,id);
-        firebaseComments.updateChildren(ups);
         this.id = id;
+        thisComment.updateChildren(Utils.generatePair("id", id));
     }
 
     public String getAuthor() {
@@ -58,10 +60,8 @@ public class Comment implements Serializable {
     }
 
     public void setAuthor(String author) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put("author",author);
-        firebaseComments.updateChildren(ups);
         this.author = author;
+        thisComment.updateChildren(Utils.generatePair("author", author));
     }
 
     public String getText() {
@@ -69,10 +69,8 @@ public class Comment implements Serializable {
     }
 
     public void setText(String text) {
-        Map<String, Object> ups = new HashMap<>();
-        ups.put("text",text);
-        firebaseComments.updateChildren(ups);
         this.text = text;
+        thisComment.updateChildren(Utils.generatePair("text", text));
     }
 
 }

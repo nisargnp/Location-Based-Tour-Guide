@@ -100,7 +100,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTourPlaces.add(place);
 
                 // Working with location objects are easier for LocationAPI
-                Location location = new Location("temp");
+                Location location = new Location("temp_img");
                 location.setLatitude(place.getLat());
                 location.setLongitude(place.getLon());
                 mTourLocations.add(location);

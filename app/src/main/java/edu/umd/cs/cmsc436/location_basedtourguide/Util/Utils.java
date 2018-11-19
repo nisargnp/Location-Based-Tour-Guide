@@ -13,10 +13,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 public final class Utils {
 
     private Utils() {}
+
+    public static HashMap<String, Object> generatePair(String str, Object obj) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(str, obj);
+        return map;
+    }
 
     // this method is only for testing
     public static String copyResourceToInternalStorage(Context appContext, int id, String dirName, String fileName) {

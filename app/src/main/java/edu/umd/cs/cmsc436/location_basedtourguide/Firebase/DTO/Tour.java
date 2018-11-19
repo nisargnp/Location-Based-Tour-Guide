@@ -4,9 +4,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 
 public class Tour implements Serializable {
@@ -23,8 +26,6 @@ public class Tour implements Serializable {
     private List<String> places;
     private List<String> comments;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
     private DatabaseReference thisTour;
 
     /**
@@ -32,27 +33,30 @@ public class Tour implements Serializable {
      */
     public Tour(){}
 
-    public Tour(String name){//use this constructor
-        this(null,name,0,0,null,null,null,0,0,null,null);
-        id = firebaseTours.push().getKey();
-        //firebaseTours.chidlsetValue(t);
-        thisTour = firebaseTours.child(id);
-        setId(id);
-        thisTour.setValue(this);
+    public static Tour createTour() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference firebaseTours = database.getReference("Tours");
+
+        Tour tour = new Tour("","",0,0,"","","",0,0,new ArrayList<>(),new ArrayList<>());
+        tour.id = firebaseTours.push().getKey();
+        tour.thisTour = firebaseTours.child(tour.id);
+        tour.setId(tour.id);
+        tour.thisTour.setValue(tour);
+        return tour;
     }
 
-    public Tour(String i, String n, double la, double lo, String des, String au,String pic,int rat, int nu, List<String> pl, List<String> c){
-        id = i;
-        name = n;
-        lat = la;
-        lon = lo;
-        description = des;
-        author = au;
-        pictureFile = pic;
-        rating = rat;
-        numVotes = nu;
-        places = pl;
-        comments = c;
+    private Tour(String id, String name, double lat, double lon, String description, String author, String pictureFile, int rating, int numVotes, List<String> places, List<String> comments) {
+        this.id = id;
+        this.name = name;
+        this.lat = lat;
+        this.lon = lon;
+        this.description = description;
+        this.author = author;
+        this.pictureFile = pictureFile;
+        this.rating = rating;
+        this.numVotes = numVotes;
+        this.places = places;
+        this.comments = comments;
     }
 
     public void updateTour(Tour t){
@@ -73,11 +77,9 @@ public class Tour implements Serializable {
         return this.id;
     }
 
-    public void setId(String id) {//this shouldnt be called
-        Map<String, Object> ups = new HashMap<>();
-        ups.put(this.id,id);
-        firebaseTours.updateChildren(ups);
+    public void setId(String id) {
         this.id = id;
+        thisTour.updateChildren(Utils.generatePair("id", id));
     }
 
     public String getName() {
@@ -85,10 +87,8 @@ public class Tour implements Serializable {
     }
 
     public void setName(String name) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("name",name);
-        thisTour.updateChildren(ups);
         this.name = name;
+        thisTour.updateChildren(Utils.generatePair("name", name));
     }
 
     public double getLat() {
@@ -96,10 +96,8 @@ public class Tour implements Serializable {
     }
 
     public void setLat(double lat) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lat",lat);
-        thisTour.updateChildren(ups);
         this.lat = lat;
+        thisTour.updateChildren(Utils.generatePair("lat", lat));
     }
 
     public double getLon() {
@@ -107,10 +105,8 @@ public class Tour implements Serializable {
     }
 
     public void setLon(double lon) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lon",lon);
-        thisTour.updateChildren(ups);
         this.lon = lon;
+        thisTour.updateChildren(Utils.generatePair("lon", lon));
     }
 
     public String getDescription() {
@@ -118,10 +114,8 @@ public class Tour implements Serializable {
     }
 
     public void setDescription(String description) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("description",description);
-        thisTour.updateChildren(ups);
         this.description = description;
+        thisTour.updateChildren(Utils.generatePair("description",description));
     }
 
     public String getAuthor() {
@@ -129,10 +123,8 @@ public class Tour implements Serializable {
     }
 
     public void setAuthor(String author) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("author",author);
-        thisTour.updateChildren(ups);
         this.author = author;
+        thisTour.updateChildren(Utils.generatePair("author", author));
     }
 
     public String getPictureFile() {
@@ -140,10 +132,8 @@ public class Tour implements Serializable {
     }
 
     public void setPictureFile(String pictureFile) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("pictureFile",pictureFile);
-        thisTour.updateChildren(ups);
         this.pictureFile = pictureFile;
+        thisTour.updateChildren(Utils.generatePair("pictureFile", pictureFile));
     }
 
     public int getRating() {
@@ -151,10 +141,8 @@ public class Tour implements Serializable {
     }
 
     public void setRating(int rating) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("rating",rating);
-        thisTour.updateChildren(ups);
         this.rating = rating;
+        thisTour.updateChildren(Utils.generatePair("rating",rating));
     }
 
     public int getNumVotes() {
@@ -162,10 +150,8 @@ public class Tour implements Serializable {
     }
 
     public void setNumVotes(int numVotes) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("numVotes",numVotes);
-        thisTour.updateChildren(ups);
         this.numVotes = numVotes;
+        thisTour.updateChildren(Utils.generatePair("numVotes", numVotes));
     }
 
     public List<String> getPlaces() {
@@ -173,10 +159,8 @@ public class Tour implements Serializable {
     }
 
     public void setPlaces(List<String> places) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("places",places);
-        thisTour.updateChildren(ups);
         this.places = places;
+        thisTour.updateChildren(Utils.generatePair("places",places));
     }
 
     public List<String> getComments() {
@@ -184,10 +168,8 @@ public class Tour implements Serializable {
     }
 
     public void setComments(List<String> comments) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("comments",comments);
-        thisTour.updateChildren(ups);
         this.comments = comments;
+        thisTour.updateChildren(Utils.generatePair("comments", comments));
     }
 
 }
