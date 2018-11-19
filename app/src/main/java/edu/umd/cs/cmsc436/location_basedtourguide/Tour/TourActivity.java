@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,17 +33,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TOUR_STOP_DATA = "tour-stop-data";
+    public static final String PLACE_ID = "place-id";
     public static final String LOCATION_DATA_ACTION =
             "edu.umd.cs.cmsc436.location_basedtourguide.Tour.LOCATION_DATA_ACTION";
     public static final int IS_ALIVE = Activity.RESULT_FIRST_USER;
@@ -52,7 +58,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
 
     private FusedLocationProviderClient mFusedLocationClient;
-    private TextView mTestText;
     private GoogleMap mMap;
     private Tour mTour;
     private List<Place> mTourPlaces;
@@ -62,14 +67,27 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Location objects to use Location helper functions for getting distance in meters
      */
     private List<Location> mTourLocations;
+    private TextView mPreviewTitleView, mPreviewDescriptionView;
+    private ImageView mPreviewImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
-        // TODO - remove this test view
-        mTestText = findViewById(R.id.testTextView);
+        // Next stop preview setup
+        // TODO - do we need a title indicating that this preview is for the next stop?
+        mPreviewImageView = findViewById(R.id.previewImage);
+        mPreviewTitleView = findViewById(R.id.previewTitle);
+        mPreviewDescriptionView = findViewById(R.id.previewDescription);
+        findViewById(R.id.previewView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlaceInfo(LocationTrackingService.getNextStopIndex());
+            }
+        });
+
+        // TODO - how do i get back to the main menu if i lose it on the backstack?
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -100,14 +118,13 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTourPlaces.add(place);
 
                 // Working with location objects are easier for LocationAPI
-                Location location = new Location("temp");
+                Location location = new Location("temp_img");
                 location.setLatitude(place.getLat());
                 location.setLongitude(place.getLon());
                 mTourLocations.add(location);
 
                 // Initialize next tour stop
-                // TODO - initialize setup for tour stop preview view
-                mTestText.setText(mTourPlaces.get(LocationTrackingService.getNextStopIndex()).getName());
+                updatePreview(LocationTrackingService.getNextStopIndex());
             }
         }
 
@@ -183,6 +200,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         showUserLocation();
+        showTourRoute();
     }
 
     @Override
@@ -203,13 +221,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setMapEventListeners() {
-        // TODO - on info window click, send to appropriate place detail activity
-        // TODO - do anything besides default zoom and show info window on marker click?
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Log.i(TAG, marker.getTitle() + "'s Info Window Clicked");
-
+                openPlaceInfo((Integer) marker.getTag());
             }
         });
     }
@@ -270,10 +285,11 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     location.getLongitude());
                             tourStops.add(userLocation);
                         }
-                        // Draw all tour stops not visited yet
-                        // TODO - I think we still need to draw markers for visited tours
+                        // Draw path to tour stops not visited yet
                         tourStops.addAll(mTourPlaces.subList(localNextStopIndex, mTourPlaces.size()));
-                        DirectionsUtil.drawTourRoute(mMap, tourStops, true);
+                        DirectionsUtil.drawTourRoute(mMap, tourStops);
+                        // Draw a marker for all tour stops even if visted
+                        DirectionsUtil.drawTourMarkers(mMap, mTourPlaces);
                     }
                 });
             } catch (SecurityException e) {
@@ -292,28 +308,59 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         localNextStopIndex = nextStopIdx;
 
         if (nextStopIdx > 0) {
-            Place arrivedPlace = mTourPlaces.get(nextStopIdx - 1);
+            int arrivedPlaceId = nextStopIdx - 1;
+            Place arrivedPlace = mTourPlaces.get(arrivedPlaceId);
             String notificationMessage = "Arrived at " + arrivedPlace.getName();
+
             Snackbar snackbar = Snackbar.make(findViewById(R.id.snackBarView), notificationMessage, 10000);
             snackbar.setAction("More Details", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO - actually play media
-                    Log.i(TAG, "Play media for: " + arrivedPlace.getName());
+                    Log.i(TAG, "Playing media for: " + arrivedPlace.getName());
+
+                    // TODO - how do i set a title for vid/aud frag?
+                    if (arrivedPlace.getVideoFile().length() > 0) {
+                        Bundle b = new Bundle();
+                        b.putString("uri", arrivedPlace.getVideoFile());
+                        VideoDialogFragment vidDialog = new VideoDialogFragment();
+                        vidDialog.setArguments(b);
+                        vidDialog.show(getFragmentManager(), "video");
+                    } else if (arrivedPlace.getAudioFile().length() > 0) {
+                        Bundle b = new Bundle();
+                        b.putString("uri", arrivedPlace.getAudioFile());
+                        AudioDialogFragment audioDialog = new AudioDialogFragment();
+                        audioDialog.setArguments(b);
+                        audioDialog.show(getFragmentManager(), "audio");
+                    } else {
+                        openPlaceInfo(arrivedPlaceId);
+                    }
                 }
             });
             snackbar.show();
 
             if (nextStopIdx < mTourPlaces.size()) {
-                // TODO - actually update the place preview view when it is made
-                Place nextPlace = mTourPlaces.get(nextStopIdx);
-                mTestText.setText(nextPlace.getName());
+                updatePreview(nextStopIdx);
             } else {
-                // TODO - handle end of tour
                 Log.i(TAG, "END OF TOUR!");
-                mTestText.setText("END");
+                mPreviewTitleView.setText("End of the Tour!");
+                mPreviewDescriptionView.setText("You have reached the end of the tour!. Press back to go" +
+                        "to the main menu to see other tours!");
             }
         }
+    }
+
+    private void updatePreview(int stopIndex) {
+        Place tourStop = mTourPlaces.get(stopIndex);
+        new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        mPreviewTitleView.setText(tourStop.getName());
+        mPreviewDescriptionView.setText(tourStop.getDescription());
+    }
+
+    private void openPlaceInfo(int placeIndex) {
+        String placeId = mTourPlaces.get(placeIndex).getId();
+        Intent intent = new Intent(TourActivity.this, PlaceInfoActivity.class);
+        intent.putExtra(PLACE_ID, placeId);
+        startActivity(intent);
     }
 
     private boolean needsRuntimePermission(String permission) {

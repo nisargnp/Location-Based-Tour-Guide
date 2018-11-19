@@ -2,30 +2,32 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import java.io.UTFDataFormatException;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AddTour.AddTourActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataGenerator.DataGenerator;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class MainActivity extends AppCompatActivity implements TourItemFragment.OnListFragmentInteractionListener {
 
-    public static final String TOUR_LIST_TAG = "TOUR_LIST";
     public static final String TOUR_TAG = "TOUR";
 
     @Override
@@ -33,21 +35,37 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: remove hardcode
-        DataStore.getInstance().addTours(DataProvider.getTours());
-        DataStore.getInstance().addPlaces(DataProvider.getPlaces());
-        DataStore.getInstance().addComments(DataProvider.getComments());
-        DataStore.getInstance().addUsers(DataProvider.getUsers());
+        // TODO: remove hardcode - generates firebase data
+        DataGenerator.generateDataFirebase();
 
-        TourItemFragment tourItemFragment = new TourItemFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, tourItemFragment);
-        fragmentTransaction.commit();
-        fragmentManager.executePendingTransactions();
+        // TODO: remove hardcode - generates local data (pre-firebase)
+//        DataGenerator.generateDataLocal();
+//        DataStore.getInstance().addTours(DataGenerator.getTours());
+//        DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+//        DataStore.getInstance().addComments(DataGenerator.getComments());
+//        DataStore.getInstance().addUsers(DataGenerator.getUsers());
+
+        DataStore.getInstance().registerListener(() -> {
+            TourItemFragment tourItemFragment = new TourItemFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
+            fragmentTransaction.commit();
+            getSupportFragmentManager().executePendingTransactions();
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddTourActivity.class)));
+
+        // TODO: exmaple -> how to add data to firebase
+//        fab.setOnClickListener(v -> {
+//            String path = Utils.copyResourceToInternalStorage(MainActivity.this, R.raw.niagara_falls, "image", "niagara_falls");
+//            Tour tour = new Tour();
+//            tour.setName("Test Place");
+//            tour.setPictureFile(path);
+//            tour.setDescription("Test adding a new place.");
+//            FirebaseUtils.uploadToFirebase(MainActivity.this, tour);
+//        });
+
     }
 
     @Override

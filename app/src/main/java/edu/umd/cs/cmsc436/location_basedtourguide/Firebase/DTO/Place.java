@@ -1,11 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Place implements Serializable {
 
@@ -14,47 +9,23 @@ public class Place implements Serializable {
     private String description;
     private double lat;
     private double lon;
-    private String pictureFile; // these are filenames @conor
+    private String pictureFile;
     private String videoFile;
     private String audioFile;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebasePlaces = database.getReference("Places");//is this the right ref?
-    private DatabaseReference thisPlace;
-
-    /**
-     * Don't use this constructor, this is for Firebase only.
-     */
-    public Place(){}
-
-    public Place(String name){
-        this(null,name,null,0,0,null,null,null);
-        id = firebasePlaces.push().getKey();
-        thisPlace = firebasePlaces.child(id);
-        setId(id);
-        thisPlace.setValue(this);
+    public Place(){
+        this("","","",0,0,"","","");
     }
 
-    public Place(String i, String n,String d,double la,double lo,String pic,String vid,String aud){
-        this.id = i;
-        this.name = n;
-        this.description = d;
-        this.lat = la;
-        this.lon = lo;
-        this.pictureFile = pic;
-        this.videoFile = vid;
-        this.audioFile = aud;
-    }
-
-    public void updatePlace(Place p){
-        setId(p.getId());
-        setName(p.getName());
-        setLat(p.getLat());
-        setLon(p.getLon());
-        setDescription(p.getDescription());
-        setPictureFile(p.getPictureFile());
-        setVideoFile(p.getVideoFile());
-        setAudioFile(p.getAudioFile());
+    private Place(String id, String name, String description, double lat, double lon, String pictureFile, String videoFile, String audioFile) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.lat = lat;
+        this.lon = lon;
+        this.pictureFile = pictureFile;
+        this.videoFile = videoFile;
+        this.audioFile = audioFile;
     }
 
     public String getId() {
@@ -70,10 +41,15 @@ public class Place implements Serializable {
     }
 
     public void setName(String name) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("name",name);
-        thisPlace.updateChildren(ups);
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getLat() {
@@ -81,9 +57,6 @@ public class Place implements Serializable {
     }
 
     public void setLat(double lat) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lat",lat);
-        thisPlace.updateChildren(ups);
         this.lat = lat;
     }
 
@@ -92,21 +65,7 @@ public class Place implements Serializable {
     }
 
     public void setLon(double lon) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lon",lon);
-        thisPlace.updateChildren(ups);
         this.lon = lon;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("description",description);
-        thisPlace.updateChildren(ups);
-        this.description = description;
     }
 
     public String getPictureFile() {
@@ -114,9 +73,6 @@ public class Place implements Serializable {
     }
 
     public void setPictureFile(String pictureFile) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("pictureFile",pictureFile);
-        thisPlace.updateChildren(ups);
         this.pictureFile = pictureFile;
     }
 
@@ -125,9 +81,6 @@ public class Place implements Serializable {
     }
 
     public void setVideoFile(String videoFile) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("videoFile",videoFile);
-        thisPlace.updateChildren(ups);
         this.videoFile = videoFile;
     }
 
@@ -136,10 +89,29 @@ public class Place implements Serializable {
     }
 
     public void setAudioFile(String audioFile) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("audioFile",audioFile);
-        thisPlace.updateChildren(ups);
         this.audioFile = audioFile;
     }
 
+    @Override
+    public String toString() {
+        return "Place{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", pictureFile='" + pictureFile + '\'' +
+                ", videoFile='" + videoFile + '\'' +
+                ", audioFile='" + audioFile + '\'' +
+                '}';
+    }
+
+    /*
+    Methods for local, non-Firebase tracked, place objects
+     */
+    public void setLocalName(String name) { this.name = name; }
+
+    public void setLocalLat(double lat) { this.lat = lat; }
+
+    public void setLocalLon(double lon) { this.lon = lon; }
 }
