@@ -3,6 +3,7 @@ package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -60,7 +61,8 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         ImageButton audioButton = findViewById(R.id.audio_button);
 
         placeDesc.setText(mPlace.getDescription());
-
+        placeDesc.setMovementMethod(new ScrollingMovementMethod());
+        
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
         } else {
