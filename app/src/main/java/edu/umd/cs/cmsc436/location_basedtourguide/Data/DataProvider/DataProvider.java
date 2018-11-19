@@ -44,7 +44,11 @@ public final class DataProvider {
         Place terrapinRow = Place.createPlace();
         terrapinRow.setId("-vQLJaqfPfLJgObaJpUst");
         terrapinRow.setName("Terrapin Row");
-        terrapinRow.setDescription("Students live here.");
+        terrapinRow.setDescription("Students live here. Located directly across the street from the " +
+                "South Campus Commons and the Washington Quad, Terrapin Row offers its residents ultra-modern " +
+                "mid-rise apartments steps away from UMD. The center of campus including the McKeldin Library " +
+                "are just a few minute walk from Terrapin Row. Come live here and experience your college life " +
+                "in style!");
         terrapinRow.setLat(38.980367);
         terrapinRow.setLon(-76.942366);
         terrapinRow.setPictureFile("https://img.offcampusimages.com/ksG-bVfAntpM3Y-0eCrDneMZGFw=/960x665/left/top/smart/images/ocgpt7bqm09amm4tieanigg8gw9rsk1nwh0tzenqzdm.jpeg");
