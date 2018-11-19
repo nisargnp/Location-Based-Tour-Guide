@@ -56,13 +56,13 @@
                 android:value="edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity" />
         </activity>
 
-        <activity android:name=".TestMapActivity">
+        <!--activity android:name=".TestMapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-->
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

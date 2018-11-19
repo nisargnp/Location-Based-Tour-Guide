@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import edu.umd.cs.cmsc436.location_basedtourguide.AddTour.AddTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
@@ -32,13 +33,7 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: remove this eventually
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference("testing");
-        dbRef.setValue("testValue");
-
-        // TODO: get this from firebase eventually
-        DataProvider.generateTourImages(getApplicationContext());
+        // TODO: remove hardcode
         DataStore.getInstance().addTours(DataProvider.getTours());
         DataStore.getInstance().addPlaces(DataProvider.getPlaces());
         DataStore.getInstance().addComments(DataProvider.getComments());

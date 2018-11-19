@@ -14,6 +14,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.TourItemFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRecyclerViewAdapter.ViewHolder> {
@@ -43,7 +44,7 @@ public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRe
         holder.mItem = tourID;
         holder.mIdView.setText(tour.getName());
         holder.mContentView.setText(tour.getDescription());
-        holder.mImageView.setImageBitmap(Utils.getImageFromInternalStorage(tour.getPictureFile()));
+        new DownloadImageTask(holder.mImageView::setImageBitmap).execute(tour.getPictureFile());
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) mListener.onListFragmentPress(holder.mItem);
