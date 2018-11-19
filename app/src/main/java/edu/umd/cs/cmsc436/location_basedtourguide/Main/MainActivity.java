@@ -37,15 +37,25 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
 
         // TODO: remove hardcode
         DataGenerator.generateData();
-        DataGenerator.uploadDataToFirebase();
+//        DataGenerator.uploadDataToFirebase();
+        DataStore.getInstance().addTours(DataGenerator.getTours());
+        DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+        DataStore.getInstance().addComments(DataGenerator.getComments());
+        DataStore.getInstance().addUsers(DataGenerator.getUsers());
 
-        DataStore.getInstance().registerListener(() -> {
-            TourItemFragment tourItemFragment = new TourItemFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
-            fragmentTransaction.commit();
-            getSupportFragmentManager().executePendingTransactions();
-        });
+//        DataStore.getInstance().registerListener(() -> {
+//            TourItemFragment tourItemFragment = new TourItemFragment();
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
+//            fragmentTransaction.commit();
+//            getSupportFragmentManager().executePendingTransactions();
+//        });
+
+        TourItemFragment tourItemFragment = new TourItemFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddTourActivity.class)));
