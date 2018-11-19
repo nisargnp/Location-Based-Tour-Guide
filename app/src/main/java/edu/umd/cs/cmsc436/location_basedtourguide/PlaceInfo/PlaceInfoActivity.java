@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,8 +56,8 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         ImageView placeImg = findViewById(R.id.place_img);
         TextView placeDesc = findViewById(R.id.place_desc);
-        Button videoButton = findViewById(R.id.vid_button);
-        Button audioButton = findViewById(R.id.audio_button);
+        ImageButton videoButton = findViewById(R.id.vid_button);
+        ImageButton audioButton = findViewById(R.id.audio_button);
 
         placeDesc.setText(mPlace.getDescription());
 
