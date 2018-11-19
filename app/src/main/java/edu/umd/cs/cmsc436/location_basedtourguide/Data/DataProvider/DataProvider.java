@@ -1,9 +1,5 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,8 +9,6 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public final class DataProvider {
 
@@ -50,7 +44,11 @@ public final class DataProvider {
         Place terrapinRow = new Place("Terrapin Row");
         terrapinRow.setId("-vQLJaqfPfLJgObaJpUst");
         terrapinRow.setName("Terrapin Row");
-        terrapinRow.setDescription("Students live here.");
+        terrapinRow.setDescription("Students live here. Located directly across the street from the " +
+                "South Campus Commons and the Washington Quad, Terrapin Row offers its residents ultra-modern " +
+                "mid-rise apartments steps away from UMD. The center of campus including the McKeldin Library " +
+                "are just a few minute walk from Terrapin Row. Come live here and experience your college life " +
+                "in style!");
         terrapinRow.setLat(38.980367);
         terrapinRow.setLon(-76.942366);
         terrapinRow.setPictureFile("https://img.offcampusimages.com/ksG-bVfAntpM3Y-0eCrDneMZGFw=/960x665/left/top/smart/images/ocgpt7bqm09amm4tieanigg8gw9rsk1nwh0tzenqzdm.jpeg");
