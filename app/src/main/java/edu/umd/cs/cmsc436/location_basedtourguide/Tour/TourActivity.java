@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
@@ -40,6 +41,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TOUR_STOP_DATA = "tour-stop-data";
@@ -52,7 +54,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int GOOGLE_MAPS_LOCATION_REQUEST_CODE = 2;
 
     private FusedLocationProviderClient mFusedLocationClient;
-    private TextView mTestText;
     private GoogleMap mMap;
     private Tour mTour;
     private List<Place> mTourPlaces;
@@ -69,7 +70,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_tour);
 
         // TODO - remove this test view
-        mTestText = findViewById(R.id.testTextView);
+//        mTestText = findViewById(R.id.testTextView);
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -107,7 +108,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Initialize next tour stop
                 // TODO - initialize setup for tour stop preview view
-                mTestText.setText(mTourPlaces.get(LocationTrackingService.getNextStopIndex()).getName());
+//                mTestText.setText(mTourPlaces.get(LocationTrackingService.getNextStopIndex()).getName());
             }
         }
 
@@ -297,8 +298,15 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             snackbar.setAction("More Details", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO - actually play media
-                    Log.i(TAG, "Play media for: " + arrivedPlace.getName());
+                    Log.i(TAG, "Playing media for: " + arrivedPlace.getName());
+                    // TODO - these paths will come from the Place object
+//                    String videoPath = Utils.copyResourceToInternalStorage(getApplicationContext(), R.raw.teapot, "test", "teapot");
+//                    // TODO - logic for video vs audio vs just go to info
+//                    Bundle b = new Bundle();
+//                    b.putString("uri", uri.toString());
+//                    VideoDialogFragment vidDialog = new VideoDialogFragment();
+//                    vidDialog.setArguments(b);
+//                    vidDialog.show(getFragmentManager(), "video");
                 }
             });
             snackbar.show();
@@ -306,11 +314,11 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (nextStopIdx < mTourPlaces.size()) {
                 // TODO - actually update the place preview view when it is made
                 Place nextPlace = mTourPlaces.get(nextStopIdx);
-                mTestText.setText(nextPlace.getName());
+//                mTestText.setText(nextPlace.getName());
             } else {
                 // TODO - handle end of tour
                 Log.i(TAG, "END OF TOUR!");
-                mTestText.setText("END");
+//                mTestText.setText("END");
             }
         }
     }
