@@ -57,12 +57,15 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         ImageView placeImg = findViewById(R.id.place_img);
         TextView placeDesc = findViewById(R.id.place_desc);
+        TextView placeName = findViewById(R.id.place_name);
         ImageButton videoButton = findViewById(R.id.vid_button);
         ImageButton audioButton = findViewById(R.id.audio_button);
 
         placeDesc.setText(mPlace.getDescription());
         placeDesc.setMovementMethod(new ScrollingMovementMethod());
-        
+
+        placeName.setText(mPlace.getName());
+
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
         } else {
