@@ -10,9 +10,7 @@
         android:id="@+id/tourMapView"
         android:layout_width="335dp"
         android:layout_height="335dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="67dp"
+        android:layout_centerInParent="true"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="113dp" />
 
@@ -22,15 +20,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="30dp"
         android:text="Refresh Tour Route" />
 
     <View
         android:id="@+id/snackBarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="460dp" />
 
     <RelativeLayout
         android:id="@+id/previewView"
@@ -54,6 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             android:text="Preview Title"
             android:textStyle="bold" />
 
@@ -63,6 +65,8 @@
             android:layout_height="57dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:text="TextView" />
     </RelativeLayout>
 

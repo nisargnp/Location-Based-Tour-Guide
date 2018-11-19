@@ -24,6 +24,7 @@ public class Place implements Serializable {
 
     /**
      * Don't use this constructor, this is for Firebase only.
+     *     christian: i need to use this constructor for drawing the tour route
      */
     public Place(){}
 
@@ -142,4 +143,12 @@ public class Place implements Serializable {
         this.audioFile = audioFile;
     }
 
+    /*
+    Methods for local, non-Firebase tracked, place objects
+     */
+    public void setLocalName(String name) { this.name = name; }
+
+    public void setLocalLat(double lat) { this.lat = lat; }
+
+    public void setLocalLon(double lon) { this.lon = lon; }
 }

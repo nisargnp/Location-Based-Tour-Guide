@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
@@ -63,14 +65,28 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Location objects to use Location helper functions for getting distance in meters
      */
     private List<Location> mTourLocations;
+    private TextView mPreviewTitleView, mPreviewDescriptionView;
+    private ImageView mPreviewImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
 
-        // TODO - remove this test view
-//        mTestText = findViewById(R.id.testTextView);
+        mPreviewImageView = findViewById(R.id.previewImage);
+        mPreviewTitleView = findViewById(R.id.previewTitle);
+        mPreviewDescriptionView = findViewById(R.id.previewDescription);
+        // TODO - do we need a title indicating that this prevew is for the next stop?
+
+        findViewById(R.id.previewView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO - actually redirect
+                Log.i(TAG, "redirect to tour info for tour index: " + LocationTrackingService.getNextStopIndex());
+            }
+        });
+
+        // TODO - how do i get back to the main menu if i lose it on the backstack?
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -107,8 +123,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTourLocations.add(location);
 
                 // Initialize next tour stop
-                // TODO - initialize setup for tour stop preview view
-//                mTestText.setText(mTourPlaces.get(LocationTrackingService.getNextStopIndex()).getName());
+                updatePreview(LocationTrackingService.getNextStopIndex());
             }
         }
 
@@ -184,6 +199,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         showUserLocation();
+        showTourRoute();
     }
 
     @Override
@@ -205,7 +221,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setMapEventListeners() {
         // TODO - on info window click, send to appropriate place detail activity
-        // TODO - do anything besides default zoom and show info window on marker click?
+        // TODO - update markers with place description
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -313,15 +329,21 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             snackbar.show();
 
             if (nextStopIdx < mTourPlaces.size()) {
-                // TODO - actually update the place preview view when it is made
-                Place nextPlace = mTourPlaces.get(nextStopIdx);
-//                mTestText.setText(nextPlace.getName());
+                updatePreview(nextStopIdx);
             } else {
-                // TODO - handle end of tour
                 Log.i(TAG, "END OF TOUR!");
-//                mTestText.setText("END");
+                mPreviewTitleView.setText("End of the Tour!");
+                mPreviewDescriptionView.setText("You have reached the end of the tour!. Press back to go" +
+                        "to the main menu to see other tours!");
             }
         }
+    }
+
+    private void updatePreview(int stopIndex) {
+        Place tourStop = mTourPlaces.get(stopIndex);
+        new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        mPreviewTitleView.setText(tourStop.getName());
+        mPreviewDescriptionView.setText(tourStop.getDescription());
     }
 
     private boolean needsRuntimePermission(String permission) {
