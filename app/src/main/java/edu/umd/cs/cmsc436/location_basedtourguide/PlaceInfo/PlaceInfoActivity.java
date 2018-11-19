@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataProvider.DataProvider;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataGenerator.DataGenerator;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -37,14 +37,14 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         try {
             placeId = givenIntent.getExtras().getString(TourActivity.PLACE_ID, null);
         } catch (Exception e) {
-//            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
-            // TODO: remove hardcode below, uncomment error above
-            DataStore.getInstance().addTours(DataProvider.getTours());
-            DataStore.getInstance().addPlaces(DataProvider.getPlaces());
-            DataStore.getInstance().addComments(DataProvider.getComments());
-            DataStore.getInstance().addUsers(DataProvider.getUsers());
 
+//            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
+
+            // TODO: remove hardcode below, uncomment error above
+            DataGenerator.generateData();
+            DataGenerator.uploadDataToFirebase();
             placeId = "-vQLJaqfPfLJgObaJpUst";
+
         }
 
         mPlace = DataStore.getInstance().getPlace(placeId);
