@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -53,7 +54,7 @@ public class AddTourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tour);
 
-        tour = new Tour();
+        tour = new Tour("");
         tourImageView = findViewById(R.id.tour_image);
         titleTextView = findViewById(R.id.tour_title);
         descriptionTextView = findViewById(R.id.tour_description);
@@ -73,13 +74,14 @@ public class AddTourActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (tour == null) {
+                if (tour.getPlaces().size() == 0) {
                     Toast.makeText(getApplicationContext(), "Tour must have atleast one stop",  Toast.LENGTH_SHORT).show();
                 } else {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
                     tour.setPictureFile(imageFilePath);
+                    DataStore.getInstance().addTour(tour);
+                    finish();
                 }
             }
         });
