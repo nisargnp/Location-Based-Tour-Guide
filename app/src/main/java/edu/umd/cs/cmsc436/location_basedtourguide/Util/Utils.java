@@ -4,19 +4,22 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
 
 public final class Utils {
 
     private Utils() {}
+
+    public static HashMap<String, Object> generatePair(String str, Object obj) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(str, obj);
+        return map;
+    }
 
     // this method is only for testing
     public static String copyResourceToInternalStorage(Context appContext, int id, String dirName, String fileName) {
@@ -79,24 +82,5 @@ public final class Utils {
         }
         return null;
     }
-    /*
-    From this link:
-    https://stackoverflow.com/questions/3681714/bad-bitmap-error-when-setting-uri
-     */
-    public static Bitmap getImageBitmapFromURI(String url) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Log.e("Bitmap", "Error getting bitmap", e);
-        }
-        return bm;
-    }
+
 }

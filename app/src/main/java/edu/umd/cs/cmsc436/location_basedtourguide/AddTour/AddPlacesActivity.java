@@ -72,6 +72,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         mRecyclerView.setAdapter(mAdapter);
 
+        // TODO: remember to remove hardcode
         prepareFakeData();
 
         fab.setOnClickListener(new View.OnClickListener() {
