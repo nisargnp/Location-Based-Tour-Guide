@@ -28,6 +28,7 @@
                 android:layout_width="135dp"
                 android:layout_height="149dp"
                 android:layout_marginBottom="553dp"
+                android:layout_marginLeft="8dp"
                 android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,19 +47,26 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <Button
+
+            <ImageButton
                 android:id="@+id/vid_button"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_below="@id/place_desc"
-                android:text="Video" />
-            <Button
+                android:src="@drawable/video_icon"
+                android:layout_marginLeft="32dp"
+                android:background="@null"/>
+            <ImageButton
                 android:id="@+id/audio_button"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_below="@id/place_desc"
-                android:layout_toRightOf="@id/vid_button"
-                android:text="Audio" />
+
+                android:src="@drawable/audio_icon"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="32dp"
+                />
         </RelativeLayout>
 
 
