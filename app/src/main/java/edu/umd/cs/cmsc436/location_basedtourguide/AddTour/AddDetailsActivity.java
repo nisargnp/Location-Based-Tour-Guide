@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -88,6 +89,10 @@ public class AddDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (imagePathFilename == null) {
+                    Toast.makeText(getApplicationContext(), "Please add place photo", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 LatLng l = (LatLng) getIntent().getExtras().getParcelable("LatLng");
 
 

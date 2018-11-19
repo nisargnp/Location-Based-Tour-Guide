@@ -18,7 +18,12 @@
         app:layout_constraintVertical_bias="1.0">
 
 
-
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
         <RelativeLayout
             android:id="@+id/list"
@@ -43,13 +48,19 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/checkmark" />
+
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="0dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/no_places_created"/>
         </RelativeLayout>
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
+
     </LinearLayout>
 
 
