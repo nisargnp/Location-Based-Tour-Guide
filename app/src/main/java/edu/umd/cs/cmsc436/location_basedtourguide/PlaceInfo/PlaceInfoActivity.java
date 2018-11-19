@@ -42,7 +42,11 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
             // TODO: remove hardcode below, uncomment error above
             DataGenerator.generateData();
-            DataGenerator.uploadDataToFirebase();
+//            DataGenerator.uploadDataToFirebase();
+            DataStore.getInstance().addTours(DataGenerator.getTours());
+            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+            DataStore.getInstance().addComments(DataGenerator.getComments());
+            DataStore.getInstance().addUsers(DataGenerator.getUsers());
             placeId = "-vQLJaqfPfLJgObaJpUst";
 
         }
