@@ -1,13 +1,8 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 
 public class Tour implements Serializable {
 
@@ -17,66 +12,35 @@ public class Tour implements Serializable {
     private double lon;
     private String description;
     private String author;
-    private String pictureFile; // this is a filename @conor
+    private String pictureFile;
     private int rating;
     private int numVotes;
     private List<String> places;
     private List<String> comments;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference firebaseTours = database.getReference("Tours");//.child("Tours");//is this the right ref?
-    private DatabaseReference thisTour;
-
-    /**
-     * Don't use this constructor, this is for Firebase only.
-     */
-    public Tour(){}
-
-    public Tour(String name){//use this constructor
-        this(null,name,0,0,null,null,null,0,0,null,null);
-        id = firebaseTours.push().getKey();
-        //firebaseTours.chidlsetValue(t);
-        thisTour = firebaseTours.child(id);
-        setId(id);
-        thisTour.setValue(this);
+    public Tour(){
+        this("","",0,0,"","","",0,0,new ArrayList<>(),new ArrayList<>());
     }
 
-    public Tour(String i, String n, double la, double lo, String des, String au,String pic,int rat, int nu, List<String> pl, List<String> c){
-        id = i;
-        name = n;
-        lat = la;
-        lon = lo;
-        description = des;
-        author = au;
-        pictureFile = pic;
-        rating = rat;
-        numVotes = nu;
-        places = pl;
-        comments = c;
-    }
-
-    public void updateTour(Tour t){
-        setId(t.getId());
-        setName(t.getName());
-        setLat(t.getLat());
-        setLon(t.getLon());
-        setDescription(t.getDescription());
-        setAuthor(t.getAuthor());
-        setPictureFile(t.getPictureFile());
-        setRating(t.getRating());
-        setNumVotes(t.getNumVotes());
-        setPlaces(t.getPlaces());
-        setComments(t.getComments());
+    private Tour(String id, String name, double lat, double lon, String description, String author, String pictureFile, int rating, int numVotes, List<String> places, List<String> comments) {
+        this.id = id;
+        this.name = name;
+        this.lat = lat;
+        this.lon = lon;
+        this.description = description;
+        this.author = author;
+        this.pictureFile = pictureFile;
+        this.rating = rating;
+        this.numVotes = numVotes;
+        this.places = places;
+        this.comments = comments;
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
-    public void setId(String id) {//this shouldnt be called
-        Map<String, Object> ups = new HashMap<>();
-        ups.put(this.id,id);
-        firebaseTours.updateChildren(ups);
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -85,9 +49,6 @@ public class Tour implements Serializable {
     }
 
     public void setName(String name) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("name",name);
-        thisTour.updateChildren(ups);
         this.name = name;
     }
 
@@ -96,9 +57,6 @@ public class Tour implements Serializable {
     }
 
     public void setLat(double lat) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lat",lat);
-        thisTour.updateChildren(ups);
         this.lat = lat;
     }
 
@@ -107,9 +65,6 @@ public class Tour implements Serializable {
     }
 
     public void setLon(double lon) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("lon",lon);
-        thisTour.updateChildren(ups);
         this.lon = lon;
     }
 
@@ -118,9 +73,6 @@ public class Tour implements Serializable {
     }
 
     public void setDescription(String description) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("description",description);
-        thisTour.updateChildren(ups);
         this.description = description;
     }
 
@@ -129,9 +81,6 @@ public class Tour implements Serializable {
     }
 
     public void setAuthor(String author) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("author",author);
-        thisTour.updateChildren(ups);
         this.author = author;
     }
 
@@ -140,9 +89,6 @@ public class Tour implements Serializable {
     }
 
     public void setPictureFile(String pictureFile) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("pictureFile",pictureFile);
-        thisTour.updateChildren(ups);
         this.pictureFile = pictureFile;
     }
 
@@ -151,9 +97,6 @@ public class Tour implements Serializable {
     }
 
     public void setRating(int rating) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("rating",rating);
-        thisTour.updateChildren(ups);
         this.rating = rating;
     }
 
@@ -162,9 +105,6 @@ public class Tour implements Serializable {
     }
 
     public void setNumVotes(int numVotes) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("numVotes",numVotes);
-        thisTour.updateChildren(ups);
         this.numVotes = numVotes;
     }
 
@@ -173,9 +113,6 @@ public class Tour implements Serializable {
     }
 
     public void setPlaces(List<String> places) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("places",places);
-        thisTour.updateChildren(ups);
         this.places = places;
     }
 
@@ -184,10 +121,24 @@ public class Tour implements Serializable {
     }
 
     public void setComments(List<String> comments) {
-        Map<String,Object> ups = new HashMap<>();
-        ups.put("comments",comments);
-        thisTour.updateChildren(ups);
         this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", description='" + description + '\'' +
+                ", author='" + author + '\'' +
+                ", pictureFile='" + pictureFile + '\'' +
+                ", rating=" + rating +
+                ", numVotes=" + numVotes +
+                ", places=" + places +
+                ", comments=" + comments +
+                '}';
     }
 
 }
