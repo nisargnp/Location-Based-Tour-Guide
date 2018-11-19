@@ -37,7 +37,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PlaceInfo.PlaceInfoActivity">
+        <activity android:name=".PlaceInfo.PlaceInfoActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
