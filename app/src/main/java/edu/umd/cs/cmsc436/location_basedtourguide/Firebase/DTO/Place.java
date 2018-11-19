@@ -17,26 +17,15 @@ public class Place implements Serializable {
     private String pictureFile; // these are filenames @conor
     private String videoFile;
     private String audioFile;
+
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference firebasePlaces = database.getReference("Places");//is this the right ref?
     private DatabaseReference thisPlace;
 
-
-    public void updatePlace(Place p){
-        setId(p.getId());
-        setName(p.getName());
-        setLat(p.getLat());
-        setLon(p.getLon());
-        setDescription(p.getDescription());
-        setPictureFile(p.getPictureFile());
-        setVideoFile(p.getVideoFile());
-        setAudioFile(p.getAudioFile());
-
-    }
-
-    public Place(){
-
-    }
+    /**
+     * Don't use this constructor, this is for Firebase only.
+     */
+    public Place(){}
 
     public Place(String name){
         this(null,name,null,0,0,null,null,null);
@@ -55,6 +44,17 @@ public class Place implements Serializable {
         this.pictureFile = pic;
         this.videoFile = vid;
         this.audioFile = aud;
+    }
+
+    public void updatePlace(Place p){
+        setId(p.getId());
+        setName(p.getName());
+        setLat(p.getLat());
+        setLon(p.getLon());
+        setDescription(p.getDescription());
+        setPictureFile(p.getPictureFile());
+        setVideoFile(p.getVideoFile());
+        setAudioFile(p.getAudioFile());
     }
 
     public String getId() {
