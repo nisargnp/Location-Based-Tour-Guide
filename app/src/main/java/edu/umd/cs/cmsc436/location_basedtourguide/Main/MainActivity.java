@@ -35,32 +35,28 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: remove hardcode
-        DataGenerator.generateData();
-//        DataGenerator.uploadDataToFirebase();
-        DataStore.getInstance().addTours(DataGenerator.getTours());
-        DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
-        DataStore.getInstance().addComments(DataGenerator.getComments());
-        DataStore.getInstance().addUsers(DataGenerator.getUsers());
+        // TODO: remove hardcode - generates firebase data
+        DataGenerator.generateDataFirebase();
 
-//        DataStore.getInstance().registerListener(() -> {
-//            TourItemFragment tourItemFragment = new TourItemFragment();
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
-//            fragmentTransaction.commit();
-//            getSupportFragmentManager().executePendingTransactions();
-//        });
+        // TODO: remove hardcode - generates local data (pre-firebase)
+//        DataGenerator.generateDataLocal();
+//        DataStore.getInstance().addTours(DataGenerator.getTours());
+//        DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+//        DataStore.getInstance().addComments(DataGenerator.getComments());
+//        DataStore.getInstance().addUsers(DataGenerator.getUsers());
 
-        TourItemFragment tourItemFragment = new TourItemFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
-        fragmentTransaction.commit();
-        getSupportFragmentManager().executePendingTransactions();
+        DataStore.getInstance().registerListener(() -> {
+            TourItemFragment tourItemFragment = new TourItemFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
+            fragmentTransaction.commit();
+            getSupportFragmentManager().executePendingTransactions();
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddTourActivity.class)));
 
-//         //temp using this button for testing
+        // TODO: exmaple -> how to add data to firebase
 //        fab.setOnClickListener(v -> {
 //            String path = Utils.copyResourceToInternalStorage(MainActivity.this, R.raw.niagara_falls, "image", "niagara_falls");
 //            Tour tour = new Tour();

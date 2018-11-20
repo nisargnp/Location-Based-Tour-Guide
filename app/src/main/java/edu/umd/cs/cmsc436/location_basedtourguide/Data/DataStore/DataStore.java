@@ -45,74 +45,74 @@ public class DataStore {
         DatabaseReference firebaseRefComments = database.getReference("Comments");
         DatabaseReference firebaseRefUsers = database.getReference("Users");
 
-//        firebaseRefTours.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                tourMap.clear();
-//                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-//                    Tour tour = childDataSnapshot.getValue(Tour.class);
-//                    if (tour != null) {
-//                        Log.d("testing", "tour: " + tour.toString());
-//                        tourMap.put(tour.getId(), tour);
-//                    }
-//                }
-//                callListeners();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {}
-//        });
-//
-//        firebaseRefPlaces.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                placeMap.clear();
-//                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-//                    Place place = childDataSnapshot.getValue(Place.class);
-//                    if (place != null) {
-//                        placeMap.put(place.getId(), place);
-//                    }
-//                }
-//                callListeners();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {}
-//        });
-//
-//        firebaseRefComments.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                commentMap.clear();
-//                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-//                    Comment comment = childDataSnapshot.getValue(Comment.class);
-//                    if (comment != null) {
-//                        commentMap.put(comment.getId(), comment);
-//                    }
-//                }
-//                callListeners();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {}
-//        });
-//
-//        firebaseRefUsers.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                userMap.clear();
-//                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-//                    User user = childDataSnapshot.getValue(User.class);
-//                    if (user != null) {
-//                        userMap.put(user.getId(), user);
-//                    }
-//                }
-//                callListeners();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {}
-//        });
+        firebaseRefTours.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tourMap.clear();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Tour tour = childDataSnapshot.getValue(Tour.class);
+                    if (tour != null) {
+                        Log.d("testing", "tour: " + tour.toString());
+                        tourMap.put(tour.getId(), tour);
+                    }
+                }
+                callListeners();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
+        firebaseRefPlaces.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                placeMap.clear();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Place place = childDataSnapshot.getValue(Place.class);
+                    if (place != null) {
+                        placeMap.put(place.getId(), place);
+                    }
+                }
+                callListeners();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
+        firebaseRefComments.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                commentMap.clear();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Comment comment = childDataSnapshot.getValue(Comment.class);
+                    if (comment != null) {
+                        commentMap.put(comment.getId(), comment);
+                    }
+                }
+                callListeners();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
+        firebaseRefUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userMap.clear();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    User user = childDataSnapshot.getValue(User.class);
+                    if (user != null) {
+                        userMap.put(user.getId(), user);
+                    }
+                }
+                callListeners();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
 
     }
 
