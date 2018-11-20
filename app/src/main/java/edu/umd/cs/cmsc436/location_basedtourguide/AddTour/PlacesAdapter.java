@@ -3,18 +3,21 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.support.v7.widget.helper.ItemTouchUIUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
-public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHolder>
+public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHolder> implements ItemTouchHelperAdapter
 {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -62,8 +65,26 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHold
         return places.size();
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(places, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(places, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
 
-
+    @Override
+    public void onItemDismiss(int position) {
+        places.remove(position);
+        notifyItemRemoved(position);
+    }
 
 
 }

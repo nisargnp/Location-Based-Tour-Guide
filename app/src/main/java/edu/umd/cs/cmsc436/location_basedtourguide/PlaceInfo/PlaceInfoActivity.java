@@ -1,9 +1,12 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
 import android.content.Intent;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,6 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Arrays;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
@@ -43,8 +48,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 //            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
 
             // TODO: remove hardcode below, uncomment error above
-            DataGenerator.generateData();
-//            DataGenerator.uploadDataToFirebase();
+            DataGenerator.generateDataLocal();
             DataStore.getInstance().addTours(DataGenerator.getTours());
             DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
             DataStore.getInstance().addComments(DataGenerator.getComments());
@@ -61,6 +65,9 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         ImageButton videoButton = findViewById(R.id.vid_button);
         ImageButton audioButton = findViewById(R.id.audio_button);
 
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+
         placeDesc.setText(mPlace.getDescription());
         placeDesc.setMovementMethod(new ScrollingMovementMethod());
 
@@ -68,6 +75,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
+            audioButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {
             audioButton.setOnClickListener(v -> {
                 Bundle b = new Bundle();
@@ -80,6 +88,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         if (mPlace.getVideoFile().length() == 0) {
             videoButton.setEnabled(false);
+            videoButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {
             videoButton.setOnClickListener(v -> {
                 Bundle b = new Bundle();
