@@ -54,7 +54,7 @@ public class AddTourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tour);
 
-        tour = new Tour("");
+        tour = new Tour();
         tourImageView = findViewById(R.id.tour_image);
         titleTextView = findViewById(R.id.tour_title);
         descriptionTextView = findViewById(R.id.tour_description);
