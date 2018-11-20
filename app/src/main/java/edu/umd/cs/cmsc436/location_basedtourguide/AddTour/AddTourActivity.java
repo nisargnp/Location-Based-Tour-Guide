@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadToFirebase;
+
 
 public class AddTourActivity extends AppCompatActivity {
 
@@ -54,7 +56,7 @@ public class AddTourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tour);
 
-        tour = new Tour("");
+        tour = new Tour();
         tourImageView = findViewById(R.id.tour_image);
         titleTextView = findViewById(R.id.tour_title);
         descriptionTextView = findViewById(R.id.tour_description);
@@ -80,7 +82,7 @@ public class AddTourActivity extends AppCompatActivity {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
                     tour.setPictureFile(imageFilePath);
-                    DataStore.getInstance().addTour(tour);
+                    uploadToFirebase(AddTourActivity.this, tour);
                     finish();
                 }
             }
