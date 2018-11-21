@@ -53,6 +53,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadToFirebase;
+
 public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
 
@@ -227,7 +229,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_STOP_DETAILS) {
             if (resultCode == RESULT_OK) {
-                Place place = new Place(data.getExtras().getString("title"));
+                Place place = new Place();
                 Bundle bundle = data.getExtras();
                 place.setName(bundle.getString("title"));
                 place.setDescription(bundle.getString("description"));
@@ -236,7 +238,8 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 place.setPictureFile(bundle.getString("imageFilePath"));
 
 
-                DataStore.getInstance().addPlace(place);
+                String id = uploadToFirebase(AddPlacesActivity.this, place);
+                place.setId(id);
                 places.add(place);
                 checkIfEmpty();
                 mAdapter.notifyDataSetChanged();
@@ -307,7 +310,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
     public void prepareFakeData() {
 
-        Place place1 = new Place("Place One");
+        Place place1 = new Place();
         place1.setName("Place One");
         place1.setDescription("The First Place");
         Bitmap bitmapUMD = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.umd));
@@ -316,7 +319,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         places.add(place1);
 
-        Place place2 = new Place("Place Two");
+        Place place2 = new Place();
         place2.setName("Place Two");
         place2.setDescription("The Second Place");
         Bitmap bitmapNiagaraFalls = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.niagara_falls));
@@ -325,7 +328,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         places.add(place2);
 
-        Place place3 = new Place("Place Three");
+        Place place3 = new Place();
         place3.setName("Place Three");
         place3.setDescription("The Third Place");
         Bitmap bitmapGrandCanyon = BitmapFactory.decodeStream(getApplicationContext().getResources().openRawResource(R.raw.grand_canyon));
