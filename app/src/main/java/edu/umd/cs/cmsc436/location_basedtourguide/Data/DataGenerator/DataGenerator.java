@@ -36,7 +36,7 @@ public final class DataGenerator {
         tour1.setLon(-76.9426);
         tour1.setDescription("This is University of Maryland, College Park. It is the largest school in Maryland.");
         tour1.setAuthor("-mXyLdjKWUNEMNslvUPWu");
-        tour1.setPictureFile("https://www.provost.umd.edu/images/umdimg10.jpg");
+        tour1.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_umd.jpg?alt=media&token=f9e9725d-9206-45bf-a81f-776398ae595d");
         tour1.setRating(77);
         tour1.setNumVotes(20);
         tour1.setPlaces(Arrays.asList("-vQLJaqfPfLJgObaJpUst", "-XCjumRBOpQaIAISygJMp", "-YSbepfiuBlDRajJUwYpB", "-mWYsAGcLRjeJBCzlDdxd"));
@@ -53,9 +53,9 @@ public final class DataGenerator {
                 "in style!");
         terrapinRow.setLat(38.980367);
         terrapinRow.setLon(-76.942366);
-        terrapinRow.setPictureFile("https://img.offcampusimages.com/ksG-bVfAntpM3Y-0eCrDneMZGFw=/960x665/left/top/smart/images/ocgpt7bqm09amm4tieanigg8gw9rsk1nwh0tzenqzdm.jpeg");
-        terrapinRow.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav");
-        terrapinRow.setVideoFile("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4");
+        terrapinRow.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_trow.jpeg?alt=media&token=40ae0ace-bd8c-4ead-bf6a-68f0bde28cdf");
+        terrapinRow.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_trow.wav?alt=media&token=add040f2-76f9-4142-a814-333b5a188b63");
+        terrapinRow.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_trow.mp4?alt=media&token=ed362870-633d-498f-baac-a0b08f9b863d");
         places.add(terrapinRow);
 
         Place CSIC = new Place();
@@ -64,9 +64,9 @@ public final class DataGenerator {
         CSIC.setDescription("Students study here.");
         CSIC.setLat(38.990085);
         CSIC.setLon(-76.936182);
-        CSIC.setPictureFile("http://www.cs.umd.edu/sites/default/files/csic.jpg");
-        CSIC.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/i_ran_so_far_away-flock_of_seagulls.wav");
-        CSIC.setVideoFile("http://techslides.com/demos/sample-videos/small.mp4");
+        CSIC.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_csic.jpg?alt=media&token=009b65ac-43f7-4d0d-ade0-0793fa56fe2b");
+        CSIC.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_csic.wav?alt=media&token=2e88ba13-91ac-42e7-bb21-346d7127d3cf");
+        CSIC.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_csic.mp4?alt=media&token=56fa41e6-b098-4506-bbc5-bec6465f2b52");
         places.add(CSIC);
 
         Place stamp = new Place();
@@ -75,8 +75,8 @@ public final class DataGenerator {
         stamp.setDescription("Students eat here.");
         stamp.setLat(38.987881);
         stamp.setLon(-76.944855);
-        stamp.setPictureFile("http://4.bp.blogspot.com/-qR-DNRpZhT0/VD6V8aae_rI/AAAAAAAAAVw/Cvm7VGLhCAk/s1600/DSC_0544.jpg");
-        stamp.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/africa-toto.wav");
+        stamp.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_stamp.jpg?alt=media&token=3afe8d69-3ddb-4074-befe-a53783c0198a");
+        stamp.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_stamp.wav?alt=media&token=2c60764a-67be-4769-a491-97df7882dee9");
         stamp.setVideoFile("");
         places.add(stamp);
 
@@ -86,9 +86,9 @@ public final class DataGenerator {
         eppley.setDescription("Students exercise here.");
         eppley.setLat(38.993635);
         eppley.setLon(-76.945155);
-        eppley.setPictureFile("http://1.bp.blogspot.com/-m6RNHUfcogg/UI1KzblHw1I/AAAAAAAAEDU/CMGB5h6hNLs/s1600/DSC00746.JPG");
+        eppley.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_eppley.JPG?alt=media&token=b5fffb90-2da6-40a8-a0ba-c2ef2e9cbe12");
         eppley.setAudioFile("");
-        eppley.setVideoFile("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+        eppley.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_eppley.mp4?alt=media&token=227acf7a-001e-4222-8b64-d9006fac8346");
         places.add(eppley);
 
         Comment comment1 = new Comment();
@@ -141,7 +141,7 @@ public final class DataGenerator {
         tour2.setLon(-112.1401);
         tour2.setDescription("This is the Grand Canyon.");
         tour2.setAuthor("-oTPklbIgOHaroQvAsOJT");
-        tour2.setPictureFile("https://www.nps.gov/grca/planyourvisit/images/0531fyp.jpg?maxwidth=650&autorotate=false");
+        tour2.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_grand_canyon.jpg?alt=media&token=7959c6df-aad5-46e4-8ed7-76651a8a3d11");
         tour2.setRating(87);
         tour2.setNumVotes(20);
         tour2.setPlaces(new ArrayList<>());
@@ -156,7 +156,7 @@ public final class DataGenerator {
         tour3.setLon(-79.0377);
         tour3.setDescription("This is Niagara Falls.");
         tour3.setAuthor("-oTPklbIgOHaroQvAsOJT");
-        tour3.setPictureFile("http://www.niagarafallslive.com/wp-content/uploads/2013/08/american-fall-night-1.jpg");
+        tour3.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_niagara.jpg?alt=media&token=87502432-8d31-47ff-ad3e-11fceb760c22");
         tour3.setRating(97);
         tour3.setNumVotes(20);
         tour3.setPlaces(new ArrayList<>());
@@ -173,7 +173,7 @@ public final class DataGenerator {
         tour1.setLat(38.9869);
         tour1.setLon(-76.9426);
         tour1.setDescription("This is University of Maryland, College Park. It is the largest school in Maryland.");
-        tour1.setPictureFile("https://www.provost.umd.edu/images/umdimg10.jpg");
+        tour1.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_umd.jpg?alt=media&token=f9e9725d-9206-45bf-a81f-776398ae595d");
         tour1.setRating(77);
         tour1.setNumVotes(20);
 
@@ -186,26 +186,26 @@ public final class DataGenerator {
                 "in style!");
         terrapinRow.setLat(38.980367);
         terrapinRow.setLon(-76.942366);
-        terrapinRow.setPictureFile("https://img.offcampusimages.com/ksG-bVfAntpM3Y-0eCrDneMZGFw=/960x665/left/top/smart/images/ocgpt7bqm09amm4tieanigg8gw9rsk1nwh0tzenqzdm.jpeg");
-        terrapinRow.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav");
-        terrapinRow.setVideoFile("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4");
+        terrapinRow.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_trow.jpeg?alt=media&token=40ae0ace-bd8c-4ead-bf6a-68f0bde28cdf");
+        terrapinRow.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_trow.wav?alt=media&token=add040f2-76f9-4142-a814-333b5a188b63");
+        terrapinRow.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_trow.mp4?alt=media&token=ed362870-633d-498f-baac-a0b08f9b863d");
 
         Place CSIC = new Place();
         CSIC.setName("Computer Science Instructional Center");
         CSIC.setDescription("Students study here.");
         CSIC.setLat(38.990085);
         CSIC.setLon(-76.936182);
-        CSIC.setPictureFile("http://www.cs.umd.edu/sites/default/files/csic.jpg");
-        CSIC.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/i_ran_so_far_away-flock_of_seagulls.wav");
-        CSIC.setVideoFile("http://techslides.com/demos/sample-videos/small.mp4");
+        CSIC.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_csic.jpg?alt=media&token=009b65ac-43f7-4d0d-ade0-0793fa56fe2b");
+        CSIC.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_csic.wav?alt=media&token=2e88ba13-91ac-42e7-bb21-346d7127d3cf");
+        CSIC.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_csic.mp4?alt=media&token=56fa41e6-b098-4506-bbc5-bec6465f2b52");
 
         Place stamp = new Place();
         stamp.setName("Stamp Student Union");
         stamp.setDescription("Students eat here.");
         stamp.setLat(38.987881);
         stamp.setLon(-76.944855);
-        stamp.setPictureFile("http://4.bp.blogspot.com/-qR-DNRpZhT0/VD6V8aae_rI/AAAAAAAAAVw/Cvm7VGLhCAk/s1600/DSC_0544.jpg");
-        stamp.setAudioFile("https://www.ee.columbia.edu/~dpwe/sounds/music/africa-toto.wav");
+        stamp.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_stamp.jpg?alt=media&token=3afe8d69-3ddb-4074-befe-a53783c0198a");
+        stamp.setAudioFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Faudio%2Faudio_stamp.wav?alt=media&token=2c60764a-67be-4769-a491-97df7882dee9");
         stamp.setVideoFile("");
 
         Place eppley = new Place();
@@ -213,9 +213,9 @@ public final class DataGenerator {
         eppley.setDescription("Students exercise here.");
         eppley.setLat(38.993635);
         eppley.setLon(-76.945155);
-        eppley.setPictureFile("http://1.bp.blogspot.com/-m6RNHUfcogg/UI1KzblHw1I/AAAAAAAAEDU/CMGB5h6hNLs/s1600/DSC00746.JPG");
+        eppley.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_eppley.JPG?alt=media&token=b5fffb90-2da6-40a8-a0ba-c2ef2e9cbe12");
         eppley.setAudioFile("");
-        eppley.setVideoFile("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+        eppley.setVideoFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fvideo%2Fvideo_eppley.mp4?alt=media&token=227acf7a-001e-4222-8b64-d9006fac8346");
 
         Comment comment1 = new Comment();
         comment1.setText("This is an amazing university!");
@@ -228,7 +228,6 @@ public final class DataGenerator {
 
         User bob = new User();
         bob.setName("Bob");
-        bob.setTours(Collections.singletonList("-rmtSKxBkNkkeWXOdkgGr"));
 
         User sam = new User();
         sam.setName("Sam");
@@ -245,7 +244,7 @@ public final class DataGenerator {
         tour2.setLat(36.0544);
         tour2.setLon(-112.1401);
         tour2.setDescription("This is the Grand Canyon.");
-        tour2.setPictureFile("https://www.nps.gov/grca/planyourvisit/images/0531fyp.jpg?maxwidth=650&autorotate=false");
+        tour2.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_grand_canyon.jpg?alt=media&token=7959c6df-aad5-46e4-8ed7-76651a8a3d11");
         tour2.setRating(87);
         tour2.setNumVotes(20);
 
@@ -255,7 +254,7 @@ public final class DataGenerator {
         tour3.setLat(43.0962);
         tour3.setLon(-79.0377);
         tour3.setDescription("This is Niagara Falls.");
-        tour3.setPictureFile("http://www.niagarafallslive.com/wp-content/uploads/2013/08/american-fall-night-1.jpg");
+        tour3.setPictureFile("https://firebasestorage.googleapis.com/v0/b/location-based-tour-guid-7c2b9.appspot.com/o/sample_data%2Fimage%2Fimage_niagara.jpg?alt=media&token=87502432-8d31-47ff-ad3e-11fceb760c22");
         tour3.setRating(97);
         tour3.setNumVotes(20);
 
