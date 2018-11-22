@@ -28,11 +28,11 @@ public class DataStore {
     private Map<String, Tour> tourMap;
     private Map<String, User> userMap;
 
-    private List<Runnable> listeners;
+    private List<Runnable> dataChangeListeners;
 
     private DataStore() {
 
-        listeners = new ArrayList<>();
+        dataChangeListeners = new ArrayList<>();
 
         commentMap = new LinkedHashMap<>();
         placeMap = new LinkedHashMap<>();
@@ -56,7 +56,7 @@ public class DataStore {
                         tourMap.put(tour.getId(), tour);
                     }
                 }
-                callListeners();
+                callDataChangeListeners();
             }
 
             @Override
@@ -73,7 +73,7 @@ public class DataStore {
                         placeMap.put(place.getId(), place);
                     }
                 }
-                callListeners();
+                callDataChangeListeners();
             }
 
             @Override
@@ -90,7 +90,7 @@ public class DataStore {
                         commentMap.put(comment.getId(), comment);
                     }
                 }
-                callListeners();
+                callDataChangeListeners();
             }
 
             @Override
@@ -107,7 +107,7 @@ public class DataStore {
                         userMap.put(user.getId(), user);
                     }
                 }
-                callListeners();
+                callDataChangeListeners();
             }
 
             @Override
@@ -209,12 +209,12 @@ public class DataStore {
         return new ArrayList<>(userMap.values());
     }
 
-    public void registerListener(Runnable r) {
-        listeners.add(r);
+    public void registerDataChangeListener(Runnable r) {
+        dataChangeListeners.add(r);
     }
 
-    private void callListeners() {
-        for (Runnable r : listeners) {
+    private void callDataChangeListeners() {
+        for (Runnable r : dataChangeListeners) {
             r.run();
         }
     }

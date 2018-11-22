@@ -2,29 +2,20 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
-
-import java.io.UTFDataFormatException;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AddTour.AddTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataGenerator.DataGenerator;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewTourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class MainActivity extends AppCompatActivity implements TourItemFragment.OnListFragmentInteractionListener {
 
@@ -45,18 +36,16 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
 //        DataStore.getInstance().addComments(DataGenerator.getComments());
 //        DataStore.getInstance().addUsers(DataGenerator.getUsers());
 
-        DataStore.getInstance().registerListener(() -> {
-            TourItemFragment tourItemFragment = new TourItemFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, tourItemFragment); // use replace instead of add
-            fragmentTransaction.commit();
-            getSupportFragmentManager().executePendingTransactions();
-        });
+        TourItemFragment tourItemFragment = new TourItemFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, tourItemFragment); // use replace instead of add
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddTourActivity.class)));
 
-        // TODO: exmaple -> how to add data to firebase
+        // TODO: example -> how to add data to firebase
 //        fab.setOnClickListener(v -> {
 //            String path = Utils.copyResourceToInternalStorage(MainActivity.this, R.raw.niagara_falls, "image", "niagara_falls");
 //            Tour tour = new Tour();
