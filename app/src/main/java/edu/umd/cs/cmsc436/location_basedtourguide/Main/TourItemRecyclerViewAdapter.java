@@ -15,16 +15,19 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.TourItemFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<String> mValues;
+    private List<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     TourItemRecyclerViewAdapter(List<String> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        DataStore.getInstance().registerDataChangeListener(() -> {
+            TourItemRecyclerViewAdapter.this.mValues = DataStore.getInstance().getTourIDs();
+            TourItemRecyclerViewAdapter.this.notifyDataSetChanged();
+        });
     }
 
     @NonNull
