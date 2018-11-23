@@ -60,7 +60,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:scrollHorizontally="true"
-                        android:text="This is the description of a tour "
+                        android:text="This is the description of a mTour "
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
                 </LinearLayout>
 

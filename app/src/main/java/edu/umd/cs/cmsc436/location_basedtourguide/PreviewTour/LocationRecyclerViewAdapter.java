@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewLocFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.LocationItem.DummyItem;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 
 import java.util.List;
 
@@ -20,26 +22,28 @@ import java.util.List;
  */
 public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public LocationRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public LocationRecyclerViewAdapter(List<String> places, OnListFragmentInteractionListener listener) {
+        mValues = places;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.fragment_place_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        //holder.mIdView.setText(mValues.get(position).id);
-        //holder.mContentView.setText(mValues.get(position).content);
+        String locID = mValues.get(position);
+        holder.mPlace = DataStore.getInstance().getPlace(locID);
+        holder.mContentView.setText(holder.mPlace.getDescription());
+        holder.mNameView.setText(holder.mPlace.getName());
+        new DownloadImageTask(holder.mImageView::setImageBitmap).execute(holder.mPlace.getPictureFile());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +51,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mPlace);
                 }
             }
         });
@@ -60,18 +64,18 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
+        public final TextView mNameView;
         public final TextView mContentView;
-        public DummyItem mItem;
-        public ImageView image;
+        public ImageView mImageView;
+        public Place mPlace;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
-            image = view.findViewById(R.id.imageView);
-            image.setVisibility(View.VISIBLE);
+            mNameView = view.findViewById(R.id.place_name);
+            mContentView = view.findViewById(R.id.content);
+            mImageView = view.findViewById(R.id.imageView);
+            mImageView.setVisibility(View.VISIBLE);
         }
 
         @Override

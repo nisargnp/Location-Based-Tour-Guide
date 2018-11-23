@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.CommentFragment.OnListFragmentInteractionListener;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.dummy.DummyContent.DummyItem;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import java.util.List;
@@ -17,28 +19,32 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyCommentItemRecyclerViewAdapter extends RecyclerView.Adapter<MyCommentItemRecyclerViewAdapter.ViewHolder> {
+public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyCommentItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public CommentRecyclerViewAdapter(List<String> commentIDs, OnListFragmentInteractionListener listener) {
+        mValues = commentIDs;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_commentitem, parent, false);
+                .inflate(R.layout.fragment_comment_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        String commentID = mValues.get(position);
+        Comment comment = DataStore.getInstance().getComment(commentID);
+        User user = DataStore.getInstance().getUser(comment.getAuthor());
+
+        holder.mItem = comment;
+        holder.mIdView.setText(user.getName());
+        holder.mContentView.setText(comment.getText());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,13 +67,13 @@ public class MyCommentItemRecyclerViewAdapter extends RecyclerView.Adapter<MyCom
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Comment mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.author_name);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

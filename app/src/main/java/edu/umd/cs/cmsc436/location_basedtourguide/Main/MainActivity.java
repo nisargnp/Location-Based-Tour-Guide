@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
 
         // TODO: example -> how to add data to firebase
 //        fab.setOnClickListener(v -> {
-//            String path = Utils.copyResourceToInternalStorage(MainActivity.this, R.raw.niagara_falls, "image", "niagara_falls");
+//            String path = Utils.copyResourceToInternalStorage(MainActivity.this, R.raw.niagara_falls, "mImageView", "niagara_falls");
 //            Tour tour = new Tour();
 //            tour.setName("Test Place");
 //            tour.setPictureFile(path);
