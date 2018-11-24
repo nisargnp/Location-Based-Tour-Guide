@@ -32,9 +32,8 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview_tour);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle("test");
 
         String tourID = getIntent().getExtras().getString(MainActivity.TOUR_TAG);
         mTour = DataStore.getInstance().getTour(tourID);
@@ -56,7 +55,7 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        float rating = mTour.getRating();
+        float rating = mTour.getRating() * 1.0f/mTour.getNumVotes();
 
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setRating(rating);
