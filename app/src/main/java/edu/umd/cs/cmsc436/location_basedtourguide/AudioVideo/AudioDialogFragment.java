@@ -47,6 +47,7 @@ public class AudioDialogFragment extends DialogFragment {
             changeSeekBar();
         });
 
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -80,6 +81,14 @@ public class AudioDialogFragment extends DialogFragment {
                 changeSeekBar();
                 isPlaying = true;
                 play.setText("||");
+            }
+        });
+        // When audio is done, have button display  play icon
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                isPlaying = false;
+                play.setText("\u25B6");
             }
         });
 
