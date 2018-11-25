@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".PreviewTour.CommentFragment"
-    tools:listitem="@layout/fragment_commentitem" />
+    tools:listitem="@layout/fragment_comment_item" />

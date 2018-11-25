@@ -8,11 +8,20 @@ import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 
 
 /**
@@ -26,13 +35,17 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 public class TourContentsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_DESCRIPTION = "description";
+    private static final String ARG_PLACES = "places";
+    private static final String ARG_LAT = "lat";
+    private static final String ARG_LON = "lon";
+
     GoogleMap gmap;
     NestedScrollView scrollView;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    private String mDescription;
+    private List<String> mPlaces;
+    private double mLat, mLon;
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,16 +57,17 @@ public class TourContentsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param description Description of Tour.
+     * @param places List of Place IDS.
      * @return A new instance of fragment TourContentsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static TourContentsFragment newInstance(String param1, String param2) {
+    public static TourContentsFragment newInstance(String description, List<String> places, double lat, double lon) {
         TourContentsFragment fragment = new TourContentsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_DESCRIPTION, description);
+        args.putStringArrayList(ARG_PLACES, new ArrayList<>(places));
+        args.putDouble(ARG_LAT, lat);
+        args.putDouble(ARG_LON, lon);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,8 +76,10 @@ public class TourContentsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mDescription = getArguments().getString(ARG_DESCRIPTION);
+            mPlaces = getArguments().getStringArrayList(ARG_PLACES);
+            mLat = getArguments().getDouble(ARG_LAT);
+            mLon = getArguments().getDouble(ARG_LON);
         }
     }
 
@@ -72,24 +88,37 @@ public class TourContentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_tour_contents, container, false);
+
+        TextView descriptionView = v.findViewById(R.id.description_container);
+        descriptionView.setText(mDescription);
+
         if(gmap == null){
             PreviewMapFragment mMap = ((PreviewMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
-            mMap.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    gmap = googleMap;
-                    gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    gmap.getUiSettings().setZoomControlsEnabled(false);
+            mMap.getMapAsync(googleMap -> {
+                gmap = googleMap;
+                gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                gmap.getUiSettings().setZoomControlsEnabled(false);
 
-                    scrollView = getView().findViewById(R.id.scroll_container);
+                scrollView = getView().findViewById(R.id.scroll_container);
 
-                    ((PreviewMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).setListener(new PreviewMapFragment.OnTouchListener() {
-                        @Override
-                        public void onTouch() {
-                            scrollView.requestDisallowInterceptTouchEvent(true);
-                        }
-                    });
+                ((PreviewMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).setListener(new PreviewMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch() {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLon), 4.0f));
+
+                List<Place> mTourPlaces = new ArrayList<>();
+                for(String placeID : mPlaces){
+                    Place place = DataStore.getInstance().getPlace(placeID);
+                    mTourPlaces.add(place);
                 }
+
+                DirectionsUtil.drawTourRoute(gmap, mTourPlaces);
+                // Draw a marker for all tour stops even if visted
+                DirectionsUtil.drawTourMarkers(gmap, mTourPlaces);
             });
         }
 

@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.dummy.DummyContent;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.dummy.DummyContent.DummyItem;
-
+import java.util.ArrayList;
 import java.util.List;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 /**
  * A fragment representing a list of Items.
@@ -24,10 +24,12 @@ import java.util.List;
  */
 public class CommentFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+    private static final String ARG_COMMENTS = "comment-list";
+
     private int mColumnCount = 1;
+    private List<String> mComments;
+
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -37,12 +39,12 @@ public class CommentFragment extends Fragment {
     public CommentFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static CommentFragment newInstance(int columnCount) {
+    public static CommentFragment newInstance(int columnCount, List<String> comments) {
         CommentFragment fragment = new CommentFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putStringArrayList(ARG_COMMENTS, new ArrayList<>(comments));
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,13 +55,14 @@ public class CommentFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mComments = getArguments().getStringArrayList(ARG_COMMENTS);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_commentitem_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_comment_item_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -70,7 +73,7 @@ public class CommentFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyCommentItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new CommentRecyclerViewAdapter(mComments, mListener));
         }
         return view;
     }
@@ -105,6 +108,6 @@ public class CommentFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Comment item);
     }
 }

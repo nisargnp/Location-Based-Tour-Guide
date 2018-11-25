@@ -10,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.LocationItem.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -21,10 +24,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.LocationItem.Dummy
  */
 public class PreviewLocFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+    private static final String ARG_PLACES = "place-list";
+
     private int mColumnCount = 1;
+    private List<String> mPlaces;
+
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -34,12 +39,12 @@ public class PreviewLocFragment extends Fragment {
     public PreviewLocFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PreviewLocFragment newInstance(int columnCount) {
+    public static PreviewLocFragment newInstance(int columnCount, List<String> places) {
         PreviewLocFragment fragment = new PreviewLocFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putStringArrayList(ARG_PLACES, new ArrayList<>(places));
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,13 +55,14 @@ public class PreviewLocFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mPlaces = getArguments().getStringArrayList(ARG_PLACES);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_place_item_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,7 +73,7 @@ public class PreviewLocFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new LocationRecyclerViewAdapter(LocationItem.ITEMS, mListener));
+            recyclerView.setAdapter(new LocationRecyclerViewAdapter(mPlaces, mListener));
         }
         return view;
     }
@@ -102,6 +108,6 @@ public class PreviewLocFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Place itemID);
     }
 }
