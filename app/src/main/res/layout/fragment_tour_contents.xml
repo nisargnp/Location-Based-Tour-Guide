@@ -18,9 +18,10 @@
         android:showDividers="middle">
 
         <TextView
+            android:id="@+id/description_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-25dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/large_text" />
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,5 +33,6 @@
             android:layout_height="300dp"
             android:layout_marginTop="10dp"
             tools:context=".PreviewTour.TourContentsFragment" />
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

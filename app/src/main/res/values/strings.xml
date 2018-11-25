@@ -100,14 +100,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="preview_details_title">Details</string>
-    <string name="preview_locations_title">Locations</string>
+    <string name="preview_locations_title">Tour Stops</string>
     <string name="title_activity_maps">Map</string>
     <string name="normal_map">Normal Map</string>
     <string name="hybrid_map">Hybrid Map</string>
     <string name="satellite_map">Satellite Map</string>
     <string name="terrain_map">Terrain Map</string>
     <string name="title_activity_add_places">Map</string>
-    <string name="no_places_created">Press on the map to create a new stop for your tour!</string>
+    <string name="no_places_created">Press on the map to create a new stop for your mTour!</string>
+    <string name="preview_comments_title">Comments</string>
 
 
 </resources>
