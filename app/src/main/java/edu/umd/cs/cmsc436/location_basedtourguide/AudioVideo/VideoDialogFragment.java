@@ -56,8 +56,8 @@ public class VideoDialogFragment extends DialogFragment {
         String uriName = b.getString("uri");
         Uri uri = Uri.parse(uriName);
 
-        //videoView.setVideoURI(uri);
-        videoView.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.teapot));
+        videoView.setVideoURI(uri);
+        //videoView.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.teapot));
 
         videoView.start();
 
