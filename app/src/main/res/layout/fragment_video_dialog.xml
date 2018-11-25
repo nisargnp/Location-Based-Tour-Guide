@@ -31,4 +31,11 @@
         android:layout_below="@id/videoview"/>
 
 
+    <SeekBar
+        android:id="@+id/video_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:layout_below="@id/play_pause_vid"/>
+
 </RelativeLayout>

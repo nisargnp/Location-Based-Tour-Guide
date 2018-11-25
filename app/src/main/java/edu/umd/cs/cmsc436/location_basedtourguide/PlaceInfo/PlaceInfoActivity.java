@@ -5,6 +5,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -60,6 +61,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         ImageView placeImg = findViewById(R.id.place_img);
         TextView placeDesc = findViewById(R.id.place_desc);
+        TextView placeName = findViewById(R.id.place_name);
         ImageButton videoButton = findViewById(R.id.vid_button);
         ImageButton audioButton = findViewById(R.id.audio_button);
 
@@ -67,6 +69,9 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         matrix.setSaturation(0);
 
         placeDesc.setText(mPlace.getDescription());
+        placeDesc.setMovementMethod(new ScrollingMovementMethod());
+
+        placeName.setText(mPlace.getName());
 
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
