@@ -13,6 +13,8 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -207,7 +209,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
         if (requestCode == GOOGLE_MAPS_LOCATION_REQUEST_CODE || requestCode == LOCATION_SERVICES_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (requestCode == LOCATION_SERVICES_REQUEST_CODE) {
                     renderTourRoute();
                 } else {
@@ -229,21 +231,19 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void showTourRoute() {
         if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            ActivityCompat.requestPermissions(TourActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_SERVICES_REQUEST_CODE);
         } else {
             renderTourRoute();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void showUserLocation() {
         if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    GOOGLE_MAPS_LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(TourActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_SERVICES_REQUEST_CODE);
         } else {
             enableLocationLayer();
         }
@@ -290,6 +290,11 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                         DirectionsUtil.drawTourRoute(mMap, tourStops);
                         // Draw a marker for all tour stops even if visted
                         DirectionsUtil.drawTourMarkers(mMap, mTourPlaces);
+
+                        // Start Location Service if not already started
+                        if (LocationTrackingService.isRunning == false) {
+                            enableLocationLayer();
+                        }
                     }
                 });
             } catch (SecurityException e) {
@@ -366,7 +371,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private boolean needsRuntimePermission(String permission) {
         // Check the SDK version and whether the permission is already granted.
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED);
+        return (ActivityCompat.checkSelfPermission(TourActivity.this, permission) != PackageManager.PERMISSION_GRANTED);
     }
 }
