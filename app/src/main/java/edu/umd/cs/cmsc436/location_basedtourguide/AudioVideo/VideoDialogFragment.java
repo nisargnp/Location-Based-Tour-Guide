@@ -91,6 +91,8 @@ public class VideoDialogFragment extends DialogFragment {
         });
 
         seekBar = v.findViewById(R.id.video_seekbar);
+        seekBar.setEnabled(false); // prevent users from interacting w/ it
+
 /*        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekbar, int progress, boolean fromTouch) {
                 if (fromTouch) {
@@ -125,3 +127,4 @@ public class VideoDialogFragment extends DialogFragment {
         this.title = title;
     }
 }
+
