@@ -88,6 +88,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         // TODO - how do i get back to the main menu if i lose it on the backstack?
+        // caused by single instance property. But need that for resuming tour.
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -114,7 +115,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
             mTourLocations = new ArrayList<>();
             for (String stopId : mTour.getPlaces()) {
                 Place place = DataStore.getInstance().getPlace(stopId);
-                // TODO - move this logic to DataStore
                 mTourPlaces.add(place);
 
                 // Working with location objects are easier for LocationAPI
@@ -318,17 +318,18 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onClick(View v) {
                     Log.i(TAG, "Playing media for: " + arrivedPlace.getName());
 
-                    // TODO - how do i set a title for vid/aud frag?
                     if (arrivedPlace.getVideoFile().length() > 0) {
                         Bundle b = new Bundle();
                         b.putString("uri", arrivedPlace.getVideoFile());
                         VideoDialogFragment vidDialog = new VideoDialogFragment();
+                        vidDialog.setTitle("Video for " + arrivedPlace.getName());
                         vidDialog.setArguments(b);
                         vidDialog.show(getFragmentManager(), "video");
                     } else if (arrivedPlace.getAudioFile().length() > 0) {
                         Bundle b = new Bundle();
                         b.putString("uri", arrivedPlace.getAudioFile());
                         AudioDialogFragment audioDialog = new AudioDialogFragment();
+                        audioDialog.setTitle("Audio for " + arrivedPlace.getName());
                         audioDialog.setArguments(b);
                         audioDialog.show(getFragmentManager(), "audio");
                     } else {

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -33,6 +34,7 @@ public class VideoDialogFragment extends DialogFragment {
     private VideoView videoView;
     private Handler handler = new Handler();
     private SeekBar seekBar;
+    private String title;
 
     Runnable updateTimeTask = new Runnable() {
         public void run() {
@@ -49,6 +51,11 @@ public class VideoDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.fragment_video_dialog, null);
         builder.setView(v);
+
+        if (title != null) {
+            TextView titleTextView = v.findViewById(R.id.play_pause_text);
+            titleTextView.setText(title);
+        }
 
         videoView = v.findViewById(R.id.videoview);
 
@@ -110,7 +117,11 @@ public class VideoDialogFragment extends DialogFragment {
         handler.postDelayed(updateTimeTask, 100);
     }
 
+    public String getTitle() {
+        return this.title;
+    }
 
-
-
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
