@@ -19,6 +19,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
@@ -83,7 +84,9 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
 
     @Override
     public void onListFragmentInteraction(Place place) {
-
+        Intent intent = new Intent(PreviewTourActivity.this, PlaceInfoActivity.class);
+        intent.putExtra(TourActivity.PLACE_ID, place.getId());
+        startActivity(intent);
     }
 
     @Override
