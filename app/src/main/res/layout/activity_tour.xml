@@ -8,9 +8,11 @@
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/tourMapView"
-        android:layout_width="335dp"
-        android:layout_height="335dp"
-        android:layout_centerInParent="true"
+        android:layout_width="365dp"
+        android:layout_height="365dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="113dp" />
 
@@ -20,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="12dp"
         android:text="Refresh Tour Route" />
 
     <View
@@ -37,7 +39,7 @@
         android:layout_height="96dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp">
+        android:layout_marginTop="11dp">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -76,11 +78,11 @@
                         android:id="@+id/previewTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:text="Place"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:paddingTop="10dp"
                         android:singleLine="true"
+                        android:text="Place"
                         android:textStyle="bold" />
 
                     <TextView

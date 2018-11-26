@@ -104,7 +104,7 @@ public class DirectionsAsyncTask extends AsyncTask<DirectionsTaskParameter, Void
             reader = new BufferedReader(new InputStreamReader(in));
             String line;
             while ((line = reader.readLine()) != null) {
-                Log.i(TAG, "Reading from JSON source");
+//                Log.i(TAG, "Reading from JSON source");
                 data.append(line);
             }
         } catch (IOException e) {
