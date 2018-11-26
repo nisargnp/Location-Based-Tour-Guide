@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,13 +47,13 @@ public class LocationTrackingService extends Service {
     private List<Location> listTourStops;
     private Context mContext;
     private NotificationManager mNotificationManager;
-    private LocationListener mCustomLocationListener;
+    private LocationListener mGPSLocationListener;
+    private LocationListener mNetworkLocationListener;
 
     public LocationTrackingService() {
         super();
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
@@ -82,8 +83,8 @@ public class LocationTrackingService extends Service {
         NOTE: You will receive location updates less frequently when application is backgrounded.
         one update per ~30 seconds
          */
+        Notification notification = createNotificatinBuilder().build();
         // TODO - do we want multiple notifications?
-        Notification notification = new Notification.Builder(mContext, channelId).build();
         startForeground(notificationId++, notification);
 
         return START_NOT_STICKY;
@@ -101,12 +102,21 @@ public class LocationTrackingService extends Service {
         }
 
         try {
-            mCustomLocationListener = new CustomLocationListener();
+            mGPSLocationListener = new CustomLocationListener();
+            mNetworkLocationListener = new CustomLocationListener();
+
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     LOCATION_REQUEST_INTERVAL,
                     MIN_DISTANCE_DELTA,
-                    mCustomLocationListener);
+                    mGPSLocationListener);
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    LOCATION_REQUEST_INTERVAL,
+                    MIN_DISTANCE_DELTA,
+                    mNetworkLocationListener);
+
+            Log.i(TAG, "Requested Location Updates");
         } catch (SecurityException e) {
             // Service assumes you have already received necessary permissions
             Log.e(TAG, e.toString());
@@ -119,8 +129,13 @@ public class LocationTrackingService extends Service {
         super.onDestroy();
         nextStopIndex = 0;
 
-        if (mLocationManager != null && mCustomLocationListener != null) {
-            mLocationManager.removeUpdates(mCustomLocationListener);
+        if (mLocationManager != null) {
+            if (mGPSLocationListener != null) {
+                mLocationManager.removeUpdates(mGPSLocationListener);
+            }
+            if (mNetworkLocationListener != null) {
+                mLocationManager.removeUpdates(mNetworkLocationListener);
+            }
         }
     }
 
@@ -148,7 +163,6 @@ public class LocationTrackingService extends Service {
         mContext.sendOrderedBroadcast(new Intent(TourActivity.LOCATION_DATA_ACTION), null,
                 new BroadcastReceiver() {
                     @Override
-                    @TargetApi(Build.VERSION_CODES.O)
                     public void onReceive(Context context, Intent intent) {
                         if (getResultCode() != TourActivity.IS_ALIVE) {
                             final PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -158,8 +172,9 @@ public class LocationTrackingService extends Service {
                                     PendingIntent.FLAG_UPDATE_CURRENT
                             );
 
-                            Notification.Builder notificationBuilder = new Notification.Builder(mContext, channelId)
-                                    .setSmallIcon(R.drawable.ic_launcher_background)
+                            Notification.Builder notificationBuilder = createNotificatinBuilder();
+
+                            notificationBuilder.setSmallIcon(R.drawable.ic_launcher_background)
                                     .setTicker("Reached the next tour stop")
                                     .setContentTitle("You've reached the next tour stop!")
                                     .setContentText("Click for more details!")
@@ -190,9 +205,19 @@ public class LocationTrackingService extends Service {
         }
     }
 
+    private Notification.Builder createNotificatinBuilder() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return new Notification.Builder(mContext, channelId);
+        }
+
+        return new Notification.Builder(mContext);
+    }
+
     private class CustomLocationListener implements LocationListener {
+
         @Override
         public void onLocationChanged(Location location) {
+            Log.i(TAG, "Got Location from provider: " + location.getProvider());
             if (nextStopIndex < listTourStops.size()) {
                 float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
                 Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
