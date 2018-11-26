@@ -1,7 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -10,11 +9,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -202,7 +199,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         showUserLocation();
-        showTourRoute();
     }
 
     @Override
@@ -243,7 +239,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showUserLocation() {
         if (needsRuntimePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             ActivityCompat.requestPermissions(TourActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_SERVICES_REQUEST_CODE);
+                    GOOGLE_MAPS_LOCATION_REQUEST_CODE);
         } else {
             enableLocationLayer();
         }
@@ -266,6 +262,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 locationIntent.putExtra(TourActivity.TOUR_STOP_DATA, tourStopData);
                 Log.i(TAG, "Starting Location Tracking Service");
                 startService(locationIntent);
+
+                // Drawing Initial Tour Route
+                renderTourRoute();
+
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
                 Log.e(TAG, e.toString());
@@ -290,11 +290,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                         DirectionsUtil.drawTourRoute(mMap, tourStops);
                         // Draw a marker for all tour stops even if visted
                         DirectionsUtil.drawTourMarkers(mMap, mTourPlaces);
-
-                        // Start Location Service if not already started
-                        if (LocationTrackingService.isRunning == false) {
-                            enableLocationLayer();
-                        }
                     }
                 });
             } catch (SecurityException e) {
