@@ -1,7 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,7 +51,6 @@ public class DataStore {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Tour tour = childDataSnapshot.getValue(Tour.class);
                     if (tour != null) {
-                        Log.d("testing", "tour: " + tour.toString());
                         tourMap.put(tour.getId(), tour);
                     }
                 }
