@@ -29,12 +29,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 public class LocationTrackingService extends Service {
     private static final String TAG = "location-service";
     private static final long LOCATION_REQUEST_INTERVAL = 5000;
-    private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - raise value? => less power
+    private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - test IRL. Raise value? => less power
     /**
      * Radius of tour stops. If users enter this radius, they will be considered to be "at" a
      * tour stop. 100 meters ~= 330 feet
      */
-    private static final float TOUR_STOP_RADIUS_METERS = 100;
+    private static final float TOUR_STOP_RADIUS_METERS = 100; // TODO - test IRL.
     /**
      * Source of truth for which tour stop the user needs to go to next. Stored as 0 based index
      */
@@ -82,9 +82,7 @@ public class LocationTrackingService extends Service {
         NOTE: You will receive location updates less frequently when application is backgrounded.
         one update per ~30 seconds
          */
-        // TODO - fix issue with stacking multiple arrived notifications takes you back to
-        // main activity. But still if you click the UMD tour, it is still going
-        // is this still an issue?
+        // TODO - do we want multiple notifications?
         Notification notification = new Notification.Builder(mContext, channelId).build();
         startForeground(notificationId++, notification);
 

@@ -114,7 +114,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
 
         LatLng placeCoords = new LatLng(mPlace.getLat(), mPlace.getLon());
         map.moveCamera(CameraUpdateFactory.newLatLng(placeCoords));
-        map.moveCamera(CameraUpdateFactory.zoomTo(10));
+        map.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         Marker marker = map.addMarker(new MarkerOptions().position(placeCoords).title(mPlace.getName()));
         marker.showInfoWindow();
