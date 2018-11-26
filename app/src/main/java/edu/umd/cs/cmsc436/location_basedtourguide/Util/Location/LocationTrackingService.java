@@ -1,6 +1,5 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Util.Location;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,7 +8,6 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,6 +26,8 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 
 public class LocationTrackingService extends Service {
+    public static boolean isRunning = false;
+
     private static final String TAG = "location-service";
     private static final long LOCATION_REQUEST_INTERVAL = 5000;
     private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - test IRL. Raise value? => less power
@@ -56,6 +56,8 @@ public class LocationTrackingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        LocationTrackingService.isRunning = true;
+
         Bundle extras = intent.getExtras();
         if (extras == null) {
             throw new InvalidParameterException("Need extras for LocationTrackingService start");
@@ -83,7 +85,7 @@ public class LocationTrackingService extends Service {
         NOTE: You will receive location updates less frequently when application is backgrounded.
         one update per ~30 seconds
          */
-        Notification notification = createNotificatinBuilder().build();
+        Notification notification = createNotificationBuilder().build();
         // TODO - do we want multiple notifications?
         startForeground(notificationId++, notification);
 
@@ -127,6 +129,7 @@ public class LocationTrackingService extends Service {
     public void onDestroy() {
         Log.e(TAG, "LocationTrackingService ending...");
         super.onDestroy();
+        LocationTrackingService.isRunning = false;
         nextStopIndex = 0;
 
         if (mLocationManager != null) {
@@ -172,7 +175,7 @@ public class LocationTrackingService extends Service {
                                     PendingIntent.FLAG_UPDATE_CURRENT
                             );
 
-                            Notification.Builder notificationBuilder = createNotificatinBuilder();
+                            Notification.Builder notificationBuilder = createNotificationBuilder();
 
                             notificationBuilder.setSmallIcon(R.drawable.ic_launcher_background)
                                     .setTicker("Reached the next tour stop")
@@ -205,7 +208,7 @@ public class LocationTrackingService extends Service {
         }
     }
 
-    private Notification.Builder createNotificatinBuilder() {
+    private Notification.Builder createNotificationBuilder() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return new Notification.Builder(mContext, channelId);
         }
