@@ -264,7 +264,7 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                     tourStopData[i] = location.getLatitude() + "," + location.getLongitude();
                 }
                 locationIntent.putExtra(TourActivity.TOUR_STOP_DATA, tourStopData);
-
+                Log.i(TAG, "Starting Location Tracking Service");
                 startService(locationIntent);
             } catch (SecurityException e) {
                 // this catch is just here cause my IDE wasn't detecting the permission check
