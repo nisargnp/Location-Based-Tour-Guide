@@ -26,8 +26,6 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 
 public class LocationTrackingService extends Service {
-    public static boolean isRunning = false;
-
     private static final String TAG = "location-service";
     private static final long LOCATION_REQUEST_INTERVAL = 5000;
     private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - test IRL. Raise value? => less power
@@ -56,8 +54,6 @@ public class LocationTrackingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LocationTrackingService.isRunning = true;
-
         Bundle extras = intent.getExtras();
         if (extras == null) {
             throw new InvalidParameterException("Need extras for LocationTrackingService start");
@@ -129,7 +125,6 @@ public class LocationTrackingService extends Service {
     public void onDestroy() {
         Log.e(TAG, "LocationTrackingService ending...");
         super.onDestroy();
-        LocationTrackingService.isRunning = false;
         nextStopIndex = 0;
 
         if (mLocationManager != null) {
