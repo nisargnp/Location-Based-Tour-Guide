@@ -32,8 +32,6 @@
         <activity android:name=".PlaceInfo.TestRatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -41,8 +39,6 @@
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -57,13 +53,17 @@
                 android:value="edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity" />
         </activity>
 
-        <!--activity android:name=".TestMapActivity">
+        <activity android:name=".Tour.TourActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-->
+        </activity>
+        <activity android:name=".AddTour.AddPlacesActivity" />
+        <activity android:name=".AddTour.AddTourActivity" />
+        <activity android:name=".AddTour.AddDetailsActivity" />
+
+        <service android:name=".Util.Location.LocationTrackingService" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -76,20 +76,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".Tour.TourActivity"
-            android:launchMode="singleInstance">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".AddTour.AddPlacesActivity" />
-        <activity android:name=".AddTour.AddTourActivity" />
-        <activity android:name=".AddTour.AddDetailsActivity"></activity>
-
-        <service android:name=".Util.Location.LocationTrackingService" />
 
     </application>
 
