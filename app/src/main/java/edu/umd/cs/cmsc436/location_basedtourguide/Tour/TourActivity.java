@@ -2,6 +2,7 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +42,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
+import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.RatingFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
@@ -75,7 +79,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_tour);
 
         // Next stop preview setup
-        // TODO - do we need a title indicating that this preview is for the next stop?
         mPreviewImageView = findViewById(R.id.previewImage);
         mPreviewTitleView = findViewById(R.id.previewTitle);
         mPreviewDescriptionView = findViewById(R.id.previewDescription);
@@ -85,9 +88,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 openPlaceInfo(LocationTrackingService.getNextStopIndex());
             }
         });
-
-        // TODO - how do i get back to the main menu if i lose it on the backstack?
-        // caused by single instance property. But need that for resuming tour.
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -140,6 +140,28 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_tour, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_exit_tour) {
+            Intent returnIntent = new Intent(TourActivity.this, MainActivity.class);
+            startActivity(returnIntent);
+
+            finish();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -346,6 +368,10 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mPreviewTitleView.setText("End of the Tour!");
                 mPreviewDescriptionView.setText("You have reached the end of the tour!. Press back to go" +
                         "to the main menu to see other tours!");
+
+                RatingFragment ratingFragment = new RatingFragment();
+                ratingFragment.setTourId(mTour.getId());
+                ratingFragment.show(getSupportFragmentManager(), "rating");
             }
         }
     }

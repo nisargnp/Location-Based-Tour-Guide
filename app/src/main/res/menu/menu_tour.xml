@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity">
+    <item
+        android:id="@+id/action_exit_tour"
+        android:orderInCategory="100"
+        android:title="Exit Tour"
+        app:showAsAction="never" />
+</menu>

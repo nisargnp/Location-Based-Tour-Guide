@@ -72,15 +72,24 @@
                 android:layout_marginRight="32dp"
                 />
 
-            <TextView
-                android:id="@+id/place_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
-                android:scrollHorizontally="false"
-                android:gravity="center_horizontal"
-                android:textSize="32dp"
-                />
+            <HorizontalScrollView
+                android:id="@+id/horizontal_scroll_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scrollbars="none">
+                <TextView
+                    android:id="@+id/place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="32dp"
+                    android:singleLine="true"
+                    android:scrollHorizontally="true"
+                    />
+            </HorizontalScrollView>
+
         </RelativeLayout>
 
 
