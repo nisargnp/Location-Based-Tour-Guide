@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/clouds" />
+                    android:src="@drawable/temp_img" />
 
                 <View
                     android:layout_width="match_parent"
