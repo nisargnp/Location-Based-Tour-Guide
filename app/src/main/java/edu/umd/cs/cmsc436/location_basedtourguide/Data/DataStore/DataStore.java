@@ -1,6 +1,7 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -84,6 +85,7 @@ public class DataStore {
                 commentMap.clear();
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Comment comment = childDataSnapshot.getValue(Comment.class);
+
                     if (comment != null) {
                         commentMap.put(comment.getId(), comment);
                     }
