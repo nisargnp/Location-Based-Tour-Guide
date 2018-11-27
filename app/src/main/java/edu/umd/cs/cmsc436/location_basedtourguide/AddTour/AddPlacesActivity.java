@@ -3,7 +3,9 @@ package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 import android.Manifest;
@@ -103,9 +105,9 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 ArrayList<String> pIDs = new ArrayList<>();
                 for (Place p : places) {
                     pIDs.add(p.getId());
+                    FirebaseUtils.uploadToFirebaseRaw(null, p);
                 }
                 bundle.putStringArrayList("places", pIDs);
-
                 Intent output = new Intent().putExtras(bundle);
                 setResult(RESULT_OK, output);
                 finish();
@@ -114,7 +116,6 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
         map.getMapAsync(this);
-
 
     }
 
@@ -125,24 +126,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         enableMyLocation(map);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (location != null) {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
+        zoomInOnMyLocation();
 
 
         map.setOnMapLongClickListener(this);
@@ -214,6 +198,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
             }
         }
     }
+
     @Override
     public void onMapLongClick(LatLng latLng) {
         Intent intent = new Intent(AddPlacesActivity.this, AddDetailsActivity.class);
@@ -260,6 +245,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
             if (resultCode == RESULT_OK) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
+                    zoomInOnMyLocation();
                 }
 
             } else {
@@ -270,6 +256,10 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void createPolyLine() {
+
+        DirectionsUtil.drawTourRoute(map, places);
+        DirectionsUtil.drawTourMarkers(map, places);
+/*
         for (Marker marker : markers) {
             map.addMarker(new MarkerOptions().position(marker.getPosition()).title(marker.getTitle()));
         }
@@ -292,7 +282,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         map.animateCamera(cu);
-
+*/
 
     }
 
@@ -305,6 +295,28 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
             mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
+
+    private void zoomInOnMyLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Criteria criteria = new Criteria();
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+
 
 
 
@@ -338,6 +350,9 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         mAdapter.notifyDataSetChanged();
     }
+
+
+
 
 
 }
