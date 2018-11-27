@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Arrays;
+
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataGenerator.DataGenerator;
@@ -37,18 +39,22 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
 
-        String placeId = getIntent().getStringExtra(TourActivity.PLACE_ID);
+        String placeId;
+        Intent givenIntent = getIntent();
+        try {
+            placeId = givenIntent.getExtras().getString(TourActivity.PLACE_ID, null);
+        } catch (Exception e) {
 
-        if (placeId == null) {
-            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
+//            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
 
             // TODO: remove hardcode below, uncomment error above
-//            DataGenerator.getStringenerateDataLocal();
-//            DataStore.getInstance().addTours(DataGenerator.getTours());
-//            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
-//            DataStore.getInstance().addComments(DataGenerator.getComments());
-//            DataStore.getInstance().addUsers(DataGenerator.getUsers());
-//            placeId = "-vQLJaqfPfLJgObaJpUst";
+            DataGenerator.generateDataLocal();
+            DataStore.getInstance().addTours(DataGenerator.getTours());
+            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+            DataStore.getInstance().addComments(DataGenerator.getComments());
+            DataStore.getInstance().addUsers(DataGenerator.getUsers());
+            placeId = "-vQLJaqfPfLJgObaJpUst";
+
         }
 
         mPlace = DataStore.getInstance().getPlace(placeId);
