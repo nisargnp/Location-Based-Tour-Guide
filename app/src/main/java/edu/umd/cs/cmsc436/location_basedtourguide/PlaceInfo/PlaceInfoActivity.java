@@ -3,15 +3,14 @@ package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.util.TypedValue;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,8 +72,15 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         placeDesc.setMovementMethod(new ScrollingMovementMethod());
 
         placeName.setText(mPlace.getName());
-        placeName.setText("Computer Science Instructional Center Hello GagagoogooGa");
-        placeName.setMovementMethod(new ScrollingMovementMethod());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            placeName.setTooltipText(mPlace.getName());
+        } else {
+            placeName.setOnLongClickListener(v -> {
+                Toast.makeText(PlaceInfoActivity.this, mPlace.getName(), Toast.LENGTH_LONG).show();
+                return true;
+            });
+        }
+
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
             audioButton.setColorFilter(new ColorMatrixColorFilter(matrix));
