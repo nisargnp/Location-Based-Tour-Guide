@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,13 +41,12 @@ public class AddDetailsActivity extends AppCompatActivity {
     TextView stopTitle;
     TextView stopDescription;
     ImageView stopImage;
-    private Uri selectedImage;
     private String imagePathFilename;
     private String audioPathFilename;
     private String videoPathFilename;
-    private MediaRecorder mRecorder;
-    private boolean recording;
 
+
+    private static final String TAG = "AddDetailsActivity";
     private static final int USE_CAMERA = 0;
     private static final int CHOOSE_PICTURE = 1;
     private static final int UPLOAD_VIDEO = 2;
@@ -83,19 +83,13 @@ public class AddDetailsActivity extends AppCompatActivity {
 
         audioButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (recording) {
-                    stopRecordingAudio();
-                } else {
-                    startRecordingAudio();
-                }
-            }
+            public void onClick(View view) { uploadAudio(); }
         });
 
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                videoFromGallery();
+                uploadVideo();
             }
         });
 
@@ -177,88 +171,66 @@ public class AddDetailsActivity extends AppCompatActivity {
             case 2:
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
-                        Uri selectedImageUri = imageReturnedIntent.getData();
-                        videoPathFilename = getPath(selectedImageUri);
+                        Uri uri = imageReturnedIntent.getData();
+                        videoPathFilename = uri.getPath();
+                        Toast.makeText(getApplicationContext(), "Successfully uploaded video file", Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "VideoPath: " + videoPathFilename);
+
                     }
                 }
+                break;
             case 3:
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
+                        Uri uri = imageReturnedIntent.getData();
+                        audioPathFilename = uri.getPath();
+                        Toast.makeText(getApplicationContext(), "Successfully uploaded audio file", Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "AudioPath: " + audioPathFilename);
 
                     }
                 }
+                break;
         }
     }
 
-
-    private void startRecordingAudio() {
-
-        recording = true;
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        audioPathFilename = getFilename();
-        mRecorder.setOutputFile(audioPathFilename);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Couldn't Prepare AudioPlayer", Toast.LENGTH_SHORT).show();
-
-        }
-        mRecorder.start();
-        Toast.makeText(getApplicationContext(), "Started Recording", Toast.LENGTH_SHORT).show();
-
-
+    private void uploadAudio(){
+        Intent intent = new Intent();
+        intent.setType("audio/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Audio"),UPLOAD_AUDIO);
 
     }
 
-    private String getFilename()
-    {
-        String filepath = Environment.getExternalStorageDirectory().getPath();
-        File file = new File(filepath);
-
-        if(!file.exists()){
-            file.mkdirs();
-        }
-
-        return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
-    }
-
-    private void stopRecordingAudio() {
-
-
-        if (null != mRecorder) {
-            recording = false;
-            mRecorder.stop();
-            mRecorder.reset();
-            mRecorder.release();
-            mRecorder = null;
-            Toast.makeText(getApplicationContext(), "Stopped Recording", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-    private void videoFromGallery() {
-
+    private void uploadVideo() {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Video"),UPLOAD_VIDEO);
     }
 
-    public String getPath(Uri uri) {
+
+
+
+    public String getVideoPath(Uri uri) {
         String[] projection = { MediaStore.Video.Media.DATA };
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
-            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
         } else
             return null;
+    }
+
+    private String getAudioPath(Uri uri) {
+        String[] data = {MediaStore.Audio.Media.DATA};
+        CursorLoader loader = new CursorLoader(getApplicationContext(), uri, data, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
 

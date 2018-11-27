@@ -221,6 +221,9 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 place.setLon(bundle.getDouble("lon"));
                 place.setLat(bundle.getDouble("lat"));
                 place.setPictureFile(bundle.getString("imageFilePath"));
+                place.setAudioFile(bundle.getString("audioFilePath"));
+                place.setVideoFile(bundle.getString("videoFilePath"));
+
 
 
                 String id = uploadToFirebase(AddPlacesActivity.this, place);
@@ -259,30 +262,6 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
 
         DirectionsUtil.drawTourRoute(map, places);
         DirectionsUtil.drawTourMarkers(map, places);
-/*
-        for (Marker marker : markers) {
-            map.addMarker(new MarkerOptions().position(marker.getPosition()).title(marker.getTitle()));
-        }
-
-        map.addPolyline(new PolylineOptions().addAll(latlngs).color(Color.CYAN).geodesic(true));
-
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Marker marker : markers) {
-            builder.include(marker.getPosition());
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Criteria criteria = new Criteria();
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            builder.include(new LatLng(location.getLatitude(), location.getLongitude()));
-        }
-
-        LatLngBounds bounds = builder.build();
-        int padding = 70; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-        map.animateCamera(cu);
-*/
 
     }
 
