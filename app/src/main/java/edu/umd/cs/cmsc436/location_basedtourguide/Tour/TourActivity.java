@@ -75,9 +75,8 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
-        
+
         // Next stop preview setup
-        // TODO - do we need a title indicating that this preview is for the next stop?
         mPreviewImageView = findViewById(R.id.previewImage);
         mPreviewTitleView = findViewById(R.id.previewTitle);
         mPreviewDescriptionView = findViewById(R.id.previewDescription);
@@ -87,9 +86,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                 openPlaceInfo(LocationTrackingService.getNextStopIndex());
             }
         });
-
-        // TODO - how do i get back to the main menu if i lose it on the backstack?
-        // caused by single instance property. But need that for resuming tour.
 
         // for drawing route to user location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
