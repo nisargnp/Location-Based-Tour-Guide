@@ -216,7 +216,9 @@ public class FirebaseUtils {
     private static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, OnUriResultListener onUriResultListener) {
         ProgressDialog progressDialog = ProgressDialog.show(context, "Uploading", "Please wait...");
         uploadFileToFirebase(filePath, uploadDir, uploadName, uri -> {
-            progressDialog.dismiss();
+            if(progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
             if (onUriResultListener != null) onUriResultListener.onUriResult(uri);
         });
     }
