@@ -8,11 +8,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 public class AddDetailsActivity extends AppCompatActivity {
@@ -37,9 +42,15 @@ public class AddDetailsActivity extends AppCompatActivity {
     ImageView stopImage;
     private Uri selectedImage;
     private String imagePathFilename;
+    private String audioPathFilename;
+    private String videoPathFilename;
+    private MediaRecorder mRecorder;
+    private boolean recording;
 
     private static final int USE_CAMERA = 0;
     private static final int CHOOSE_PICTURE = 1;
+    private static final int UPLOAD_VIDEO = 2;
+    private static final int UPLOAD_AUDIO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +84,18 @@ public class AddDetailsActivity extends AppCompatActivity {
         audioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (recording) {
+                    stopRecordingAudio();
+                } else {
+                    startRecordingAudio();
+                }
             }
         });
 
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                videoFromGallery();
             }
         });
 
@@ -105,8 +120,8 @@ public class AddDetailsActivity extends AppCompatActivity {
                 bundle.putString("title", stopTitle.getText().toString());
                 bundle.putString("description", stopDescription.getText().toString());
                 bundle.putString("imageFilePath", imagePathFilename);
-                //bundle.putString("videoFilePath", );
-                //bundle.putString("audioFilePath", );
+                bundle.putString("videoFilePath", videoPathFilename);
+                bundle.putString("audioFilePath", audioPathFilename);
                 output.putExtras(bundle);
 
 
@@ -119,8 +134,10 @@ public class AddDetailsActivity extends AppCompatActivity {
     }
 
     public void fromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, CHOOSE_PICTURE);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_PICTURE);
     }
 
     public void fromCamera() {
@@ -145,15 +162,104 @@ public class AddDetailsActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
-                        stopImage.setImageBitmap(selectedImage);
-                        imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+                        Uri contentURI = imageReturnedIntent.getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                            stopImage.setImageBitmap(bitmap);
+                            imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), bitmap, "images" ,bitmap.toString());
+
+                        } catch (IOException e) {
+                            Toast.makeText(getApplicationContext(), "Image Upload unsuccessful", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    if (imageReturnedIntent != null) {
+                        Uri selectedImageUri = imageReturnedIntent.getData();
+                        videoPathFilename = getPath(selectedImageUri);
+                    }
+                }
+            case 3:
+                if (resultCode == RESULT_OK) {
+                    if (imageReturnedIntent != null) {
+
+                    }
+                }
         }
     }
 
+
+    private void startRecordingAudio() {
+
+        recording = true;
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        audioPathFilename = getFilename();
+        mRecorder.setOutputFile(audioPathFilename);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Couldn't Prepare AudioPlayer", Toast.LENGTH_SHORT).show();
+
+        }
+        mRecorder.start();
+        Toast.makeText(getApplicationContext(), "Started Recording", Toast.LENGTH_SHORT).show();
+
+
+
+    }
+
+    private String getFilename()
+    {
+        String filepath = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(filepath);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
+    }
+
+    private void stopRecordingAudio() {
+
+
+        if (null != mRecorder) {
+            recording = false;
+            mRecorder.stop();
+            mRecorder.reset();
+            mRecorder.release();
+            mRecorder = null;
+            Toast.makeText(getApplicationContext(), "Stopped Recording", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void videoFromGallery() {
+
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Video"),UPLOAD_VIDEO);
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
+    }
 
 
 }

@@ -27,7 +27,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHold
             super(itemView);
             image = itemView.findViewById(R.id.imageView);
             image.setVisibility(View.VISIBLE);
-            mIdView = (TextView) itemView.findViewById(R.id.item_number);
+            mIdView = (TextView) itemView.findViewById(R.id.place_name);
             mContentView = (TextView) itemView.findViewById(R.id.content);
 
         }

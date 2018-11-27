@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
@@ -78,11 +80,17 @@ public class AddTourActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (tour.getPlaces().size() == 0) {
                     Toast.makeText(getApplicationContext(), "Tour must have atleast one stop",  Toast.LENGTH_SHORT).show();
+                } else if (tour.getPictureFile() == null) {
+                    Toast.makeText(getApplicationContext(), "Tour must have picture", Toast.LENGTH_SHORT).show();
                 } else {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
                     tour.setPictureFile(imageFilePath);
-                    uploadToFirebase(AddTourActivity.this, tour);
+                    User Admin = new User();
+                    Admin.setName("Admin");
+                    String admin = FirebaseUtils.uploadToFirebaseRaw(null, Admin);
+                    tour.setAuthor(admin);
+                    FirebaseUtils.uploadToFirebase(AddTourActivity.this, tour);
                     finish();
                 }
             }
@@ -106,8 +114,10 @@ public class AddTourActivity extends AppCompatActivity {
     }
 
     public void fromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, CHOOSE_PICTURE);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_PICTURE);
     }
 
     public void fromCamera() {
@@ -133,10 +143,15 @@ public class AddTourActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
-                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
-                        tourImageView.setImageBitmap(selectedImage);
-                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
+                        Uri contentURI = imageReturnedIntent.getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                            tourImageView.setImageBitmap(bitmap);
+                            imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), bitmap, "images" ,bitmap.toString());
 
+                        } catch (IOException e) {
+                            Toast.makeText(getApplicationContext(), "Image Upload unsuccessful", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 break;
@@ -147,5 +162,22 @@ public class AddTourActivity extends AppCompatActivity {
                 }
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("tourTitle", titleTextView.getText().toString());
+        savedInstanceState.putString("tourDescription", descriptionTextView.getText().toString());
+        savedInstanceState.putString("tourImage", imageFilePath);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        imageFilePath = (String) savedInstanceState.getString("tourImage");
+        titleTextView.setText(savedInstanceState.getString("tourTitle"));
+        descriptionTextView.setText(savedInstanceState.getString("tourDescription"));
+    }
+
 
 }
