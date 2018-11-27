@@ -39,22 +39,10 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
 
-        String placeId;
-        Intent givenIntent = getIntent();
-        try {
-            placeId = givenIntent.getExtras().getString(TourActivity.PLACE_ID, null);
-        } catch (Exception e) {
 
-//            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
-
-            // TODO: remove hardcode below, uncomment error above
-            DataGenerator.generateDataLocal();
-            DataStore.getInstance().addTours(DataGenerator.getTours());
-            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
-            DataStore.getInstance().addComments(DataGenerator.getComments());
-            DataStore.getInstance().addUsers(DataGenerator.getUsers());
-            placeId = "-vQLJaqfPfLJgObaJpUst";
-
+        String placeId = getIntent().getStringExtra(TourActivity.PLACE_ID);
+        if (placeId == null) {
+            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
         }
 
         mPlace = DataStore.getInstance().getPlace(placeId);
