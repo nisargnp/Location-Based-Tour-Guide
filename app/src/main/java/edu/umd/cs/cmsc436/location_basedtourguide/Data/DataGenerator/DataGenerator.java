@@ -283,7 +283,7 @@ public final class DataGenerator {
 
         // upload tours
         tour1.setAuthor(bobID);
-        tour1.setPlaces(Arrays.asList(trowID, csicID, stampID, epplyID));
+        tour1.setPlaces(Arrays.asList(csicID, trowID, stampID, epplyID));
         tour1.setComments(Arrays.asList(comment1ID, comment2ID, comment3ID));
         String tour1ID = FirebaseUtils.uploadToFirebaseRaw(null, tour1);
 
