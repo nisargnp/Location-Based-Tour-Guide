@@ -88,7 +88,7 @@ public class AddTourActivity extends AppCompatActivity {
                     tour.setPictureFile(imageFilePath);
                     User Admin = new User();
                     Admin.setName("Admin");
-                    String admin = FirebaseUtils.uploadToFirebaseRaw(null, Admin);
+                    String admin = FirebaseUtils.uploadToFirebase(AddTourActivity.this, Admin);
                     tour.setAuthor(admin);
                     FirebaseUtils.uploadToFirebase(AddTourActivity.this, tour);
                     finish();
