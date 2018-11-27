@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "665009384495",
-    "firebase_url": "https://location-based-tour-guid-7c2b9.firebaseio.com",
-    "project_id": "location-based-tour-guid-7c2b9",
-    "storage_bucket": "location-based-tour-guid-7c2b9.appspot.com"
+    "project_number": "593389072374",
+    "firebase_url": "https://lbtgproject123.firebaseio.com",
+    "project_id": "lbtgproject123",
+    "storage_bucket": "lbtgproject123.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:665009384495:android:1f448acc57bd1a55",
+        "mobilesdk_app_id": "1:593389072374:android:1f448acc57bd1a55",
         "android_client_info": {
           "package_name": "edu.umd.cs.cmsc436.location_basedtourguide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "665009384495-uu9pnqhg3de7nc4honkck2uh3tpd9rf9.apps.googleusercontent.com",
+          "client_id": "593389072374-00uqd8se1oh99vdldh3ue1afpc4dikda.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCovhI7rYGkUBGx52fk3aefXJfpKt7lT4Q"
+          "current_key": "AIzaSyDpwQC20Ckjyo17LfZle51dSRHaFGnrSk4"
         }
       ],
       "services": {
