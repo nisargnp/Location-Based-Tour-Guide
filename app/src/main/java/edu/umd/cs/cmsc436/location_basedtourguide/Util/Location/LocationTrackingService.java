@@ -95,6 +95,8 @@ public class LocationTrackingService extends Service {
 
         createNotificationChannel();
 
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         }
@@ -191,8 +193,6 @@ public class LocationTrackingService extends Service {
 
     private void createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
             NotificationChannel notificationChannel = new NotificationChannel(
                     channelId,
                     "MyCustomChannel",
@@ -215,7 +215,7 @@ public class LocationTrackingService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.i(TAG, "Got Location from provider: " + location.getProvider());
+            Log.i(TAG, "Got Location from provider: " + location.getProvider() + "\n" + location.toString());
             if (nextStopIndex < listTourStops.size()) {
                 float metersToNextStop = location.distanceTo(listTourStops.get(nextStopIndex));
                 Log.i(TAG, "Distance to next stop: " + metersToNextStop + " meters");
