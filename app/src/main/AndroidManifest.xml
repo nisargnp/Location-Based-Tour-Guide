@@ -30,12 +30,6 @@
         </activity>
 
 
-        <activity android:name=".PlaceInfo.TestRatingActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-
         <activity android:name=".PlaceInfo.PlaceInfoActivity"
             android:launchMode="singleInstance">
             <intent-filter>

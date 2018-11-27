@@ -1,7 +1,9 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.app.Activity;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
-public class RatingFragment extends Fragment {
+public class RatingFragment extends DialogFragment {
     TextView ratingText;
     TextView commentDesc;
     TextView nameDesc;
@@ -21,6 +22,8 @@ public class RatingFragment extends Fragment {
     Button submitButton;
     EditText commentBox;
     EditText nameText;
+    // for upload
+    private String tourId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,12 @@ public class RatingFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Activity host = getActivity();
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        View host = inflater.inflate(R.layout.fragment_rating, null);
+        builder.setView(host);
 
         ratingText = host.findViewById(R.id.textView);
         rating = host.findViewById(R.id.ratingbar);
@@ -53,6 +59,7 @@ public class RatingFragment extends Fragment {
                 ratingText.setText(getString(R.string.rating_string, rating));
             }
         });
+        return builder.create();
     }
 
     @Override
@@ -60,5 +67,13 @@ public class RatingFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_rating, container, false);
 
+    }
+
+    public String getTourId() {
+        return tourId;
+    }
+
+    public void setTourId(String tourId) {
+        this.tourId = tourId;
     }
 }
