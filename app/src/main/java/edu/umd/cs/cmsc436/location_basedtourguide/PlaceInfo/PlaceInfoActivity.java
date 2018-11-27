@@ -3,14 +3,14 @@ package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Arrays;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
@@ -39,22 +37,18 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_info);
 
-        String placeId;
-        Intent givenIntent = getIntent();
-        try {
-            placeId = givenIntent.getExtras().getString(TourActivity.PLACE_ID, null);
-        } catch (Exception e) {
+        String placeId = getIntent().getStringExtra(TourActivity.PLACE_ID);
 
-//            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
+        if (placeId == null) {
+            throw new IllegalArgumentException("Need to pass an intent with extras to PlaceInfoActivity!");
 
             // TODO: remove hardcode below, uncomment error above
-            DataGenerator.generateDataLocal();
-            DataStore.getInstance().addTours(DataGenerator.getTours());
-            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
-            DataStore.getInstance().addComments(DataGenerator.getComments());
-            DataStore.getInstance().addUsers(DataGenerator.getUsers());
-            placeId = "-vQLJaqfPfLJgObaJpUst";
-
+//            DataGenerator.getStringenerateDataLocal();
+//            DataStore.getInstance().addTours(DataGenerator.getTours());
+//            DataStore.getInstance().addPlaces(DataGenerator.getPlaces());
+//            DataStore.getInstance().addComments(DataGenerator.getComments());
+//            DataStore.getInstance().addUsers(DataGenerator.getUsers());
+//            placeId = "-vQLJaqfPfLJgObaJpUst";
         }
 
         mPlace = DataStore.getInstance().getPlace(placeId);
@@ -72,6 +66,14 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         placeDesc.setMovementMethod(new ScrollingMovementMethod());
 
         placeName.setText(mPlace.getName());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            placeName.setTooltipText(mPlace.getName());
+        } else {
+            placeName.setOnLongClickListener(v -> {
+                Toast.makeText(PlaceInfoActivity.this, mPlace.getName(), Toast.LENGTH_LONG).show();
+                return true;
+            });
+        }
 
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
