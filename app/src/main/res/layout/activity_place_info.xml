@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_below="@id/place_desc"
                 android:src="@drawable/video_icon"
-                android:layout_marginLeft="32dp"
+                android:layout_marginLeft="48dp"
                 android:layout_marginTop="16dp"
                 android:background="@null"/>
             <ImageButton
@@ -69,7 +69,7 @@
                 android:src="@drawable/audio_icon"
                 android:background="@null"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="32dp"
+                android:layout_marginRight="48dp"
                 />
 
             <HorizontalScrollView
