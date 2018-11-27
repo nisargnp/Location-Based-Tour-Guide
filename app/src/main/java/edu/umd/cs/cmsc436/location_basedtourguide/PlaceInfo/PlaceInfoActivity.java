@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -72,7 +73,8 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         placeDesc.setMovementMethod(new ScrollingMovementMethod());
 
         placeName.setText(mPlace.getName());
-
+        placeName.setText("Computer Science Instructional Center Hello GagagoogooGa");
+        placeName.setMovementMethod(new ScrollingMovementMethod());
         if (mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
             audioButton.setColorFilter(new ColorMatrixColorFilter(matrix));

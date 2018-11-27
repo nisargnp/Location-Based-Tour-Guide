@@ -17,6 +17,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
+
+
+
         <RelativeLayout
             android:id="@+id/list"
             android:layout_width="match_parent"
@@ -60,6 +63,7 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:background="@null"/>
+
             <ImageButton
                 android:id="@+id/audio_button"
                 android:layout_height="wrap_content"
@@ -75,11 +79,12 @@
             <TextView
                 android:id="@+id/place_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginBottom="32dp"
                 android:scrollHorizontally="false"
                 android:gravity="center_horizontal"
-                android:textSize="32dp"
+                android:textSize="24dp"
+                android:scrollbars = "vertical"
                 />
         </RelativeLayout>
 
