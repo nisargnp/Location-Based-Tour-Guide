@@ -45,8 +45,6 @@ import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
-import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadToFirebase;
-
 public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
 
@@ -95,7 +93,6 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 ArrayList<String> pIDs = new ArrayList<>();
                 for (Place p : places) {
                     pIDs.add(p.getId());
-                    FirebaseUtils.uploadToFirebase(AddPlacesActivity.this, p);
                 }
                 DataStore.getInstance().addPlaces(places);
                 bundle.putStringArrayList("places", pIDs);
@@ -215,9 +212,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 place.setAudioFile(bundle.getString("audioFilePath"));
                 place.setVideoFile(bundle.getString("videoFilePath"));
 
-
-
-                String id = uploadToFirebase(AddPlacesActivity.this, place);
+                String id = FirebaseUtils.uploadToFirebase(AddPlacesActivity.this, place, null);
                 place.setId(id);
                 places.add(place);
                 checkIfEmpty();
