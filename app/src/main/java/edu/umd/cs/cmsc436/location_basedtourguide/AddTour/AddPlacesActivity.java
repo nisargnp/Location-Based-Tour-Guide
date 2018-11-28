@@ -107,6 +107,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                     pIDs.add(p.getId());
                     FirebaseUtils.uploadToFirebase(AddPlacesActivity.this, p);
                 }
+                DataStore.getInstance().addPlaces(places);
                 bundle.putStringArrayList("places", pIDs);
                 Intent output = new Intent().putExtras(bundle);
                 setResult(RESULT_OK, output);
