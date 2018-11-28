@@ -93,9 +93,9 @@ public class LocationTrackingService extends Service {
         Log.i(TAG, "Creating new LocationTrackingService");
         mContext = getApplicationContext();
 
-        createNotificationChannel();
-
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        createNotificationChannel();
 
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
