@@ -53,7 +53,7 @@ public class DataStore {
                     Tour tour = childDataSnapshot.getValue(Tour.class);
                     if (tour != null) {
                         if(tourMap.containsKey(tour.getId())){
-                            tourMap.remove(tour);
+                            tourMap.remove(tour.getId());
                         }
                         addTour(tour);
                     }
@@ -73,7 +73,7 @@ public class DataStore {
                     Place place = childDataSnapshot.getValue(Place.class);
                     if (place != null) {
                         if(placeMap.containsKey(place.getId())){
-                            placeMap.remove(place);
+                            placeMap.remove(place.getId());
                         }
                         addPlace(place);
                     }
@@ -94,7 +94,7 @@ public class DataStore {
 
                     if (comment != null) {
                         if(commentMap.containsKey(comment.getId())){
-                            commentMap.remove(comment);
+                            commentMap.remove(comment.getId());
                         }
                         addComment(comment);
                     }
@@ -114,7 +114,7 @@ public class DataStore {
                     User user = childDataSnapshot.getValue(User.class);
                     if (user != null) {
                         if(userMap.containsKey(user.getId())){
-                            userMap.remove(user);
+                            userMap.remove(user.getId());
                         }
                         addUser(user);
                     }
