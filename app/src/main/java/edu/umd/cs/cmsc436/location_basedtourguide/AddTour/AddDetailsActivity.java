@@ -1,4 +1,5 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
@@ -172,7 +173,8 @@ public class AddDetailsActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
                         Uri uri = imageReturnedIntent.getData();
-                        videoPathFilename = uri.getPath();
+                        File file = new File(uri.getPath());
+                        videoPathFilename = file.getAbsolutePath();
                         Toast.makeText(getApplicationContext(), "Successfully uploaded video file", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "VideoPath: " + videoPathFilename);
 
@@ -183,7 +185,8 @@ public class AddDetailsActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
                         Uri uri = imageReturnedIntent.getData();
-                        audioPathFilename = uri.getPath();
+                        File file = new File(uri.getPath());
+                        audioPathFilename = file.getAbsolutePath();
                         Toast.makeText(getApplicationContext(), "Successfully uploaded audio file", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "AudioPath: " + audioPathFilename);
 
