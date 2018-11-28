@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="MapSource 6.16.1" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+<trk>
+<name>emulate</name>
+<trkseg>
+<trkpt lat="38.986674" lon="-76.940467"><ele>0.000000</ele><time>2018-01-01T00:00:10Z</time></trkpt>
+<trkpt lat="38.986666" lon="-76.940815"><ele>0.000000</ele><time>2018-01-01T00:00:20Z</time></trkpt>
+<trkpt lat="38.986670" lon="-76.941314"><ele>0.000000</ele><time>2018-01-01T00:00:30Z</time></trkpt>
+<trkpt lat="38.986653" lon="-76.941920"><ele>0.000000</ele><time>2018-01-01T00:00:40Z</time><name>ESJ</name></trkpt>
+<trkpt lat="38.986670" lon="-76.942290"><ele>0.000000</ele><time>2018-01-01T00:00:50Z</time></trkpt>
+<trkpt lat="38.986657" lon="-76.942548"><ele>0.000000</ele><time>2018-01-01T00:01:00Z</time></trkpt>
+<trkpt lat="38.987307" lon="-76.942586"><ele>0.000000</ele><time>2018-01-01T00:01:10Z</time></trkpt>
+<trkpt lat="38.987667" lon="-76.942588"><ele>0.000000</ele><time>2018-01-01T00:01:20Z</time></trkpt>
+<trkpt lat="38.988050" lon="-76.942618"><ele>0.000000</ele><time>2018-01-01T00:01:30Z</time><name>Hornbake</name></trkpt>
+<trkpt lat="38.987716" lon="-76.943015"><ele>0.000000</ele><time>2018-01-01T00:01:40Z</time></trkpt>
+<trkpt lat="38.987570" lon="-76.943487"><ele>0.000000</ele><time>2018-01-01T00:01:50Z</time></trkpt>
+<trkpt lat="38.987566" lon="-76.944195"><ele>0.000000</ele><time>2018-01-01T00:02:00Z</time></trkpt>
+<trkpt lat="38.987554" lon="-76.944871"><ele>0.000000</ele><time>2018-01-01T00:02:10Z</time><name>Stamp</name></trkpt>
+<trkpt lat="38.987562" lon="-76.944297"><ele>0.000000</ele><time>2018-01-01T00:02:20Z</time></trkpt>
+<trkpt lat="38.987316" lon="-76.944254"><ele>0.000000</ele><time>2018-01-01T00:02:30Z</time></trkpt>
+<trkpt lat="38.986858" lon="-76.944254"><ele>0.000000</ele><time>2018-01-01T00:02:40Z</time></trkpt>
+<trkpt lat="38.986578" lon="-76.944544"><ele>0.000000</ele><time>2018-01-01T00:02:50Z</time></trkpt>
+<trkpt lat="38.985953" lon="-76.944608"><ele>0.000000</ele><time>2018-01-01T00:03:00Z</time><name>Mckeldin</name></trkpt>
+</trkseg>
+</trk>
+</gpx>

@@ -28,12 +28,12 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
 public class LocationTrackingService extends Service {
     private static final String TAG = "location-service";
     private static final long LOCATION_REQUEST_INTERVAL = 5000;
-    private static final float MIN_DISTANCE_DELTA = 10f; // 10 meters TODO - test IRL. Raise value? => less power
+    private static final float MIN_DISTANCE_DELTA = 10f;
     /**
      * Radius of tour stops. If users enter this radius, they will be considered to be "at" a
      * tour stop. 100 meters ~= 330 feet
      */
-    private static final float TOUR_STOP_RADIUS_METERS = 100; // TODO - test IRL.
+    private static final float TOUR_STOP_RADIUS_METERS = TourActivity.RUNNING_DEMO ? 25 : 100;
     /**
      * Source of truth for which tour stop the user needs to go to next. Stored as 0 based index
      */
