@@ -47,7 +47,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/checkmark" />
+                android:tint="@android:color/white"
+                android:backgroundTint="@android:color/darker_gray"
+                android:src="@drawable/checkmark"
+                app:borderWidth="0dp"
+                app:fabSize="normal"/>
 
             <TextView
                 android:id="@+id/empty_view"

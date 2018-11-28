@@ -57,6 +57,7 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         float rating = mTour.getRating() * 1.0f/mTour.getNumVotes();
+        rating = rating == rating ? rating : 0; // NaN check
 
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setRating(rating);

@@ -1,38 +1,24 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
-
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadToFirebase;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 
 public class AddTourActivity extends AppCompatActivity {
@@ -134,11 +120,9 @@ public class AddTourActivity extends AppCompatActivity {
                     if (imageReturnedIntent != null) {
                         Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
                         tourImageView.setImageBitmap(selectedImage);
-                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
-
+                        imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" , "image_" + System.currentTimeMillis());
                     }
                 }
-
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
