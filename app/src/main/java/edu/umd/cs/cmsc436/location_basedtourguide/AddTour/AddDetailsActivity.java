@@ -1,22 +1,10 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
-
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,11 +14,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class AddDetailsActivity extends AppCompatActivity {
 
@@ -68,32 +53,10 @@ public class AddDetailsActivity extends AppCompatActivity {
         videoButton = findViewById(R.id.video_button);
 
 
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromGallery();
-            }
-        });
-
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromCamera();
-            }
-        });
-
-        audioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { uploadAudio(); }
-        });
-
-        videoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                uploadVideo();
-            }
-        });
-
+        galleryButton.setOnClickListener(view -> fromGallery());
+        cameraButton.setOnClickListener(view -> fromCamera());
+        audioButton.setOnClickListener(view -> uploadAudio());
+        videoButton.setOnClickListener(view -> uploadVideo());
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +67,6 @@ public class AddDetailsActivity extends AppCompatActivity {
                     return;
                 }
                 LatLng l = (LatLng) getIntent().getExtras().getParcelable("LatLng");
-
-
 
                 Intent output = new Intent();
 
@@ -141,55 +102,45 @@ public class AddDetailsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
-                    if (imageReturnedIntent != null) {
-                        Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
-                        stopImage.setImageBitmap(selectedImage);
-                        imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), selectedImage, "images" ,selectedImage.toString());
-
+                    if (data != null) {
+                        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                        stopImage.setImageBitmap(bitmap);
+                        imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), bitmap, "images" , "image_" + System.currentTimeMillis());
                     }
                 }
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
-                    if (imageReturnedIntent != null) {
-                        Uri contentURI = imageReturnedIntent.getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                            stopImage.setImageBitmap(bitmap);
-                            imagePathFilename = Utils.putImageToInternalStorage(getApplicationContext(), bitmap, "images" ,bitmap.toString());
-
-                        } catch (IOException e) {
-                            Toast.makeText(getApplicationContext(), "Image Upload unsuccessful", Toast.LENGTH_SHORT).show();
-                        }
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        imagePathFilename = AddTourUtils.getPath(AddDetailsActivity.this, uri);
+                        Toast.makeText(getApplicationContext(), "Successfully added image.", Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "ImagePath: " + imagePathFilename);
                     }
                 }
                 break;
             case 2:
                 if (resultCode == RESULT_OK) {
-                    if (imageReturnedIntent != null) {
-                        Uri uri = imageReturnedIntent.getData();
-                        File file = new File(uri.getPath());
-                        videoPathFilename = file.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Successfully uploaded video file", Toast.LENGTH_SHORT).show();
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        videoPathFilename = AddTourUtils.getPath(AddDetailsActivity.this, uri);
+                        Toast.makeText(getApplicationContext(), "Successfully added video.", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "VideoPath: " + videoPathFilename);
-
                     }
                 }
                 break;
             case 3:
                 if (resultCode == RESULT_OK) {
-                    if (imageReturnedIntent != null) {
-                        Uri uri = imageReturnedIntent.getData();
-                        File file = new File(uri.getPath());
-                        audioPathFilename = file.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Successfully uploaded audio file", Toast.LENGTH_SHORT).show();
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        audioPathFilename = AddTourUtils.getPath(AddDetailsActivity.this, uri);
+                        Toast.makeText(getApplicationContext(), "Successfully added audio.", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "AudioPath: " + audioPathFilename);
-
                     }
                 }
                 break;
@@ -210,31 +161,5 @@ public class AddDetailsActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Video"),UPLOAD_VIDEO);
     }
-
-
-
-
-    public String getVideoPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
-            return null;
-    }
-
-    private String getAudioPath(Uri uri) {
-        String[] data = {MediaStore.Audio.Media.DATA};
-        CursorLoader loader = new CursorLoader(getApplicationContext(), uri, data, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
 
 }

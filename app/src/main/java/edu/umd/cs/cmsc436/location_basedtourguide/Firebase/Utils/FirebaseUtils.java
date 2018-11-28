@@ -1,6 +1,5 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 
@@ -149,7 +148,7 @@ public class FirebaseUtils {
 
     // private helper
     private static void tryUploadPlaceImage(Context context, String id, Place place) {
-        if (place.getPictureFile().length() != 0) {
+        if (place.getPictureFile() != null && place.getPictureFile().length() != 0) {
             uploadFileToFirebase(context, place.getPictureFile(), "image", place.getPictureFile(), uri -> {
                 place.setPictureFile(uri.toString());
                 tryUploadPlaceAudio(context, id, place);
@@ -161,9 +160,9 @@ public class FirebaseUtils {
 
     // private helper
     private static void tryUploadPlaceAudio(Context context, String id, Place place) {
-        if (place.getAudioFile().length() != 0) {
+        if (place.getAudioFile() != null && place.getAudioFile().length() != 0) {
             uploadFileToFirebase(context, place.getAudioFile(), "audio", place.getAudioFile(), uri -> {
-                place.setPictureFile(uri.toString());
+                place.setAudioFile(uri.toString());
                 tryUploadPlaceVideo(context, id, place);
             });
         } else {
@@ -173,9 +172,9 @@ public class FirebaseUtils {
 
     // private helper
     private static void tryUploadPlaceVideo(Context context, String id, Place place) {
-        if (place.getVideoFile().length() != 0) {
+        if (place.getVideoFile() != null && place.getVideoFile().length() != 0) {
             uploadFileToFirebase(context, place.getVideoFile(), "video", place.getVideoFile(), uri -> {
-                place.setPictureFile(uri.toString());
+                place.setVideoFile(uri.toString());
                 uploadToFirebaseRaw(id, place);
             });
         } else {
@@ -215,7 +214,8 @@ public class FirebaseUtils {
      */
     private static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, OnUriResultListener onUriResultListener) {
   //      ProgressDialog progressDialog = ProgressDialog.show(context, "Uploading", "Please wait...");
-        uploadFileToFirebase(filePath, uploadDir, uploadName, uri -> {
+        File file = new File(uploadName);
+        uploadFileToFirebase(filePath, uploadDir, file.getName(), uri -> {
             /*
             if(progressDialog.isShowing()) {
                 progressDialog.dismiss();
