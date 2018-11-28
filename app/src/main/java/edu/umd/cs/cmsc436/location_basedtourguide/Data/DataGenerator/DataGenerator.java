@@ -202,8 +202,8 @@ public final class DataGenerator {
         Place stamp = new Place();
         stamp.setName("Stamp Student Union");
         stamp.setDescription("Students eat here.");
-        stamp.setLat(38.987881);
-        stamp.setLon(-76.944855);
+        stamp.setLat(38.987612);
+        stamp.setLon(-76.944860);
         stamp.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fimage_stamp.jpg?alt=media&token=0f811fca-b2b5-4238-bcbb-3b5ad7800447");
         stamp.setAudioFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Faudio_stamp.wav?alt=media&token=62c4adc7-b0d9-48f1-90b4-f3eb255a8f92");
         stamp.setVideoFile("");
@@ -258,6 +258,55 @@ public final class DataGenerator {
         tour3.setRating(97);
         tour3.setNumVotes(20);
 
+        // tour 4
+        Tour tour4 =  new Tour();
+        tour4.setName("Mckeldin Mall Tour");
+        tour4.setLat(38.9860);
+        tour4.setLon(-76.9428);
+        tour4.setDescription("The Mckeldin mall is nice and tight for a smooth demo.");
+        tour4.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2F350px-Mckeldin_Mall.jpg?alt=media&token=25da531d-88e1-4714-9c43-36b4dd25093a");
+        tour4.setRating(10);
+        tour4.setNumVotes(15);
+
+        Place esj = new Place();
+        esj.setName("Edward Saint John Learning Center");
+        esj.setDescription("This is a pretty new building with big classes for big knowledge.");
+        esj.setLat(38.986664);
+        esj.setLon(-76.941921);
+        esj.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fumd_esj_building.jpg?alt=media&token=8acef363-c8c2-46ae-bc58-e59a1bc05a09");
+        esj.setAudioFile("");
+        esj.setVideoFile("");
+
+        Place hornbakePlaza = new Place();
+        hornbakePlaza.setName("Hornbake Plaza");
+        hornbakePlaza.setDescription("A small place that I pass by on my way to nap time in astro");
+        hornbakePlaza.setLat(38.988075);
+        hornbakePlaza.setLon(-76.942614);
+        hornbakePlaza.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fumd_hornbake_plaza.jpg?alt=media&token=f2f5ac9f-25ab-4b57-84b0-e2ea5d8d1682");
+        hornbakePlaza.setAudioFile("");
+        hornbakePlaza.setVideoFile("");
+
+        Place mckeldin = new Place();
+        mckeldin.setName("Mckeldin Library");
+        mckeldin.setDescription("It's a pretty nice place to study. But there is a high risk of getting flashed.");
+        mckeldin.setLat(38.985917);
+        mckeldin.setLon(-76.944757);
+        mckeldin.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fmckeldin_library.jpg?alt=media&token=546cedd9-c8fa-429b-ba56-7206df0a51f0");
+        mckeldin.setAudioFile("");
+        mckeldin.setVideoFile("");
+
+        Comment mallComment1 = new Comment();
+        mallComment1.setText("Pretty good tour... But I finished it in 5 mintes");
+
+        Comment mallComment2 = new Comment();
+        mallComment2.setText("What a great experience! Small and quick enough for my first time!");
+
+        Comment mallComment3 = new Comment();
+        mallComment3.setText("Trash.");
+
+        User aporter = new User();
+        aporter.setName("aporter");
+
         // clear firebase before starting upload
         FirebaseUtils.clearFirebaseDB();
 
@@ -266,6 +315,7 @@ public final class DataGenerator {
         String samID = FirebaseUtils.uploadToFirebaseRaw(null, sam);
         String alexID = FirebaseUtils.uploadToFirebaseRaw(null, alex);
         String joeID = FirebaseUtils.uploadToFirebaseRaw(null, joe);
+        String aporterID = FirebaseUtils.uploadToFirebaseRaw(null, aporter);
 
         // upload comments
         comment1.setAuthor(samID);
@@ -274,12 +324,21 @@ public final class DataGenerator {
         String comment2ID = FirebaseUtils.uploadToFirebaseRaw(null, comment2);
         comment3.setAuthor(joeID);
         String comment3ID = FirebaseUtils.uploadToFirebaseRaw(null, comment3);
+        mallComment1.setAuthor(samID);
+        String mallComment1ID = FirebaseUtils.uploadToFirebaseRaw(null, mallComment1);
+        mallComment2.setAuthor(alexID);
+        String mallComment2ID = FirebaseUtils.uploadToFirebaseRaw(null, mallComment2);
+        mallComment3.setAuthor(aporterID);
+        String mallComment3ID = FirebaseUtils.uploadToFirebaseRaw(null, mallComment3);
 
         // upload places
         String trowID = FirebaseUtils.uploadToFirebaseRaw(null, terrapinRow);
         String csicID = FirebaseUtils.uploadToFirebaseRaw(null, CSIC);
         String stampID = FirebaseUtils.uploadToFirebaseRaw(null, stamp);
         String epplyID = FirebaseUtils.uploadToFirebaseRaw(null, eppley);
+        String esjID = FirebaseUtils.uploadToFirebaseRaw(null, esj);
+        String hornbakeID = FirebaseUtils.uploadToFirebaseRaw(null, hornbakePlaza);
+        String mckeldinID = FirebaseUtils.uploadToFirebaseRaw(null, mckeldin);
 
         // upload tours
         tour1.setAuthor(bobID);
@@ -293,6 +352,10 @@ public final class DataGenerator {
         tour3.setAuthor(samID);
         String tour3ID = FirebaseUtils.uploadToFirebaseRaw(null, tour3);
 
+        tour4.setAuthor(joeID);
+        tour4.setPlaces(Arrays.asList(esjID, hornbakeID, stampID, mckeldinID));
+        tour4.setComments(Arrays.asList(mallComment1ID, mallComment2ID, mallComment3ID));
+        String tour4ID = FirebaseUtils.uploadToFirebaseRaw(null, tour4);
     }
 
     public static List<Comment> getComments() {
