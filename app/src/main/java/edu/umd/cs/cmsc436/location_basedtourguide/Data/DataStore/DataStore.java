@@ -48,11 +48,14 @@ public class DataStore {
         firebaseRefTours.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                tourMap.clear();
+                //tourMap.clear();
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Tour tour = childDataSnapshot.getValue(Tour.class);
                     if (tour != null) {
-                        tourMap.put(tour.getId(), tour);
+                        if(tourMap.containsKey(tour.getId())){
+                            tourMap.remove(tour);
+                        }
+                        addTour(tour);
                     }
                 }
                 callDataChangeListeners();
@@ -65,11 +68,14 @@ public class DataStore {
         firebaseRefPlaces.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                placeMap.clear();
+                //placeMap.clear();
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Place place = childDataSnapshot.getValue(Place.class);
                     if (place != null) {
-                        placeMap.put(place.getId(), place);
+                        if(placeMap.containsKey(place.getId())){
+                            placeMap.remove(place);
+                        }
+                        addPlace(place);
                     }
                 }
                 callDataChangeListeners();
@@ -82,12 +88,15 @@ public class DataStore {
         firebaseRefComments.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                commentMap.clear();
+                //commentMap.clear();
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Comment comment = childDataSnapshot.getValue(Comment.class);
 
                     if (comment != null) {
-                        commentMap.put(comment.getId(), comment);
+                        if(commentMap.containsKey(comment.getId())){
+                            commentMap.remove(comment);
+                        }
+                        addComment(comment);
                     }
                 }
                 callDataChangeListeners();
@@ -100,11 +109,14 @@ public class DataStore {
         firebaseRefUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userMap.clear();
+                //userMap.clear();
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User user = childDataSnapshot.getValue(User.class);
                     if (user != null) {
-                        userMap.put(user.getId(), user);
+                        if(userMap.containsKey(user.getId())){
+                            userMap.remove(user);
+                        }
+                        addUser(user);
                     }
                 }
                 callDataChangeListeners();
