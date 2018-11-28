@@ -118,6 +118,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     if (data != null) {
                         Uri uri = data.getData();
+                        stopImage.setImageURI(uri);
                         imagePathFilename = AddTourUtils.getPath(AddDetailsActivity.this, uri);
                         Toast.makeText(getApplicationContext(), "Successfully added image.", Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "ImagePath: " + imagePathFilename);

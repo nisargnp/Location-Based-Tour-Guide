@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.User;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
@@ -65,19 +63,19 @@ public class AddTourActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (tour.getPlaces().size() == 0) {
-                    Toast.makeText(getApplicationContext(), "Tour must have atleast one stop",  Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Tour must have at least one stop",  Toast.LENGTH_SHORT).show();
                 } else if (tour.getPictureFile() == null) {
                     Toast.makeText(getApplicationContext(), "Tour must have picture", Toast.LENGTH_SHORT).show();
                 } else {
                     tour.setName(titleTextView.getText().toString());
                     tour.setDescription(descriptionTextView.getText().toString());
                     tour.setPictureFile(imageFilePath);
-                    User Admin = new User();
-                    Admin.setName("Admin");
-                    String admin = FirebaseUtils.uploadToFirebase(AddTourActivity.this, Admin);
-                    tour.setAuthor(admin);
-                    FirebaseUtils.uploadToFirebase(AddTourActivity.this, tour);
-                    finish();
+                    User admin = new User();
+                    admin.setName("Admin");
+                    String adminId = FirebaseUtils.uploadToFirebase(AddTourActivity.this, admin, null);
+                    tour.setAuthor(adminId);
+                    FirebaseUtils.uploadToFirebase(AddTourActivity.this, tour, AddTourActivity.this::finish);
+//                    finish();
                 }
             }
         });
@@ -128,14 +126,9 @@ public class AddTourActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
                         Uri contentURI = imageReturnedIntent.getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                            tourImageView.setImageBitmap(bitmap);
-                            imageFilePath = Utils.putImageToInternalStorage(getApplicationContext(), bitmap, "images" ,bitmap.toString());
-
-                        } catch (IOException e) {
-                            Toast.makeText(getApplicationContext(), "Image Upload unsuccessful", Toast.LENGTH_SHORT).show();
-                        }
+                        tourImageView.setImageURI(contentURI);
+                        imageFilePath = AddTourUtils.getPath(AddTourActivity.this, contentURI);
+                        Toast.makeText(getApplicationContext(), "Successfully added image.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

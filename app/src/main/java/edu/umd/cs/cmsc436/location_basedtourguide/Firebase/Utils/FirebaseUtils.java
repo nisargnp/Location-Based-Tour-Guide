@@ -1,5 +1,6 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 
@@ -40,9 +41,9 @@ public class FirebaseUtils {
      * @param context contexxt
      * @param tour tour
      */
-    public static String uploadToFirebase(Context context, Tour tour) {
+    public static String uploadToFirebase(Context context, Tour tour, Runnable onFinish) {
         String id = dbTours.push().getKey();
-        tryUploadTourImage(context, id, tour);
+        tryUploadTourImage(context, id, tour, onFinish);
         return id;
     }
 
@@ -54,9 +55,9 @@ public class FirebaseUtils {
      * @param place tour
      * @return id
      */
-    public static String uploadToFirebase(Context context, Place place) {
+    public static String uploadToFirebase(Context context, Place place, Runnable onFinish) {
         String id = dbPlaces.push().getKey();
-        tryUploadPlaceImage(context, id, place);
+        tryUploadPlaceImage(context, id, place, onFinish);
         return id;
     }
 
@@ -67,9 +68,10 @@ public class FirebaseUtils {
      * @param comment comment
      * @return id
      */
-    public static String uploadToFirebase(Context context, Comment comment) {
+    public static String uploadToFirebase(Context context, Comment comment, Runnable onFinish) {
         String id = dbComments.push().getKey();
         uploadToFirebaseRaw(id, comment);
+        if (onFinish != null) onFinish.run();
         return id;
     }
 
@@ -80,9 +82,10 @@ public class FirebaseUtils {
      * @param user user
      * @return id
      */
-    public static String uploadToFirebase(Context context, User user) {
+    public static String uploadToFirebase(Context context, User user, Runnable onFinish) {
         String id = dbUsers.push().getKey();
         uploadToFirebaseRaw(id, user);
+        if (onFinish != null) onFinish.run();
         return id;
     }
 
@@ -135,48 +138,48 @@ public class FirebaseUtils {
     }
 
     // private helper
-    private static void tryUploadTourImage(Context context, String id, Tour tour) {
+    private static void tryUploadTourImage(Context context, String id, Tour tour, Runnable onFinish) {
         if (tour.getPictureFile().length() != 0) {
             uploadFileToFirebase(context, tour.getPictureFile(), "image", tour.getPictureFile(), uri -> {
                 tour.setPictureFile(uri.toString());
                 uploadToFirebaseRaw(id, tour);
-            });
+            }, onFinish);
         } else {
             uploadToFirebaseRaw(id, tour);
         }
     }
 
     // private helper
-    private static void tryUploadPlaceImage(Context context, String id, Place place) {
+    private static void tryUploadPlaceImage(Context context, String id, Place place, Runnable onFinish) {
         if (place.getPictureFile() != null && place.getPictureFile().length() != 0) {
             uploadFileToFirebase(context, place.getPictureFile(), "image", place.getPictureFile(), uri -> {
                 place.setPictureFile(uri.toString());
-                tryUploadPlaceAudio(context, id, place);
-            });
+                tryUploadPlaceAudio(context, id, place, onFinish);
+            }, onFinish);
         } else {
-            tryUploadPlaceAudio(context, id, place);
+            tryUploadPlaceAudio(context, id, place, onFinish);
         }
     }
 
     // private helper
-    private static void tryUploadPlaceAudio(Context context, String id, Place place) {
+    private static void tryUploadPlaceAudio(Context context, String id, Place place, Runnable onFinish) {
         if (place.getAudioFile() != null && place.getAudioFile().length() != 0) {
             uploadFileToFirebase(context, place.getAudioFile(), "audio", place.getAudioFile(), uri -> {
                 place.setAudioFile(uri.toString());
-                tryUploadPlaceVideo(context, id, place);
-            });
+                tryUploadPlaceVideo(context, id, place, onFinish);
+            }, onFinish);
         } else {
-            tryUploadPlaceVideo(context, id, place);
+            tryUploadPlaceVideo(context, id, place, onFinish);
         }
     }
 
     // private helper
-    private static void tryUploadPlaceVideo(Context context, String id, Place place) {
+    private static void tryUploadPlaceVideo(Context context, String id, Place place, Runnable onFinish) {
         if (place.getVideoFile() != null && place.getVideoFile().length() != 0) {
             uploadFileToFirebase(context, place.getVideoFile(), "video", place.getVideoFile(), uri -> {
                 place.setVideoFile(uri.toString());
                 uploadToFirebaseRaw(id, place);
-            });
+            }, onFinish);
         } else {
             uploadToFirebaseRaw(id, place);
         }
@@ -212,16 +215,15 @@ public class FirebaseUtils {
      * @param uploadName name of uploaded file on Firebase
      * @param onUriResultListener optional function to invoke when download URI becomes available
      */
-    private static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, OnUriResultListener onUriResultListener) {
-  //      ProgressDialog progressDialog = ProgressDialog.show(context, "Uploading", "Please wait...");
+    private static void uploadFileToFirebase(Context context, String filePath, String uploadDir, String uploadName, OnUriResultListener onUriResultListener, Runnable onFinish) {
+        ProgressDialog progressDialog = ProgressDialog.show(context, "Uploading", "Please wait...");
         File file = new File(uploadName);
         uploadFileToFirebase(filePath, uploadDir, file.getName(), uri -> {
-            /*
             if(progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            */
             if (onUriResultListener != null) onUriResultListener.onUriResult(uri);
+            if (onFinish != null) onFinish.run();
         });
     }
 
