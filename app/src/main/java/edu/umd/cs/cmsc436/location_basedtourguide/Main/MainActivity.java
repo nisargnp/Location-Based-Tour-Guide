@@ -52,7 +52,15 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
 //            tour.setName("Test Place");
 //            tour.setPictureFile(path);
 //            tour.setDescription("Test adding a new place.");
-//            FirebaseUtils.uploadToFirebase(MainActivity.this, tour);
+//            FirebaseUtils.uploadToFirebase(MainActivity.this, tour, null);
+//        });
+
+        // TODO: example -> how to start rating fragment
+//        fab.setOnClickListener(v -> {
+//            RatingFragment ratingFragment = new RatingFragment();
+//            Log.d("testing", "tour_id: " + DataStore.getInstance().getTours().get(0).getId());
+//            ratingFragment.setTourId(DataStore.getInstance().getTours().get(0).getId());
+//            ratingFragment.show(getSupportFragmentManager(), "rating");
 //        });
 
     }
