@@ -11,11 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.TourItemFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 
 public class TourItemRecyclerViewAdapter extends RecyclerView.Adapter<TourItemRecyclerViewAdapter.ViewHolder> {
 
