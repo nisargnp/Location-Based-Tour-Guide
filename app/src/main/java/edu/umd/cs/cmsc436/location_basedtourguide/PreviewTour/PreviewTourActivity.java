@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
@@ -25,7 +24,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 
 public class PreviewTourActivity extends AppCompatActivity implements TourContentsFragment.OnFragmentInteractionListener,
         PreviewLocFragment.OnListFragmentInteractionListener, CommentFragment.OnListFragmentInteractionListener{

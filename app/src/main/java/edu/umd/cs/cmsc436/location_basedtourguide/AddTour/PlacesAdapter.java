@@ -1,5 +1,4 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import android.support.annotation.NonNull;
@@ -15,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHolder> implements ItemTouchHelperAdapter
