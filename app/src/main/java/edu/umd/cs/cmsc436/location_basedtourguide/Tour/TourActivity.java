@@ -38,6 +38,7 @@ import java.util.List;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
 import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
@@ -380,7 +381,9 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updatePreview(int stopIndex) {
         Place tourStop = mTourPlaces.get(stopIndex);
-        new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        //new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(tourStop.getPictureFile(), mPreviewImageView);
+
         mPreviewTitleView.setText(tourStop.getName());
         mPreviewDescriptionView.setText(tourStop.getDescription());
     }
