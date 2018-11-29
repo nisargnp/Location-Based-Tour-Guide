@@ -275,7 +275,7 @@ public final class DataGenerator {
         esj.setLon(-76.941921);
         esj.setPictureFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fumd_esj_building.jpg?alt=media&token=8acef363-c8c2-46ae-bc58-e59a1bc05a09");
         esj.setAudioFile("");
-        esj.setVideoFile("");
+        esj.setVideoFile("https://firebasestorage.googleapis.com/v0/b/lbtgproject123.appspot.com/o/sampleData%2Fvideo_csic.mp4?alt=media&token=421d3cdb-9558-4fad-b340-e90246599394");
 
         Place hornbakePlaza = new Place();
         hornbakePlaza.setName("Hornbake Plaza");

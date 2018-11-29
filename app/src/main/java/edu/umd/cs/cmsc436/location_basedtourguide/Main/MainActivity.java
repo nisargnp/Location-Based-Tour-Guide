@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity implements TourItemFragment.
         setContentView(R.layout.activity_main);
 
         // TODO: remove hardcode - generates firebase data
-        DataGenerator.generateDataFirebase();
+        if (!TourActivity.RUNNING_DEMO) {
+            DataGenerator.generateDataFirebase();
+        }
 
         // TODO: remove hardcode - generates local data (pre-firebase)
 //        DataGenerator.generateDataLocal();
