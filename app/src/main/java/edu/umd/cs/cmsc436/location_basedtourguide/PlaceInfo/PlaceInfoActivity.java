@@ -67,7 +67,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-        if (mPlace.getAudioFile() != null && mPlace.getAudioFile().length() == 0) {
+        if (mPlace.getAudioFile() == null || mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
             audioButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {
@@ -80,7 +80,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-        if (mPlace.getVideoFile() != null && mPlace.getVideoFile().length() == 0) {
+        if (mPlace.getVideoFile() == null || mPlace.getVideoFile().length() == 0) {
             videoButton.setEnabled(false);
             videoButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {
