@@ -1,10 +1,15 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +25,8 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 
 public class AddTourActivity extends AppCompatActivity {
+
+    private static final int PERMISSIONS_READ_EXTERNAL_STORAGE = 0;
 
     ImageView tourImageView;
     TextView titleTextView;
@@ -95,6 +102,13 @@ public class AddTourActivity extends AppCompatActivity {
             }
         });
 
+        if (ContextCompat.checkSelfPermission(AddTourActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(AddTourActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSIONS_READ_EXTERNAL_STORAGE);
+        }
+
     }
 
     public void fromGallery() {
@@ -156,5 +170,19 @@ public class AddTourActivity extends AppCompatActivity {
         descriptionTextView.setText(savedInstanceState.getString("tourDescription"));
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case PERMISSIONS_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(AddTourActivity.this, "Thank you for providing permission!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddTourActivity.this, "Need storage permission to create tour.", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                break;
+        }
+    }
 }
