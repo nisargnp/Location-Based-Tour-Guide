@@ -50,6 +50,8 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTracking
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public static final boolean RUNNING_DEMO = true;
+
     public static final String TOUR_STOP_DATA = "tour-stop-data";
     public static final String PLACE_ID = "place-id";
     public static final String LOCATION_DATA_ACTION =
@@ -310,7 +312,6 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
                         // Draw path to tour stops not visited yet
                         tourStops.addAll(mTourPlaces.subList(localNextStopIndex, mTourPlaces.size()));
                         DirectionsUtil.drawTourRoute(mMap, tourStops);
-                        // Draw a marker for all tour stops even if visted
                         DirectionsUtil.drawTourMarkers(mMap, mTourPlaces);
                     }
                 });
