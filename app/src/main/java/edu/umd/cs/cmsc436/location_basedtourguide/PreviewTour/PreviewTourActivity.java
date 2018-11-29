@@ -24,7 +24,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Main.MainActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 
 public class PreviewTourActivity extends AppCompatActivity implements TourContentsFragment.OnFragmentInteractionListener,
         PreviewLocFragment.OnListFragmentInteractionListener, CommentFragment.OnListFragmentInteractionListener{
@@ -45,7 +45,8 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
 
         ImageView imageView = findViewById(R.id.htab_header);
 
-        new DownloadImageTask(imageView::setImageBitmap).execute(mTour.getPictureFile());
+        //new DownloadImageTask(imageView::setImageBitmap).execute(mTour.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(mTour.getPictureFile(), imageView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
