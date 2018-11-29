@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
@@ -62,7 +64,9 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         ratingBar.setRating(rating);
         TextView ratingScore = findViewById(R.id.rating_score);
-        ratingScore.setText(String.format("%s", rating));
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        ratingScore.setText(df.format(rating));
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
