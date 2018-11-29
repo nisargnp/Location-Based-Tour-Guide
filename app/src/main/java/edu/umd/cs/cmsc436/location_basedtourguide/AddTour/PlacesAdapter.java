@@ -1,4 +1,5 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 
 import android.support.annotation.NonNull;
@@ -61,7 +62,8 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.MyViewHold
         if (file.exists()) {
             viewHolder.image.setImageBitmap(Utils.getImageFromInternalStorage(place.getPictureFile()));
         } else {
-            new DownloadImageTask(viewHolder.image::setImageBitmap).execute(place.getPictureFile());
+            //new DownloadImageTask(viewHolder.image::setImageBitmap).execute(place.getPictureFile());
+            ImageLoader.getInstance().loadBitmap(place.getPictureFile(), viewHolder.image);
         }
 
     }

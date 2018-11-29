@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Comment;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
@@ -45,7 +46,8 @@ public class PreviewTourActivity extends AppCompatActivity implements TourConten
 
         ImageView imageView = findViewById(R.id.htab_header);
 
-        new DownloadImageTask(imageView::setImageBitmap).execute(mTour.getPictureFile());
+        //new DownloadImageTask(imageView::setImageBitmap).execute(mTour.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(mTour.getPictureFile(), imageView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
