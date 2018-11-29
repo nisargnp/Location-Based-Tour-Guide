@@ -1,10 +1,8 @@
-package edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore;
+package edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
 import android.widget.ImageView;
-
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 
 public class ImageLoader {
     private static final ImageLoader ourInstance = new ImageLoader();
