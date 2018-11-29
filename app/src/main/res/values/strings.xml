@@ -107,7 +107,7 @@
     <string name="satellite_map">Satellite Map</string>
     <string name="terrain_map">Terrain Map</string>
     <string name="title_activity_add_places">Map</string>
-    <string name="no_places_created">Press on the map to create a new stop for your mTour!</string>
+    <string name="no_places_created">Press on the map to create a new stop for your Tour!</string>
     <string name="preview_comments_title">Comments</string>
 
 
