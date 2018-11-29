@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.PreviewTour.PreviewLocFragment.OnListFragmentInteractionListener;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -16,7 +17,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link } and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
@@ -43,8 +44,8 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         holder.mPlace = DataStore.getInstance().getPlace(locID);
         holder.mContentView.setText(holder.mPlace.getDescription());
         holder.mNameView.setText(holder.mPlace.getName());
-        new DownloadImageTask(holder.mImageView::setImageBitmap).execute(holder.mPlace.getPictureFile());
-
+        //new DownloadImageTask(holder.mImageView::setImageBitmap).execute(holder.mPlace.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(holder.mPlace.getPictureFile(), holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Interface.OnBitmapResultListener;
 
 /**
@@ -26,7 +27,9 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         String uri = uris[0];
         try {
             InputStream in = new java.net.URL(uri).openStream();
-            return BitmapFactory.decodeStream(in);
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            ImageLoader.getInstance().addBitmapToMemoryCache(uri, bitmap);
+            return bitmap;
         } catch (Exception e) {
             e.printStackTrace();
         }
