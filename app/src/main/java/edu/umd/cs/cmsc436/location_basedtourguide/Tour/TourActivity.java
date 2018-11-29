@@ -50,7 +50,8 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTracking
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
 public class TourActivity extends AppCompatActivity implements OnMapReadyCallback {
-    public static final boolean RUNNING_DEMO = true;
+    // TODO - change to true for the demo
+    public static final boolean RUNNING_DEMO = false;
 
     public static final String TOUR_STOP_DATA = "tour-stop-data";
     public static final String PLACE_ID = "place-id";
