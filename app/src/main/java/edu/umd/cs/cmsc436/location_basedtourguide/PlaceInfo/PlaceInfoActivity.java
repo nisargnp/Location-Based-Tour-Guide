@@ -1,12 +1,12 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo;
 
-import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,11 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Arrays;
-
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.AudioDialogFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.AudioVideo.VideoDialogFragment;
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataGenerator.DataGenerator;
 import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
@@ -46,6 +43,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
         }
 
         mPlace = DataStore.getInstance().getPlace(placeId);
+        Log.d("testing", "placeInfo: " + mPlace.toString());
 
         ImageView placeImg = findViewById(R.id.place_img);
         TextView placeDesc = findViewById(R.id.place_desc);
@@ -69,7 +67,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-        if (mPlace.getAudioFile().length() == 0) {
+        if (mPlace.getAudioFile() != null && mPlace.getAudioFile().length() == 0) {
             audioButton.setEnabled(false);
             audioButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {
@@ -82,7 +80,7 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-        if (mPlace.getVideoFile().length() == 0) {
+        if (mPlace.getVideoFile() != null && mPlace.getVideoFile().length() == 0) {
             videoButton.setEnabled(false);
             videoButton.setColorFilter(new ColorMatrixColorFilter(matrix));
         } else {

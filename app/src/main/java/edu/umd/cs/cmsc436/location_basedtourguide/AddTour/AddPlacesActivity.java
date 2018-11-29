@@ -1,34 +1,20 @@
 package edu.umd.cs.cmsc436.location_basedtourguide.AddTour;
 
-import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
-import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
-import edu.umd.cs.cmsc436.location_basedtourguide.R;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,24 +24,26 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils.uploadToFirebase;
+import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Tour;
+import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.Utils.FirebaseUtils;
+import edu.umd.cs.cmsc436.location_basedtourguide.R;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.Utils;
 
 public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener {
 
@@ -105,7 +93,6 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 ArrayList<String> pIDs = new ArrayList<>();
                 for (Place p : places) {
                     pIDs.add(p.getId());
-                    FirebaseUtils.uploadToFirebase(AddPlacesActivity.this, p);
                 }
                 DataStore.getInstance().addPlaces(places);
                 bundle.putStringArrayList("places", pIDs);
@@ -225,9 +212,7 @@ public class AddPlacesActivity extends FragmentActivity implements OnMapReadyCal
                 place.setAudioFile(bundle.getString("audioFilePath"));
                 place.setVideoFile(bundle.getString("videoFilePath"));
 
-
-
-                String id = uploadToFirebase(AddPlacesActivity.this, place);
+                String id = FirebaseUtils.uploadToFirebase(AddPlacesActivity.this, place, null);
                 place.setId(id);
                 places.add(place);
                 checkIfEmpty();
