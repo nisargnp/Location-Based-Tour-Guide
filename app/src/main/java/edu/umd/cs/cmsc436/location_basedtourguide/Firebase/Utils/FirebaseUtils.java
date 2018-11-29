@@ -35,10 +35,54 @@ public class FirebaseUtils {
     }
 
     /**
+     * Update the tour object. Does NOT upload image.
+     * @param id id
+     * @param tour tour
+     * @return id
+     */
+    public static String updateFirebaseRaw(String id, Tour tour) {
+        dbTours.child(id).setValue(tour);
+        return id;
+    }
+
+    /**
+     * Update the place object. Does NOT upload image, video, or audio.
+     * @param id id
+     * @param place place
+     * @return id
+     */
+    public static String updateFirebaseRaw(String id, Place place) {
+        dbPlaces.child(id).setValue(place);
+        return id;
+    }
+
+    /**
+     * Update the comment object.
+     * @param id id
+     * @param comment comment
+     * @return id
+     */
+    public static String updateFirebaseRaw(String id, Comment comment) {
+        dbComments.child(id).setValue(comment);
+        return id;
+    }
+
+    /**
+     * Update the user object.
+     * @param id id
+     * @param user user
+     * @return id
+     */
+    public static String updateFirebaseRaw(String id, User user) {
+        dbUsers.child(id).setValue(user);
+        return id;
+    }
+
+    /**
      * Use this to upload a Tour to Firebase.
      * Tour.pictureFile should be set to the ~local~ path for the data.
      *
-     * @param context contexxt
+     * @param context context
      * @param tour tour
      */
     public static String uploadToFirebase(Context context, Tour tour, Runnable onFinish) {
