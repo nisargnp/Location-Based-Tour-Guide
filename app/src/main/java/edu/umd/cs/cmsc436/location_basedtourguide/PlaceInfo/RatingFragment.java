@@ -73,24 +73,30 @@ public class RatingFragment extends DialogFragment {
             public void onClick(View v) {
 
                 int rating = (int) ratingBar.getRating();
-                String commentStr = commentBox.getText().toString();
                 String nameStr = nameText.getText().toString();
+                String commentStr = commentBox.getText().toString();
 
                 User user = new User();
-                user.setName(nameStr);
+                user.setName(nameStr.length() == 0 ? "Anonymous" : nameStr);
                 String userId = FirebaseUtils.uploadToFirebase(getActivity(), user, null);
 
-                Comment comment = new Comment();
-                comment.setText(commentStr);
-                comment.setAuthor(userId);
-                String commentId = FirebaseUtils.uploadToFirebase(getActivity(), comment, null);
+                Comment comment = null;
+                String commentId = null;
+                if (commentStr.length() != 0) {
+                    comment = new Comment();
+                    comment.setText(commentStr);
+                    comment.setAuthor(userId);
+                    commentId = FirebaseUtils.uploadToFirebase(getActivity(), comment, null);
+                }
 
                 Tour tour = DataStore.getInstance().getTour(tourId);
                 tour.setRating(tour.getRating() + rating);
                 tour.setNumVotes(tour.getNumVotes() + 1);
-                ArrayList<String> comments = new ArrayList<>(tour.getComments());
-                comments.add(commentId);
-                tour.setComments(comments);
+                if (comment != null) {
+                    ArrayList<String> comments = new ArrayList<>(tour.getComments());
+                    comments.add(commentId);
+                    tour.setComments(comments);
+                }
                 FirebaseUtils.updateFirebaseRaw(tour.getId(), tour);
 
                 dismiss();
