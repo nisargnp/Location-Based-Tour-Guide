@@ -38,7 +38,10 @@ public class SplashActivity extends AppCompatActivity {
                 runOnUiThread(() -> progressBar.setProgress(progress));
             }
 
-            runOnUiThread(() -> startActivity(intent));
+            runOnUiThread(() -> {
+                finish();
+                startActivity(intent);
+            });
 
         }).start();
 
