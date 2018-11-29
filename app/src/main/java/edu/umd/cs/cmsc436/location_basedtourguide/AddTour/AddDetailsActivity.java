@@ -105,8 +105,6 @@ public class AddDetailsActivity extends AppCompatActivity {
                 }
                 LatLng l = (LatLng) getIntent().getExtras().getParcelable("LatLng");
 
-
-
                 Intent output = new Intent();
 
                 Bundle bundle = new Bundle();
@@ -144,7 +142,7 @@ public class AddDetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch(requestCode) {
-            case 0:
+            case USE_CAMERA:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
                         Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
@@ -154,7 +152,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case 1:
+            case CHOOSE_PICTURE:
                 if(resultCode == RESULT_OK){
                     if (imageReturnedIntent != null) {
                         Uri contentURI = imageReturnedIntent.getData();
@@ -169,7 +167,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case 2:
+            case UPLOAD_VIDEO:
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
                         Uri uri = imageReturnedIntent.getData();
@@ -181,7 +179,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case 3:
+            case UPLOAD_AUDIO:
                 if (resultCode == RESULT_OK) {
                     if (imageReturnedIntent != null) {
                         Uri uri = imageReturnedIntent.getData();
