@@ -26,7 +26,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.Data.DataStore.DataStore;
 import edu.umd.cs.cmsc436.location_basedtourguide.Firebase.DTO.Place;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Tour.TourActivity;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 
 public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     private Place mPlace;
@@ -93,7 +93,9 @@ public class PlaceInfoActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-        new DownloadImageTask(placeImg::setImageBitmap).execute(mPlace.getPictureFile());
+        //new DownloadImageTask(placeImg::setImageBitmap).execute(mPlace.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(mPlace.getPictureFile(), placeImg);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
