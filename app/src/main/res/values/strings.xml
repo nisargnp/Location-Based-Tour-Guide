@@ -109,6 +109,7 @@
     <string name="title_activity_add_places">Map</string>
     <string name="no_places_created">Press on the map to create a new stop for your mTour!</string>
     <string name="preview_comments_title">Comments</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 
 </resources>

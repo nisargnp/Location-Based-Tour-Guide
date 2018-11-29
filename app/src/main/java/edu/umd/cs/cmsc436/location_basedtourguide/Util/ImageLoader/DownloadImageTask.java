@@ -1,14 +1,12 @@
-package edu.umd.cs.cmsc436.location_basedtourguide.Util;
+package edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.InputStream;
 
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Interface.OnBitmapResultListener;
 
 /**
@@ -26,7 +24,9 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         String uri = uris[0];
         try {
             InputStream in = new java.net.URL(uri).openStream();
-            return BitmapFactory.decodeStream(in);
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            ImageLoader.getInstance().addBitmapToMemoryCache(uri, bitmap);
+            return bitmap;
         } catch (Exception e) {
             e.printStackTrace();
         }

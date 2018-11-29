@@ -2,7 +2,6 @@ package edu.umd.cs.cmsc436.location_basedtourguide.Tour;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -45,7 +44,7 @@ import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.PlaceInfoActivity;
 import edu.umd.cs.cmsc436.location_basedtourguide.PlaceInfo.RatingFragment;
 import edu.umd.cs.cmsc436.location_basedtourguide.R;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Directions.DirectionsUtil;
-import edu.umd.cs.cmsc436.location_basedtourguide.Util.DownloadImageTask;
+import edu.umd.cs.cmsc436.location_basedtourguide.Util.ImageLoader.ImageLoader;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.LocationTrackingService;
 import edu.umd.cs.cmsc436.location_basedtourguide.Util.Location.UserLocation;
 
@@ -380,7 +379,9 @@ public class TourActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updatePreview(int stopIndex) {
         Place tourStop = mTourPlaces.get(stopIndex);
-        new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        //new DownloadImageTask(mPreviewImageView::setImageBitmap).execute(tourStop.getPictureFile());
+        ImageLoader.getInstance().loadBitmap(tourStop.getPictureFile(), mPreviewImageView);
+
         mPreviewTitleView.setText(tourStop.getName());
         mPreviewDescriptionView.setText(tourStop.getDescription());
     }
