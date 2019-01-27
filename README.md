@@ -2,6 +2,8 @@
 
 a.k.a. Tourodactyl (pTOURodactyl?)
 
+[Demo Video](https://www.youtube.com/watch?v=kX6Sl0rBEI8)
+
 System and framework where an author can create tours for a set of locations. Allows users to link audio and video content to each stop on a tour. Users use the app to follow the tour and to automatically view linked content when they are arrive at a particular location on the tour. Users could then go to these places and see the information.
 
 ## Development Notes
